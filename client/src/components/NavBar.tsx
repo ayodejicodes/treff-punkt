@@ -32,22 +32,20 @@ const NavBar = () => {
     }
   }, [theme]);
 
-  console.log(theme);
-
   return (
-    <div className=" flex justify-between h-[70px]  items-center mr-2 ml-2  gap-8 dark:bg-secondaryColor">
+    <div className="container gap-36 flex justify-between h-[70px]  items-center bg-whiteColor  dark:bg-secondaryColor sticky top-0 z-100">
       {/* Left */}
 
-      <div className="flex grow-[1] gap-3 items-center cursor-pointer">
+      <div className="flex grow-[1] gap-3 items-center cursor-pointer mr-2 ">
         <BsChatRightQuoteFill size={28} className="text-primaryColor" />
-        <h1 className="font-semibold text-lg text-secondaryColor md:whitespace-nowrap dark:text-whiteColor">
+        <h1 className="font-semibold text-lg text-secondaryColor whitespace-nowrap dark:text-whiteColor ">
           Treff Punkt
         </h1>
       </div>
 
       {/* Search Field */}
-      <div className="hidden md:block grow-[5] w-full ">
-        <div className="flex items-center bg-secondaryColor/[0.08] dark:bg-whiteColor/[0.08] gap-1 rounded-full">
+      <div className="hidden md:block grow-[3.5] w-full ">
+        <div className="flex items-center bgSecondaryColorLight dark:bgWhiteColorLight gap-1 rounded-full ">
           <input
             type="text"
             name=""
@@ -64,36 +62,26 @@ const NavBar = () => {
 
       {/* Right */}
 
-      {/* Light/Dark */}
-      <div>
-        {theme === "dark" ? (
-          <BsSun
-            size={22}
-            className="cursor-pointer text-secondaryColor dark:text-whiteColor mr-3 "
-            onClick={() => {
-              setTheme("light");
-            }}
-          />
-        ) : (
-          <BsMoon
-            size={22}
-            className="cursor-pointer text-secondaryColor  mr-3 "
-            onClick={() => setTheme("dark")}
-          />
-        )}
-      </div>
-      {/* Mobile Hamburger ------------------------*/}
-      <div className="  flex items-end">
-        <div>
-          <GiHamburgerMenu
-            size={23}
-            className="cursor-pointer text-secondaryColor dark:text-whiteColor md:hidden"
-          />
-        </div>
+      <div className=" flex gap-5 grow-[1] items-center justify-end">
+        <div className="flex gap-5 ">
+          {/* ---------Light/Dark ----------*/}
 
-        {/* -------------------------- */}
-
-        <div className="hidden md:flex gap-5 grow-[1] items-center">
+          {theme === "dark" ? (
+            <BsSun
+              size={24}
+              className="cursor-pointer text-secondaryColor dark:text-whiteColor mr-3 "
+              onClick={() => {
+                setTheme("light");
+              }}
+            />
+          ) : (
+            <BsMoon
+              size={22}
+              className="cursor-pointer text-secondaryColor  "
+              onClick={() => setTheme("dark")}
+            />
+          )}
+          {/* ------------------------- */}
           <BsChatDots
             size={22}
             className="text-secondaryColor dark:text-whiteColor cursor-pointer"
@@ -102,17 +90,29 @@ const NavBar = () => {
             size={22}
             className="text-secondaryColor dark:text-whiteColor cursor-pointer"
           />
+        </div>
 
-          <div className="flex bg-secondaryColor/[0.08] dark:bg-whiteColor/[0.08] rounded-full p-2 cursor-pointer">
-            <FaUserCircle
-              size={22}
-              className="text-secondaryColor dark:text-whiteColor"
-            />
-            <BiChevronDown
-              size={22}
-              className="text-primaryColor dark:text-whiteColor"
+        <div className="hidden md:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full p-2 cursor-pointer">
+          <FaUserCircle
+            size={22}
+            className="text-secondaryColor dark:text-whiteColor"
+          />
+          <BiChevronDown
+            size={22}
+            className="text-primaryColor dark:text-whiteColor"
+          />
+        </div>
+
+        {/* Mobile Hamburger ------------------------*/}
+        <div className=" md:hidden flex items-end">
+          <div>
+            <GiHamburgerMenu
+              size={23}
+              className="cursor-pointer text-secondaryColor dark:text-whiteColor md:hidden"
             />
           </div>
+
+          {/* -------------------------- */}
         </div>
       </div>
     </div>

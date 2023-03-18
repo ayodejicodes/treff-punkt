@@ -11,6 +11,7 @@ module.exports = {
         primaryColor: "#fb8500",
         secondaryColor: "#023047",
         whiteColor: "#ffffff",
+        blackColor: "#000000",
         onlineGreen: "#0ead69",
       },
     },
