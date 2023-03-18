@@ -33,7 +33,7 @@ const NavBar = () => {
   }, [theme]);
 
   return (
-    <div className="container gap-36 flex justify-between h-[70px]  items-center bg-whiteColor  dark:bg-secondaryColor sticky top-0 z-100">
+    <div className="container gap-36 flex justify-between h-[70px]  items-center bg-white  dark:bg-secondaryColor sticky top-0 z-10 ">
       {/* Left */}
 
       <div className="flex grow-[1] gap-3 items-center cursor-pointer mr-2 ">
@@ -92,11 +92,18 @@ const NavBar = () => {
           />
         </div>
 
-        <div className="hidden md:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full p-2 cursor-pointer">
-          <FaUserCircle
+        <div className="hidden md:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer">
+          {/* <FaUserCircle
             size={22}
             className="text-secondaryColor dark:text-whiteColor"
-          />
+          /> */}
+          <div className=" relative w-7 h-7">
+            <img
+              src="../src/assets/ayo.jpg"
+              alt=""
+              className=" rounded-full object-cover"
+            />
+          </div>
           <BiChevronDown
             size={22}
             className="text-primaryColor dark:text-whiteColor"

@@ -10,8 +10,8 @@ module.exports = {
       colors: {
         primaryColor: "#fb8500",
         secondaryColor: "#023047",
-        whiteColor: "#ffffff",
-        blackColor: "#000000",
+        whiteColor: "rgba(255, 255, 255, 0.85)",
+        blackColor: "000000",
         onlineGreen: "#0ead69",
       },
     },
