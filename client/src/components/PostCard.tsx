@@ -72,10 +72,10 @@ const PostCard = () => {
             <div className="absolute top-0 right-0  mt-8">
               <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div>
               <div className="flex flex-col p-4 gap-3 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
-                <small className=" dark:text-secondaryColor text-whiteColor hover:bg-white/[10%] dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
                   Edit
                 </small>
-                <small className=" dark:text-secondaryColor text-whiteColor hover:bg-white/[10%] dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
                   Delete
                 </small>
               </div>
@@ -120,7 +120,13 @@ const PostCard = () => {
             </small>
           </div>
 
-          <div className="flex items-center gap-2 cursor-pointer">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              setCommentOpen(!commentOpen);
+              setAllCommentsOpen(!allCommentsOpen);
+            }}
+          >
             <BiCommentDots
               size={20}
               className="text-secondaryColor dark:text-whiteColor"
@@ -149,7 +155,7 @@ const PostCard = () => {
         </div>
         <textarea
           placeholder="Comment of fIrYYstName Post"
-          className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:border-whiteColor/[20%] focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
+          className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
         ></textarea>
         <div className="flex items-center gap-4 absolute right-0 mr-6">
           <VscSmiley
