@@ -1,18 +1,28 @@
 import { useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
-import { BiLike, BiCommentDots, BiDotsVerticalRounded } from "react-icons/bi";
+import {
+  BiLike,
+  BiCommentDots,
+  BiDotsVerticalRounded,
+  BiChevronDown,
+  BiChevronUp,
+} from "react-icons/bi";
 import { RiShareForwardLine } from "react-icons/ri";
 import { VscSmiley } from "react-icons/vsc";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
+import CommentCard from "./CommentCard";
 
 const PostCard = () => {
   const [toggleLike, setToggleLike] = useState(false);
   const [savedPost, setSavedPost] = useState(false);
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [updateDeleteOpen, setUpdateDeleteOpen] = useState(false);
+  const [allCommentsOpen, setAllCommentsOpen] = useState(false);
+
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor border border-secondaryColor/[10%] dark:border-blackColor/[10%] rounded-xl p-10 gap-4 z-0 ">
       {/* User details and post creation date */}
-
       <div className="flex justify-between">
         {/* left */}
         <div>
@@ -36,7 +46,7 @@ const PostCard = () => {
         </div>
 
         {/* right */}
-        <div className="flex gap-3">
+        <div className="flex relative gap-3">
           {savedPost ? (
             <FaBookmark
               size={20}
@@ -54,22 +64,34 @@ const PostCard = () => {
           <BiDotsVerticalRounded
             size={20}
             className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+            onClick={() => setUpdateDeleteOpen(!updateDeleteOpen)}
           />
+          {/* Edit, Delete Modal */}
+
+          {updateDeleteOpen ? (
+            <div className="absolute top-0 right-0  mt-8">
+              <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div>
+              <div className="flex flex-col p-4 gap-3 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
+                <small className=" dark:text-secondaryColor text-whiteColor hover:bg-white/[10%] dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                  Edit
+                </small>
+                <small className=" dark:text-secondaryColor text-whiteColor hover:bg-white/[10%] dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                  Delete
+                </small>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
-
       {/* Post Text */}
       <p className=" text-secondaryColor dark:text-whiteColor">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos dolorum
         quia consectetur mollitia, fuga doloribus ipsum dolores! Asperiores,
         iure pariatur?
       </p>
-
       {/* Post Picture */}
       <div className=" w-full h-[400px] bg-red-500 rounded-lg"></div>
-
       {/* Likes Comment Share */}
-
       <div className="flex justify-between">
         {/* Left */}
 
@@ -120,9 +142,7 @@ const PostCard = () => {
           </small>
         </div>
       </div>
-
       {/* Comment Box */}
-
       <div className="relative flex items-center gap-4 ">
         <div className="  w-8 h-8">
           <img src="../src/assets/ayo.jpg" alt="" className=" rounded-full" />
@@ -142,6 +162,54 @@ const PostCard = () => {
           />
         </div>
       </div>
+
+      {/* Comments Controls */}
+      <div className="flex justify-between items-center">
+        {/* Left */}
+        <div
+          className="flex items-center gap-0.5 cursor-pointer"
+          onClick={() => {
+            setCommentOpen(!commentOpen);
+            setAllCommentsOpen(!allCommentsOpen);
+          }}
+        >
+          <small className="text-secondaryColor dark:text-whiteColor text-sm">
+            All comments
+          </small>
+          <small className="text-secondaryColor dark:text-whiteColor text-sm">
+            (10)
+          </small>
+
+          {commentOpen ? (
+            <BiChevronUp
+              size={22}
+              className="text-secondaryColor dark:text-whiteColor text-sm"
+            />
+          ) : (
+            <BiChevronDown
+              size={22}
+              className="text-secondaryColor dark:text-whiteColor text-sm"
+            />
+          )}
+        </div>
+
+        {/* Right */}
+        <div className="flex items-center gap-0.5 ">
+          <small className="text-secondaryColor dark:text-whiteColor text-sm">
+            Sort by
+          </small>
+          <select className="text-secondaryColor dark:text-whiteColor text-sm bg-transparent focus:outline-none cursor-pointer">
+            <option className="text-secondaryColor  text-sm bg-transparent">
+              Most recent
+            </option>
+            <option className="text-secondaryColor text-sm bg-transparent">
+              Most liked
+            </option>
+          </select>
+        </div>
+      </div>
+
+      {allCommentsOpen ? <CommentCard /> : ""}
     </div>
   );
 };

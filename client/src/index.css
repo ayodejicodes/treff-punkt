@@ -6,8 +6,17 @@
   .bgSecondaryColorLight {
     @apply bg-secondaryColor/[0.05];
   }
+  .borderSecondaryColorLight {
+    @apply border-secondaryColor/[0.05];
+  }
   .bgWhiteColorLight {
     @apply bg-whiteColor/[0.08];
+  }
+  .borderWhiteColorLight {
+    @apply border-whiteColor/[0.08];
+  }
+  .hoverSecondaryColorLight {
+    @apply hover:bg-secondaryColor/[10%];
   }
 }
 
