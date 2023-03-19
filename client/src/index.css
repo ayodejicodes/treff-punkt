@@ -22,7 +22,7 @@
     @apply hover:bg-white/[10%];
   }
   .btnPrimary {
-    @apply bg-primaryColor rounded-full pt-2 pb-2 pl-4 pr-4 text-sm hover:bg-primaryColor/[90%];
+    @apply bg-primaryColor rounded-full pt-2 pb-2 pl-4 pr-4 text-sm hover:bg-primaryColor/[90%] text-secondaryColor;
   }
   .inputStyle {
     @apply text-sm  pr-4 pl-4 pt-1.5 pb-1.5;

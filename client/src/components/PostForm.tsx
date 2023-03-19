@@ -30,14 +30,15 @@ const PostForm = () => {
               type="file"
               name="file"
               id="file"
-              className="opacity-0 cursor-none"
+              accept=""
+              className="opacity-0 cursor-none bg-transparent"
             />
             <div className="flex absolute items-center gap-2 cursor-pointer p-2 hoverSecondaryColorLight dark:hoverWhiteColorLight rounded-lg ">
               <label
                 htmlFor="file"
                 className="hover:underline text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] cursor-pointer"
               >
-                Upload your Photo / Video
+                Click to upload Photo / Video
               </label>
               <AiOutlinePicture
                 size={20}

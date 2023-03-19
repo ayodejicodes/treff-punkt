@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 const NavBar = () => {
   const [theme, setTheme] = useState<string | null>(null);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(true);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   // Check for window prefered theme
   useEffect(() => {
