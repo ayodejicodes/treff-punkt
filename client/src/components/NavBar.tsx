@@ -9,6 +9,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState, useEffect } from "react";
+import InputText from "./InputText";
 
 const NavBar = () => {
   const [theme, setTheme] = useState<string | null>(null);
@@ -45,19 +46,10 @@ const NavBar = () => {
 
       {/* Search Field */}
       <div className="hidden md:block grow-[3.5] w-full ">
-        <div className="flex items-center bgSecondaryColorLight dark:bgWhiteColorLight gap-1 rounded-full ">
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="Search for friends..."
-            className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
-          />
-          <RxMagnifyingGlass
-            size={22}
-            className="cursor-pointer text-secondaryColor dark:text-whiteColor mr-3"
-          />
-        </div>
+        <InputText
+          placeholder="Search for friends..."
+          icon={<RxMagnifyingGlass size={20} className="inputIconStyle" />}
+        />
       </div>
 
       {/* Right */}

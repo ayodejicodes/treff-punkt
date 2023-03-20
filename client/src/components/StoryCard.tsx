@@ -6,8 +6,8 @@ interface Prop {
 
 const StoryCard = (prop: Prop) => {
   return (
-    <div className="relative flex items-center justify-center w-[6em] h-40 rounded-lg  bgSecondaryColorLight dark:bgWhiteColorLight cursor-pointer">
-      <div className="w-[6em] h-40  rounded-lg ">
+    <div className="relative flex items-center justify-center rounded-lg  bgSecondaryColorLight dark:bgWhiteColorLight  ">
+      <div className="w-[6.5em] h-40  rounded-lg ">
         <img
           src={`../src/assets/${prop.image}.jpg`}
           alt=""
@@ -16,7 +16,7 @@ const StoryCard = (prop: Prop) => {
       </div>
 
       {/* Black overlay */}
-      <div className="absolute w-[6em] h-40 bg-black/[32%] hover:bg-black/[20%] rounded-lg"></div>
+      <div className="absolute w-[6.5em] h-40 bg-black/[32%] hover:bg-black/[20%] rounded-lg"></div>
 
       {/* User Stories Ring */}
       <div className="flex flex-col absolute top-24 items-center">

@@ -1,14 +1,14 @@
 import PostArea from "../components/PostArea";
-import SideBar from "../components/SideBar";
-import SideChat from "../components/SideChat";
+import LeftSideBar from "../components/LeftSideBar";
+import RightSideBar from "../components/RightSideBar";
 
-const Dashboard = () => {
+const Home = () => {
   return (
     <div className="container flex flex-col md:flex-row  gap-6 ">
-      <SideBar />
+      <LeftSideBar />
       <PostArea />
-      <SideChat />
+      <RightSideBar />
     </div>
   );
 };
-export default Dashboard;
+export default Home;
