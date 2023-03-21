@@ -10,6 +10,7 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState, useEffect } from "react";
 import InputText from "./InputText";
+import NotificationIcon from "./NotificationIcon";
 
 const NavBar = () => {
   const [theme, setTheme] = useState<string | null>(null);
@@ -74,14 +75,25 @@ const NavBar = () => {
             />
           )}
           {/* ------------------------- */}
-          <BsChatDots
-            size={22}
-            className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-          />
-          <BsBell
-            size={22}
-            className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-          />
+
+          <div className="relative">
+            <BsChatDots
+              size={22}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+            />
+            <div className="absolute right-[-5px] top-[-4px]">
+              <NotificationIcon />
+            </div>
+          </div>
+          <div className="relative">
+            <BsBell
+              size={22}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+            />
+            <div className="absolute right-[-2px] top-[-4px]">
+              <NotificationIcon />
+            </div>
+          </div>
         </div>
 
         <div

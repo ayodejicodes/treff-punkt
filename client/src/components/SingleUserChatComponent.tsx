@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import NotificationIcon from "./NotificationIcon";
 
 const SingleUserChatComponent = () => {
   const [online, setOnline] = useState<Boolean>(false);
@@ -42,15 +43,11 @@ const SingleUserChatComponent = () => {
                 {online ? "Online" : "Offline"}
               </small>
             </div>
-            <div className="flex gap-3 justify-between">
+            <div className="flex gap-3 justify-between items-center">
               <small className="text-secondaryColor dark:text-whiteColor text-[12px] overflow-hidden whitespace-nowrap overflow-ellipsis w-4 grow">
                 What's your plans for tomorrow eveing
               </small>
-              <div className="flex justify-center items-center bg-notificationRed w-4 h-4 rounded-full">
-                <small className="text-whiteColor text-[10px] font-bold">
-                  4
-                </small>
-              </div>
+              <NotificationIcon />
             </div>
           </div>
         </div>

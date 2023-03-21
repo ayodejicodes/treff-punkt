@@ -9,10 +9,6 @@ const SideChat = () => {
       <SingleUserChatComponent />
       <SingleUserChatComponent />
       <SingleUserChatComponent />
-      <SingleUserChatComponent />
-      <SingleUserChatComponent />
-      <SingleUserChatComponent />
-      <SingleUserChatComponent />
     </div>
   );
 };

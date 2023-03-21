@@ -4,10 +4,12 @@ import RightSideBar from "../components/RightSideBar";
 
 const Home = () => {
   return (
-    <div className="container flex flex-col md:flex-row  gap-6 ">
-      <LeftSideBar />
-      <PostArea />
-      <RightSideBar />
+    <div className="h-fit ">
+      <div className="container flex flex-col md:flex-row  gap-6 pb-6">
+        <LeftSideBar />
+        <PostArea />
+        <RightSideBar />
+      </div>
     </div>
   );
 };

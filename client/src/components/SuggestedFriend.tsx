@@ -22,10 +22,10 @@ const SuggestedFriend = () => {
             </div>
             {/* Follow/Ignore Buttons */}
             <div className="flex flex-row gap-2.5">
-              <button className="btnPrimary text-[9px] pt-1 pb-1 pl-2 pr-2 font-semibold">
+              <button className="btnPrimary text-[9px] pt-1 pb-1 pl-2 pr-2 font-bold">
                 Follow Back
               </button>
-              <button className="btnPrimaryReject text-[9px] pt-1 pb-1 pl-4 pr-4 font-semibold">
+              <button className="btnPrimaryReject text-[9px] pt-1 pb-1 pl-4 pr-4 font-bold">
                 Ignore
               </button>
             </div>

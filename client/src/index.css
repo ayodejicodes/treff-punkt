@@ -28,7 +28,7 @@
     @apply bg-reject rounded-full pt-2 pb-2 pl-4 pr-4 text-sm hover:bg-reject/[90%] text-secondaryColor;
   }
   .componentsBorder {
-    @apply border border-secondaryColor/[10%] dark:border-whiteColor/[10%];
+    @apply border-[3px] border-secondaryColor/[10%] dark:border-whiteColor/[10%];
   }
   .inputStyle {
     @apply text-sm  pr-4 pl-4 pt-1.5 pb-1.5;
@@ -41,5 +41,30 @@
 @layer utilities {
   .container {
     @apply max-w-screen-2xl m-auto pr-4 pl-4;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    /* background: rgba(255, 255, 255, 0.1); */
+    width: 2px;
+  }
+
+  .scrollbarDark::-webkit-scrollbar-thumb {
+    background: #fb860067;
+    border-radius: 100vh;
+    /* border: 1px solid #f6f7ed; */
+    height: 1vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #0230476d;
+    border-radius: 100vh;
+    /* border: 1px solid #f6f7ed; */
+    height: 1vh;
   }
 }

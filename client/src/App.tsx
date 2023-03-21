@@ -5,7 +5,7 @@ import Dashboard from "./pages/home";
 
 function App() {
   return (
-    <div className=" dark:bg-secondaryColor">
+    <div className=" dark:bg-secondaryColor ">
       <div className="container">
         <NavBar />
 

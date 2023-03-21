@@ -27,26 +27,36 @@ const Stories = () => {
   return (
     <motion.div
       ref={carousel}
-      className="bg-whiteColor dark:bg-secondaryColor border componentsBorder rounded-xl p-10 overflow-hidden"
+      className="bg-whiteColor dark:bg-secondaryColor componentsBorder componentsBorder rounded-xl overflow-x-clip p-10 "
       whileTap={{ cursor: "grabbing" }}
     >
       <motion.div
         drag="x"
         dragConstraints={{ right: 0, left: -width }}
-        className=" flex  gap-5 z-0 "
+        className=" flex  gap-[1.88rem] z-0 "
       >
         {/* Authenticated User Story */}
-        <div className=" w-[6.5em] h-40 bgSecondaryColorLight dark:bgWhiteColorLight rounded-lg cursor-pointer">
-          <div className="flex items-center justify-center w-[6.5em] h-40 rounded-lg ">
+        <div className=" w-[7.5em] h-40 bgSecondaryColorLight dark:bgWhiteColorLight rounded-lg  ">
+          <div className="flex items-center justify-center w-[7.5em] h-40 rounded-lg ">
             {/* +sign and create story */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="relative flex flex-col items-center gap-3">
               <FiPlusSquare
                 size={20}
-                className="text-secondaryColor dark:text-whiteColor "
+                className="text-primaryColor dark:text-whiteColor "
               />
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px]">
+
+              <small className="text-secondaryColor dark:text-whiteColor text-[11px]">
                 Create Story
               </small>
+
+              <input
+                type="file"
+                name=""
+                id=""
+                style={{ width: "7.5em", height: "10rem" }}
+                className="opacity-0 absolute top-[-3.5em] left-[-1.5em] cursor-pointer"
+              />
+
               {/* --------------------------- */}
             </div>
           </div>
