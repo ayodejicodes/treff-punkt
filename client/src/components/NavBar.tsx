@@ -35,7 +35,7 @@ const NavBar = () => {
   }, [theme]);
 
   return (
-    <div className="container gap-36 flex justify-between h-[70px]  items-center bg-white  dark:bg-secondaryColor sticky top-0 z-10 ">
+    <div className="container containerPadding gap-36 flex justify-between h-[10vh]  items-center bg-white  dark:bg-secondaryColor sticky top-0 z-10 overflow-hidden ">
       {/* Left */}
 
       <div className="flex grow-[1] gap-3 items-center cursor-pointer mr-2 ">
@@ -97,7 +97,7 @@ const NavBar = () => {
         </div>
 
         <div
-          className="hidden md:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer"
+          className="hidden md:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer z-10 "
           onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
         >
           <div className=" relative w-7 h-7">

@@ -6,15 +6,24 @@
   .bgSecondaryColorLight {
     @apply bg-secondaryColor/[0.05];
   }
+
+  .bgWhiteColorLight {
+    @apply bg-whiteColor/[0.08];
+  }
+
+  .textSecondaryColorLight {
+    @apply text-secondaryColor/[0.2];
+  }
+  .textWhiteColorLight {
+    @apply text-whiteColor/[0.2];
+  }
   .borderSecondaryColorLight {
     @apply border-secondaryColor/[0.08];
   }
   .borderWhiteColorLight {
     @apply border-whiteColor/[0.08];
   }
-  .bgWhiteColorLight {
-    @apply bg-whiteColor/[0.08];
-  }
+
   .hoverSecondaryColorLight {
     @apply hover:bg-secondaryColor/[10%];
   }
@@ -40,7 +49,13 @@
 
 @layer utilities {
   .container {
-    @apply max-w-screen-2xl m-auto pr-4 pl-4;
+    @apply max-w-screen-2xl m-auto;
+  }
+  .containerPadding {
+    @apply pr-4 pl-4;
+  }
+  .pageViewportHeight {
+    @apply h-[calc(90vh-1.5rem)];
   }
 
   .scrollbar::-webkit-scrollbar {
@@ -55,14 +70,14 @@
   }
 
   .scrollbarDark::-webkit-scrollbar-thumb {
-    background: #fb860067;
+    background: #023047;
     border-radius: 100vh;
     /* border: 1px solid #f6f7ed; */
     height: 1vh;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #0230476d;
+    background: #ffffff;
     border-radius: 100vh;
     /* border: 1px solid #f6f7ed; */
     height: 1vh;

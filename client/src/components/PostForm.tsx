@@ -30,6 +30,7 @@ const PostForm = () => {
               type="file"
               name="file"
               id="file"
+              title=""
               accept=""
               className="opacity-0 cursor-none bg-transparent"
             />

@@ -1,15 +1,18 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
-
-import Dashboard from "./pages/home";
+import Home from "./pages/home";
+import Profile from "./pages/profile";
 
 function App() {
   return (
     <div className=" dark:bg-secondaryColor ">
-      <div className="container">
+      <div className="container flex flex-col  ">
         <NavBar />
 
-        <Dashboard />
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ const Stories = () => {
         className=" flex  gap-[1.88rem] z-0 "
       >
         {/* Authenticated User Story */}
-        <div className=" w-[7.5em] h-40 bgSecondaryColorLight dark:bgWhiteColorLight rounded-lg  ">
+        <div className=" w-[7.5em] h-40 bgSecondaryColorLight dark:bgWhiteColorLight rounded-lg cursor-pointer ">
           <div className="flex items-center justify-center w-[7.5em] h-40 rounded-lg ">
             {/* +sign and create story */}
             <div className="relative flex flex-col items-center gap-3">
@@ -53,6 +53,7 @@ const Stories = () => {
                 type="file"
                 name=""
                 id=""
+                title=""
                 style={{ width: "7.5em", height: "10rem" }}
                 className="opacity-0 absolute top-[-3.5em] left-[-1.5em] cursor-pointer"
               />

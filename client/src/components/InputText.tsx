@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 
 interface InputTextProps {
   placeholder: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
 const InputText: FunctionComponent<InputTextProps> = ({

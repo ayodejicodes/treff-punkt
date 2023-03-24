@@ -4,8 +4,8 @@ import RightSideBar from "../components/RightSideBar";
 
 const Home = () => {
   return (
-    <div className="h-fit ">
-      <div className="container flex flex-col md:flex-row  gap-6 pb-6">
+    <div className="pageViewportHeight overflow-y-hidden mt-2 mb-4">
+      <div className="container containerPadding  flex flex-col md:flex-end md:flex-row  gap-6 ">
         <LeftSideBar />
         <PostArea />
         <RightSideBar />

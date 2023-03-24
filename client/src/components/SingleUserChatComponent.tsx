@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
+import useOnlineStatus from "../hooks/useOnlineStatus";
 import NotificationIcon from "./NotificationIcon";
 
 const SingleUserChatComponent = () => {
-  const [online, setOnline] = useState<Boolean>(false);
-
-  useEffect(() => {
-    if (window.navigator.onLine === true) {
-      setOnline(true);
-    } else {
-      setOnline(false);
-    }
-  }, []);
+  const online = useOnlineStatus();
 
   return (
     <div>
@@ -45,7 +37,7 @@ const SingleUserChatComponent = () => {
             </div>
             <div className="flex gap-3 justify-between items-center">
               <small className="text-secondaryColor dark:text-whiteColor text-[12px] overflow-hidden whitespace-nowrap overflow-ellipsis w-4 grow">
-                What's your plans for tomorrow eveing
+                What are your plans for tomorrow eveing
               </small>
               <NotificationIcon />
             </div>
