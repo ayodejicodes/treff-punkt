@@ -1,3 +1,4 @@
+import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import NotificationIcon from "./NotificationIcon";
 
@@ -8,7 +9,7 @@ const SingleUserChatComponent = () => {
     <div>
       {/* Image and Details */}
       <div className="border-t-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight cursor-pointer">
-        <div className="flex gap-3 componentsBorder hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 ">
+        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 ">
           {/* Image */}
           <div>
             <div className="relative w-10 h-10">
@@ -28,9 +29,18 @@ const SingleUserChatComponent = () => {
           {/* Message Details */}
           <div className="flex flex-col  w-full">
             <div className="flex flex-col">
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold ">
-                FirstName LastName
-              </small>
+              <div className="flex items-center gap-1 ">
+                <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold ">
+                  FirstName LastName
+                </small>
+                <span>
+                  <MdVerified
+                    size={12}
+                    className=" text-secondaryColor dark:text-whiteColor"
+                  />
+                </span>
+              </div>
+
               <small className="text-secondaryColor dark:text-whiteColor text-[10px] italic ">
                 {online ? "Online" : "Offline"}
               </small>

@@ -4,7 +4,7 @@
 
 @layer base {
   .bgSecondaryColorLight {
-    @apply bg-secondaryColor/[0.05];
+    @apply bg-secondaryColor/[0.06];
   }
 
   .bgWhiteColorLight {

@@ -1,3 +1,4 @@
+import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 
 const ShortProfile = () => {
@@ -5,7 +6,7 @@ const ShortProfile = () => {
   return (
     <div>
       <div className="flex justify-center w-full">
-        <div className="flex gap-3 componentsBorder hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl ">
+        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl ">
           {/* Image */}
           <div>
             <div className="relative w-10 h-10">
@@ -25,9 +26,17 @@ const ShortProfile = () => {
           {/* Details */}
           <div className="flex flex-col ">
             <div className="flex flex-col">
-              <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold">
-                FirstName LastName
-              </small>
+              <div className="flex items-center gap-1 ">
+                <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold">
+                  FirstName LastName
+                </small>
+                <span>
+                  <MdVerified
+                    size={12}
+                    className=" text-secondaryColor dark:text-whiteColor"
+                  />
+                </span>
+              </div>
               <small className="text-secondaryColor dark:text-whiteColor italic">
                 @dejifabz
               </small>

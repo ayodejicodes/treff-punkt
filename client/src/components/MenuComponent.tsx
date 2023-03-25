@@ -18,9 +18,9 @@ const MenuComponent: FC<MenuProps> = ({
   const [activeMenu, setActiveMenu] = useState(false);
 
   let activeState =
-    " bg-whiteColor dark:bgWhiteColorLight relative flex items-center gap-3 componentsBorder hoverSecondaryColorLight dark:hoverWhiteColorLight pt-3 pb-3 pr-3 pl-6 rounded-xl mt-2.5 overflow-hidden";
+    " bg-secondaryColor/[0.1] dark:bgWhiteColorLight relative flex items-center gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight pt-3 pb-3 pr-3 pl-6 rounded-xl mt-2.5 overflow-hidden";
   let inactiveState =
-    "relative flex items-center gap-3 componentsBorder hoverSecondaryColorLight dark:hoverWhiteColorLight pt-3 pb-3 pr-3 pl-6 rounded-xl mt-2.5 overflow-hidden";
+    "relative flex items-center gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight pt-3 pb-3 pr-3 pl-6 rounded-xl mt-2.5 overflow-hidden";
 
   console.log(activeMenu);
   return (

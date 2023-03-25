@@ -2,7 +2,7 @@ import { AiOutlinePicture } from "react-icons/ai";
 
 const PostForm = () => {
   return (
-    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor componentsBorder rounded-xl p-10 gap-4 z-0 ">
+    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-2 z-0 ">
       {/* What would you like to post? */}
       <div className="flex gap-4">
         <div className="  w-12 h-12">
@@ -15,7 +15,7 @@ const PostForm = () => {
 
         <textarea
           placeholder="What would you like to share?"
-          className="  resize-none inputStyle bgSecondaryColorLight dark:bgWhiteColorLight w-full focus:outline-none text-secondaryColor dark:text-whiteColor rounded-lg p-3"
+          className="  resize-none inputStyle bgSecondaryColorLight dark:bgWhiteColorLight w-full focus:outline-none text-secondaryColor dark:text-whiteColor rounded-lg p-3 h-12"
         ></textarea>
       </div>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
+import { MdVerified } from "react-icons/md";
 import { FiSend } from "react-icons/fi";
 import {
   BiLike,
@@ -21,7 +22,7 @@ const PostCard = () => {
   const [allCommentsOpen, setAllCommentsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor componentsBorder rounded-xl p-10 gap-4 z-0 ">
+    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4 z-0 ">
       {/* User details and post creation date */}
       <div className="flex justify-between">
         {/* left */}
@@ -35,9 +36,17 @@ const PostCard = () => {
               />
             </div>
             <div>
-              <h3 className="font-bold text-secondaryColor dark:text-whiteColor cursor-pointer">
-                Firstname Lastname
-              </h3>
+              <div className="flex items-center gap-1 ">
+                <h3 className="font-bold text-secondaryColor dark:text-whiteColor cursor-pointer">
+                  Firstname Lastname
+                </h3>
+                <span>
+                  <MdVerified
+                    size={14}
+                    className=" text-secondaryColor dark:text-whiteColor"
+                  />
+                </span>
+              </div>
               <small className=" text-secondaryColor dark:text-whiteColor">
                 17 March at 08:25 PM
               </small>
@@ -86,8 +95,7 @@ const PostCard = () => {
       {/* Post Text */}
       <p className=" text-secondaryColor dark:text-whiteColor">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos dolorum
-        quia consectetur mollitia, fuga doloribus ipsum dolores! Asperiores,
-        iure pariatur?
+        quia consectetur mollitia
       </p>
       {/* Post Picture */}
       <div className=" w-full h-[400px] bg-red-500 rounded-lg"></div>

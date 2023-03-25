@@ -27,7 +27,7 @@ const Stories = () => {
   return (
     <motion.div
       ref={carousel}
-      className="bg-whiteColor dark:bg-secondaryColor componentsBorder componentsBorder rounded-xl overflow-x-clip p-10 "
+      className="bg-whiteColor dark:bg-secondaryColor   rounded-xl overflow-x-clip p-10 "
       whileTap={{ cursor: "grabbing" }}
     >
       <motion.div

@@ -1,14 +1,10 @@
-import PostArea from "../components/PostArea";
-import LeftSideBar from "../components/LeftSideBar";
-import RightSideBar from "../components/RightSideBar";
+import HomePage from "../components/HomePage";
 
 const Home = () => {
   return (
-    <div className="pageViewportHeight overflow-y-hidden mt-2 mb-4">
-      <div className="container containerPadding  flex flex-col md:flex-end md:flex-row  gap-6 ">
-        <LeftSideBar />
-        <PostArea />
-        <RightSideBar />
+    <div className="pageViewportHeight  mt-2 mb-4 ">
+      <div className="container containerPadding gap-6  flex justify-center ">
+        <HomePage />
       </div>
     </div>
   );

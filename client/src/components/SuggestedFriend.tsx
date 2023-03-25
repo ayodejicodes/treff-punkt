@@ -1,9 +1,11 @@
+import { MdVerified } from "react-icons/md";
+
 const SuggestedFriend = () => {
   return (
     <div>
       {/* Image and Details */}
       <div className="border-t-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight">
-        <div className="flex gap-3 componentsBorder hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 ">
+        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 ">
           <div className="  w-10 h-10">
             <img
               src="../src/assets/ayo.jpg"
@@ -13,9 +15,18 @@ const SuggestedFriend = () => {
           </div>
           <div className="flex flex-col gap-2.5 ">
             <div className="flex flex-col">
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold">
-                FirstName LastName
-              </small>
+              <div className="flex items-center gap-1 ">
+                <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold">
+                  FirstName LastName
+                </small>
+                <span>
+                  <MdVerified
+                    size={12}
+                    className=" text-secondaryColor dark:text-whiteColor"
+                  />
+                </span>
+              </div>
+
               <small className="text-secondaryColor dark:text-whiteColor text-[10px] italic">
                 Follows you
               </small>
