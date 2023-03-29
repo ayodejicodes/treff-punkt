@@ -4,20 +4,34 @@ import { RxCross2 } from "react-icons/rx";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone, DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const MyDropzone: React.FC = ({}) => {
   const [acceptedFile, setAcceptedFile] = useState<File[] | undefined>();
-  const [rejectedFile, setRejectedFile] = useState<FileRejection[] | undefined>(
-    []
-  );
+  const [rejectedFile, setRejectedFile] = useState<
+    FileRejection[] | undefined
+  >();
   const [preview, setPreview] = useState<string>();
+  const [uploadedPicture, setUploadedPicture] = useState<string>();
+  const [file, setFile] = useState<string | null>(null);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       if (acceptedFiles.length > 0) {
-        acceptedFiles;
+        // Converting to Base 64
+        // ---------------------------------------------
+
+        const reader = new FileReader();
+        reader.onload = (event: ProgressEvent<FileReader>) => {
+          if (event.target && event.target.result) {
+            setFile(event.target.result.toString());
+          }
+        };
+        reader.readAsDataURL(acceptedFiles[0]);
+
+        // ---------------------------------------------------------
+
         setAcceptedFile(acceptedFiles);
         setRejectedFile(undefined);
         setPreview(URL.createObjectURL(acceptedFiles[0]));
@@ -32,7 +46,6 @@ const MyDropzone: React.FC = ({}) => {
   );
 
   const maxSize = 1024 * 5000;
-
   const { getRootProps, getInputProps, open }: DropzoneState = useDropzone({
     accept: {
       "image/*": [".jpeg", ".jpg", ".png"],
@@ -44,14 +57,12 @@ const MyDropzone: React.FC = ({}) => {
   });
 
   //   Gets the Error Message from the rejectedFiles
-  let errorCode: any = null;
-
   useEffect(() => {
     if (rejectedFile && acceptedFile === undefined && rejectedFile.length > 0) {
       // Gets the filetype
       const filetype = rejectedFile[0]["file"]["name"].split(".").pop();
 
-      // Gets the filetype and Formatii=ng text-----
+      // Gets the errorType and Format text-----
       const errorType = rejectedFile[0]["errors"][0]["code"]
         .split("-")
         .join(" ");
@@ -71,17 +82,48 @@ const MyDropzone: React.FC = ({}) => {
         toast.error(`${filetype} files not supported, Please upload an image.`);
       }
 
-      console.log("Rejected:", filetype);
-      console.log("Error:", capitalizedErrorType);
+      //   console.log("Rejected:", filetype);
+      //   console.log("Error:", capitalizedErrorType);
     }
   }, [acceptedFile, rejectedFile]);
 
   useEffect(() => {
     if (acceptedFile && rejectedFile === undefined && acceptedFile.length > 0) {
       toast.success("Image added successfully");
-      console.log("acceptedFile", acceptedFile[0]["name"]);
+      //   console.log("acceptedFile", acceptedFile[0]["name"]);
     }
   }, [acceptedFile, rejectedFile]);
+
+  const handleRemove = () => {
+    setPreview("");
+    setAcceptedFile(undefined);
+  };
+
+  console.log(file);
+
+  // Upload to Cloudinary
+
+  const handleSubmit = () => {
+    if (file) {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "treffPunkt");
+      data.append("cloud_name", "dpcdcpyln");
+
+      fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUploadedPicture(data.url.toString());
+          console.log(data.url.toString());
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <div {...getRootProps()} className="my-dropzone">
@@ -94,34 +136,39 @@ const MyDropzone: React.FC = ({}) => {
               {/* Chat Messages------------------------------------------ */}
               {!preview && <div className="flex-1  pl-7 pr-7 ">Messages</div>}
               {preview && (
-                <div className="relative flex-1  pl-7 pr-7 ">
-                  <img src={preview} alt="preview" />
-                  <div className=" flex items-center gap-1 absolute left-[43%] top-[94%] bg-whiteColor/[80%] p-1.5 rounded-full">
-                    <small>Send file to Member</small>
-                    <AiOutlineArrowUp />
+                <div className="flex flex-col justify-between relative flex-1  pl-7 pr-7 items-center  ">
+                  <img src={preview} alt="preview" className="mt-2" />
+                  <div className="flex gap-4 mt-3 mb-3">
+                    <div className=" flex items-center   gap-2 bg-onlineGreen/[95%] p-2 rounded-full cursor-pointer text-white">
+                      <small className="text-[12px]">Send file to Member</small>
+                      <AiOutlineArrowUp />
+                    </div>
+                    <div
+                      className=" flex items-center gap-2  bg-red-700/[95%] p-2 rounded-full cursor-pointer text-white"
+                      onClick={handleRemove}
+                    >
+                      <small className="text-[12px]">Remove Attachment</small>
+                      <RxCross2 />
+                    </div>
                   </div>
                 </div>
               )}
-              {/* {preview && } */}
 
               {/* Chat Form------------------------------------------ */}
               <div className="flex items-center pl-7 pr-7 pt-3 pb-3 gap-4">
                 <div className="">
                   {preview && (
-                    <div className="relative w-7 h-7 object-cover bg-red-500">
+                    <div className="relative w-8 h-8 bg-red-700">
                       <img
                         src={preview}
                         alt=""
-                        className=""
+                        className="object-cover w-full h-full"
                         onLoad={() => URL.revokeObjectURL(preview)}
                       />
                       <RxCross2
-                        size={15}
-                        className="absolute top-0 right-0 cursor-pointer text-reject  "
-                        onClick={() => {
-                          setPreview("");
-                          setAcceptedFile(undefined);
-                        }}
+                        size={12}
+                        className="absolute top-0 right-0 cursor-pointer text-reject"
+                        onClick={handleRemove}
                       />
                     </div>
                   )}
@@ -149,6 +196,7 @@ const MyDropzone: React.FC = ({}) => {
                         <BiPaperPlane
                           size={18}
                           className="cursor-pointer text-secondaryColor dark:text-whiteColorcursor-pointer  dark:text-whiteColor"
+                          onClick={handleSubmit}
                         />
                       </div>
                     </div>

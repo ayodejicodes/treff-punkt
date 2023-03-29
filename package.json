@@ -22,6 +22,7 @@
   "homepage": "https://github.com/ayodejicodes/treff-punkt-socials#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cloudinary": "^1.35.0",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

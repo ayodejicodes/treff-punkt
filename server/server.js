@@ -1,9 +1,16 @@
 const express = require("express");
 const colors = require("colors");
+const cors = require("cors");
 const errorHandlerMiddleware = require("./middlewares/errorHandlerMiddleware");
 const connectDB = require("./config/db");
-
 require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Connects to database
 connectDB();
@@ -12,9 +19,12 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 // Handles JSON data
-app.use(express.json());
+app.use(express.json({ limit: "25mb" }));
 // Handles form data
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ limit: "25mb" }));
+
+// Cross Origin sharing
+app.use(cors({ origin: "*" }));
 
 // Routes
 app.use("/api/posts", require("./routes/postRoutes"));
