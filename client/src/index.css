@@ -11,6 +11,14 @@
     @apply bg-whiteColor/[0.08];
   }
 
+  .divideSecondaryColorLight {
+    @apply divide-secondaryColor/[0.15];
+  }
+
+  .divideWhiteColorLight {
+    @apply divide-whiteColor/[0.15];
+  }
+
   .textSecondaryColorLight {
     @apply text-secondaryColor/[0.2];
   }

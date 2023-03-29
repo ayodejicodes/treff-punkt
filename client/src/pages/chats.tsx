@@ -1,12 +1,12 @@
-import ProfilePage from "../components/ProfilePage";
+import ChatsPage from "../components/Chat/ChatsPage";
 
-const Profile = () => {
+const Chats = () => {
   return (
     <div className=" pageViewportHeight mt-2 mb-4 ">
       <div className="container containerPadding gap-6  flex justify-center ">
-        <ProfilePage />
+        <ChatsPage />
       </div>
     </div>
   );
 };
-export default Profile;
+export default Chats;

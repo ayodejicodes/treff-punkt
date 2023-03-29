@@ -1,6 +1,6 @@
 import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
-import NotificationIcon from "./NotificationIcon";
+import NotificationIcon from "./Notifications/NotificationIcon";
 
 const SingleUserChatComponent = () => {
   const online = useOnlineStatus();

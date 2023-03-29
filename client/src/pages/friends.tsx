@@ -1,12 +1,12 @@
-import ProfilePage from "../components/ProfilePage";
+import FriendsPage from "../components/FriendsPage";
 
-const Profile = () => {
+const Friends = () => {
   return (
     <div className=" pageViewportHeight mt-2 mb-4 ">
       <div className="container containerPadding gap-6  flex justify-center ">
-        <ProfilePage />
+        <FriendsPage />
       </div>
     </div>
   );
 };
-export default Profile;
+export default Friends;

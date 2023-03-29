@@ -10,7 +10,7 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState, useEffect } from "react";
 import InputText from "./InputText";
-import NotificationIcon from "./NotificationIcon";
+import NotificationIcon from "./Notifications/NotificationIcon";
 
 const NavBar = () => {
   const [theme, setTheme] = useState<string | null>(null);
@@ -115,7 +115,7 @@ const NavBar = () => {
 
         {/* Profile Dropdown */}
         {profileDropdownOpen ? (
-          <div className="absolute top-7 right-4 w-[10em] mt-8">
+          <div className="absolute top-7 right-4 w-[10em] mt-8 ">
             {/* <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div> */}
             <div className="flex flex-col p-4 gap-5 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
               <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer text-sm">

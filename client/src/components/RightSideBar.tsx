@@ -12,7 +12,7 @@ const RightSideBar = () => {
           Suggestions
         </h3>
         <SuggestedFriend />
-        <SuggestedFriend />
+        {/* <SuggestedFriend /> */}
         {/* <SuggestedFriend /> */}
       </div>
 

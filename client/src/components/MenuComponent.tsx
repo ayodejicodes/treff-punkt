@@ -1,5 +1,4 @@
 import { FC, ReactNode, useState } from "react";
-import { AiTwotoneHome, AiOutlineHome } from "react-icons/ai";
 import { NavLink, NavLinkProps, matchPath, Link } from "react-router-dom";
 
 interface MenuProps {
