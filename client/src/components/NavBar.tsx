@@ -8,39 +8,27 @@ import {
 import { BiChevronDown } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useState, useEffect } from "react";
 import InputText from "./InputText";
 import NotificationIcon from "./Notifications/NotificationIcon";
+import { useNavigate } from "react-router-dom";
+import useTheme from "../hooks/useTheme";
+import { useState } from "react";
 
 const NavBar = () => {
-  const [theme, setTheme] = useState<string | null>(null);
+  const { theme, setTheme } = useTheme();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-
-  // Check for window prefered theme
-  useEffect(() => {
-    if (window.matchMedia("(prefers-color-scheme:dark)").matches) {
-      setTheme("dark");
-    } else {
-      setTheme("light");
-    }
-  }, []);
-
-  // Toggle Light'Dark Mode
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [theme]);
+  const navigate = useNavigate();
 
   return (
     <div className="container containerPadding gap-36 flex justify-between h-[10vh]  items-center bg-white  dark:bg-secondaryColor sticky top-0 z-10 overflow-hidden ">
       {/* Left */}
 
-      <div className="flex grow-[1] gap-3 items-center cursor-pointer mr-2 ">
+      <div className="flex grow-[1] gap-3 items-center cursor-pointer ml-3 mr-2 ">
         <BsChatRightQuoteFill size={28} className="text-primaryColor" />
-        <h1 className="font-semibold text-lg text-secondaryColor whitespace-nowrap dark:text-whiteColor ">
+        <h1
+          className="font-semibold text-lg text-secondaryColor whitespace-nowrap dark:text-whiteColor "
+          onClick={() => navigate("/")}
+        >
           Treff Punkt
         </h1>
       </div>
@@ -55,7 +43,7 @@ const NavBar = () => {
 
       {/* Right */}
 
-      <div className=" flex gap-5 grow-[1] items-center justify-end">
+      <div className=" flex gap-5 grow-[1] items-center justify-end m-3">
         <div className="flex gap-5 ">
           {/* ---------Light/Dark ----------*/}
 

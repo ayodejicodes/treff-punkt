@@ -1,29 +1,28 @@
-import { Routes, Route } from "react-router-dom";
-
-import ChatsPage from "./components/Chat/ChatsPage";
-// import FriendsPage from "./components/FriendsPage";
-
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
-
 import LeftSideBar from "./components/LeftSideBar";
 import NavBar from "./components/NavBar";
 import RightSideBar from "./components/RightSideBar";
-import Chats from "./pages/chats";
-import Friends from "./pages/friends";
+import Auth from "./pages/auth";
 import Home from "./pages/home";
 import Profile from "./pages/profile";
+import Friends from "./pages/friends";
+import Chats from "./pages/chats";
 
 function App() {
+  const location = useLocation();
+  const showNavBar = location.pathname !== "/";
+
   return (
     <div className=" dark:bg-secondaryColor ">
       <div className="container flex flex-col relative w-full">
-        <NavBar />
-        <LeftSideBar />
-        <RightSideBar />
+        {showNavBar && <NavBar />}
+        {showNavBar && <LeftSideBar />}
+        {showNavBar && <RightSideBar />}
 
         <Routes>
+          <Route path="/" element={<Auth />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/friends" element={<Friends />} />
@@ -32,7 +31,7 @@ function App() {
 
         <ToastContainer
           position="bottom-center"
-          autoClose={3000}
+          autoClose={1500}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

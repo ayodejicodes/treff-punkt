@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone, DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 
 const MyDropzone: React.FC = ({}) => {
   const [acceptedFile, setAcceptedFile] = useState<File[] | undefined>();
@@ -117,13 +116,15 @@ const MyDropzone: React.FC = ({}) => {
         .then((res) => res.json())
         .then((data) => {
           setUploadedPicture(data.url.toString());
-          console.log(data.url.toString());
+          setPreview("");
         })
         .catch((error) => {
           console.log(error);
         });
     }
   };
+
+  console.log(uploadedPicture);
 
   return (
     <div {...getRootProps()} className="my-dropzone">
@@ -139,7 +140,10 @@ const MyDropzone: React.FC = ({}) => {
                 <div className="flex flex-col justify-between relative flex-1  pl-7 pr-7 items-center  ">
                   <img src={preview} alt="preview" className="mt-2" />
                   <div className="flex gap-4 mt-3 mb-3">
-                    <div className=" flex items-center   gap-2 bg-onlineGreen/[95%] p-2 rounded-full cursor-pointer text-white">
+                    <div
+                      className=" flex items-center   gap-2 bg-onlineGreen/[95%] p-2 rounded-full cursor-pointer text-white"
+                      onClick={handleSubmit}
+                    >
                       <small className="text-[12px]">Send file to Member</small>
                       <AiOutlineArrowUp />
                     </div>

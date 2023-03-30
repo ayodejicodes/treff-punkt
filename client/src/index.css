@@ -41,6 +41,7 @@
   .btnPrimary {
     @apply bg-primaryColor rounded-full pt-2 pb-2 pl-4 pr-4 text-sm hover:bg-primaryColor/[90%] text-secondaryColor;
   }
+
   .btnPrimaryReject {
     @apply bg-reject rounded-full pt-2 pb-2 pl-4 pr-4 text-sm hover:bg-reject/[90%] text-secondaryColor;
   }
