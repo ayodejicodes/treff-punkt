@@ -4,7 +4,8 @@ import { BsMoon, BsSun } from "react-icons/bs";
 import { Link, NavLink } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast } from "react-toastify";
-import { FaUserCircle } from "react-icons/fa";
+import { FaCloudUploadAlt, FaUserCircle } from "react-icons/fa";
+import Spinner from "../Spinner";
 
 const RegisterPage = () => {
   const { theme, setTheme } = useTheme();
@@ -17,7 +18,7 @@ const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // In Megabytes
-  const approvedFileSize = 2;
+  const approvedFileSize = 4;
 
   useEffect(() => {
     if (profilePicturePreview) {
@@ -90,7 +91,7 @@ const RegisterPage = () => {
         const fileSizeInMB = Math.round(fileSizeInBytes / (1024 * 1000));
 
         if (fileSizeInMB > approvedFileSize) {
-          console.log(`File is larger than ${approvedFileSize} mb`);
+          toast.error(`File is larger than ${approvedFileSize} mb`);
           setIsFileLarger(true);
           // URL.revokeObjectURL(profilePicturePreview as string);
 
@@ -128,6 +129,11 @@ const RegisterPage = () => {
   ): Promise<object | undefined> => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     if (base64Image) {
       const data = new FormData();
       data.append("file", base64Image);
@@ -149,18 +155,19 @@ const RegisterPage = () => {
           throw new Error("Unable to fetch back the Profile Picture", error);
         });
     } else {
-      // console.log(registerFormData);
-      return registerFormData;
+      const { confirmPassword, ...others } = registerFormData;
+
+      return others;
     }
   };
 
   // -----------------------------------------------------------------------
 
-  // console.log(registerFormData);
+  console.log(registerFormData);
   // console.log(registerFormData.profilePicture);
-  console.log(isFileLarger);
-  console.log(profilePicturePreview);
-  console.log("typeof", typeof profilePicturePreview);
+  // console.log(isFileLarger);
+  // console.log(profilePicturePreview);
+  // console.log("typeof", typeof profilePicturePreview);
 
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
@@ -272,21 +279,7 @@ const RegisterPage = () => {
                 className={inputClassname}
               />
             </div>
-            {/* Username */}
-            <div>
-              <label htmlFor="username" className={labelClassName}>
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                placeholder="Enter your preferred username"
-                name="userName"
-                value={userName}
-                onChange={handleChange}
-                className={inputClassname}
-              />
-            </div>
+
             {/* Email */}
             <div>
               <label htmlFor="email" className={labelClassName}>
@@ -302,6 +295,22 @@ const RegisterPage = () => {
                 className={inputClassname}
               />
             </div>
+            {/* Username */}
+            <div>
+              <label htmlFor="username" className={labelClassName}>
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Enter your preferred username"
+                name="userName"
+                value={userName}
+                onChange={handleChange}
+                className={inputClassname}
+              />
+            </div>
+
             {/* Password */}
             <div>
               <label htmlFor="password" className={labelClassName}>
@@ -377,32 +386,47 @@ const RegisterPage = () => {
             </div>
 
             {/* Profile Picture */}
-            <div className="flex items-center gap-2.5 mt-1 mb-1">
-              <div className=" flex justify-center items-center w-8 h-8 rounded-full">
-                {isFileLarger === false ||
-                profilePicturePreview === undefined ? (
-                  <img
-                    src={profilePicturePreview}
-                    alt={profilePicturePreview}
-                    className="w-8 h-8 object-cover rounded-full"
-                  />
-                ) : (
-                  <FaUserCircle size={24} />
-                )}
+            <div className=" flex items-center gap-2.5 mt-1 mb-1">
+              {profilePicture && (
+                <div className=" flex justify-center items-center w-8 h-8 rounded-full">
+                  {isFileLarger === false ? (
+                    <img
+                      src={profilePicturePreview}
+                      alt="profilePic"
+                      className="w-8 h-8 object-cover rounded-full"
+                    />
+                  ) : (
+                    <FaUserCircle
+                      size={24}
+                      className="text-whiteColor dark:text-secondaryColor"
+                    />
+                  )}
+                </div>
+              )}
+
+              <div className=" relative flex gap-3 items-center pt-1 pb-1 pl-2 pr-2 bg-whiteColor rounded-lg hover:bg-offlineGray/[10%]">
+                <div>
+                  <FaCloudUploadAlt size={22} className="text-secondaryColor" />
+                </div>
+                <small className="whitespace-nowrap text-secondaryColor  ">
+                  Upload Profile Picture ({`max. ${approvedFileSize} mb`})
+                </small>
+
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  name="profilePicture"
+                  id="profilePicture"
+                  title=""
+                  className="absolute left-0 mt-1 mb-1 w-64 opacity-0"
+                  onChange={handleChange}
+                  ref={profilePictureRef}
+                />
               </div>
-              <input
-                type="file"
-                accept=".jpg, .jpeg, .png"
-                name="profilePicture"
-                id="profilePicture"
-                className="mt-1 mb-1"
-                onChange={handleChange}
-                ref={profilePictureRef}
-              />
             </div>
 
             <button className="btnPrimary" type="submit">
-              {isLoading ? "...Loading" : "Register"}
+              {isLoading ? <Spinner /> : "Register"}
             </button>
             <small className="text-center">
               Already have an account?
