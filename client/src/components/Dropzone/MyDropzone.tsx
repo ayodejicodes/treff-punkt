@@ -6,7 +6,7 @@ import { useDropzone, DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MyDropzone: React.FC = ({}) => {
+const MyDropzone = ({}) => {
   const [acceptedFile, setAcceptedFile] = useState<File[] | undefined>();
   const [rejectedFile, setRejectedFile] = useState<
     FileRejection[] | undefined
@@ -101,13 +101,15 @@ const MyDropzone: React.FC = ({}) => {
   console.log(file);
 
   // Upload to Cloudinary
+  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
   const handleSubmit = () => {
     if (file) {
       const data = new FormData();
       data.append("file", file);
-      data.append("upload_preset", "treffPunkt");
-      data.append("cloud_name", "dpcdcpyln");
+      data.append("upload_preset", `${upload_preset}`);
+      data.append("cloud_name", `${cloud_name}`);
 
       fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
         method: "post",
@@ -125,6 +127,7 @@ const MyDropzone: React.FC = ({}) => {
   };
 
   console.log(uploadedPicture);
+  // console.log("upload_preset:", `"${cloud_name}"`);
 
   return (
     <div {...getRootProps()} className="my-dropzone">
