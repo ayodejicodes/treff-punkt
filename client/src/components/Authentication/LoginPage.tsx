@@ -18,7 +18,11 @@ const RegisterPage = () => {
   let inActiveClassName =
     "rounded-full bg-offlineGray pt-2 pb-2 pl-4 pr-4 text-sm cursor-pointer text-white";
 
-  // Buttons Handlers
+  // Buttons Handlers\
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  // }
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
   };

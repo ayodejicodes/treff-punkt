@@ -1,36 +1,78 @@
-import { useEffect, useRef, useState } from "react";
-import useTheme from "../../hooks/useTheme";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { BsMoon, BsSun } from "react-icons/bs";
+import useTheme from "../../hooks/useTheme";
 import { Link, NavLink } from "react-router-dom";
-import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast } from "react-toastify";
-import { FaCloudUploadAlt, FaUserCircle } from "react-icons/fa";
-import Spinner from "../Spinner";
 
-const RegisterPage = () => {
+type FormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  password: string;
+  confirmPassword: string;
+  profilePicture: FileList;
+};
+
+// Approved File Size
+// in Bytes
+const approvedProfilePicSizeBytes = 5 * 1000000;
+const approvedProfilePicSizeMB = Math.round(
+  approvedProfilePicSizeBytes / 1000000
+);
+
+// Form Validation---------------------------------------------------
+const validationSchema = yup.object().shape({
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  userName: yup.string().required("Username is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), undefined], "Passwords must match")
+    .required("Confirm Password is required"),
+  profilePicture: yup
+    .mixed()
+    .required("Profile picture is required")
+    .test(
+      "fileSize",
+      `Profile picture size must not exceed ${approvedProfilePicSizeMB}MB`,
+      (value) =>
+        value &&
+        (value as FileList)[0] &&
+        (value as FileList)[0].size <= approvedProfilePicSizeBytes
+    )
+    .test(
+      "fileType",
+      "Profile picture must be a JPG, JPEG, PNG, or GIF",
+      (value) =>
+        value &&
+        (value as FileList)[0] &&
+        ["image/jpg", "image/jpeg", "image/png", "image/gif"].includes(
+          (value as FileList)[0].type
+        )
+    ),
+});
+
+// ------------------------------------------------------------------
+
+const Register = () => {
   const { theme, setTheme } = useTheme();
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const profilePictureRef = useRef<HTMLInputElement>(null);
-  const [base64Image, setBase64Image] = useState<string | Blob | null>();
-  const [isFileLarger, setIsFileLarger] = useState<boolean>(false);
-  const [profilePicturePreview, setProfilePicturePreview] =
-    useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // In Megabytes
-  const approvedFileSize = 4;
-
-  useEffect(() => {
-    if (profilePicturePreview) {
-      URL.revokeObjectURL(profilePicturePreview);
-    }
-  }, [profilePicturePreview]);
 
   // Styling--------------------------------------
   const inputClassname =
     "w-full text-sm pr-4 pl-4 pt-2 pb-2 mt-1 rounded-lg  dark:text-secondaryColor text-secondaryColor outline-none pr-10";
 
-  const labelClassName = "text-[12.5px] font-semibold";
+  const labelClassName = "text-[12.5px] font-semibold mb-[-4px]";
+  const errorClassName =
+    "text-[12.5px] font-semibold mb-[-4px]  text-red-500 ml-1";
 
   let activeClassName =
     "rounded-full bg-primaryColor pt-2 pb-2 pl-4 pr-4 text-sm cursor-pointer";
@@ -40,134 +82,42 @@ const RegisterPage = () => {
 
   // --------------------------------------------
 
-  interface RegisterFormData {
-    firstName: string;
-    lastName: string;
-    userName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    profilePicture?: File | string;
-  }
-
-  const [registerFormData, setRegisterFormData] = useState<RegisterFormData>({
-    firstName: "",
-    lastName: "",
-    userName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    profilePicture: undefined,
-  });
-
-  // Setting value destructured from FormData
   const {
-    firstName,
-    lastName,
-    userName,
-    email,
-    password,
-    confirmPassword,
-    profilePicture,
-  } = registerFormData;
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: yupResolver(validationSchema) });
 
-  // Buttons Handlers
-  // input change handler
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
+  // ----------------------------------------------
+  // Checking File Size
 
-    setRegisterFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const [profilePictureSizeError, setProfilePictureSizeError] = useState("");
 
-    // Check for Profile Picture Upload locally
-    if (files && name === "profilePicture") {
-      const profilePicture = files[0];
-      // console.log(profilePicture.size);
-
-      if (profilePicture) {
-        const fileSizeInBytes = profilePicture?.size;
-        const fileSizeInMB = Math.round(fileSizeInBytes / (1024 * 1000));
-
-        if (fileSizeInMB > approvedFileSize) {
-          toast.error(`File is larger than ${approvedFileSize} mb`);
-          setIsFileLarger(true);
-          // URL.revokeObjectURL(profilePicturePreview as string);
-
-          return;
-        } else {
-          setIsFileLarger(false);
-          // Setting Preview
-          setProfilePicturePreview(URL.createObjectURL(profilePicture));
-        }
-
-        // Converting to Base 64
-        // ---------------------------------------------
-
-        // Revoke the previous objectURL
-
-        if (isFileLarger === false) {
-          const reader = new FileReader();
-          reader.readAsDataURL(profilePicture);
-          reader.onload = (event: ProgressEvent<FileReader>) => {
-            setBase64Image(reader.result?.toString());
-          };
-        }
-      }
-    }
-  };
-
-  // -----------------------------------------------------------------------------
-
-  // Upload to Cloudinary and submit Registration form
-  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  const handleRegister = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<object | undefined> => {
-    e.preventDefault();
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-
-    if (base64Image) {
-      const data = new FormData();
-      data.append("file", base64Image);
-      data.append("upload_preset", `${upload_preset}`);
-      data.append("cloud_name", `${cloud_name}`);
-
-      await fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setRegisterFormData((prev) => ({
-            ...prev,
-            profilePicture: data.url,
-          }));
-        })
-        .catch((error) => {
-          throw new Error("Unable to fetch back the Profile Picture", error);
-        });
+  const handleProfilePictureChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file && file.size > approvedProfilePicSizeBytes) {
+      setProfilePictureSizeError(
+        `Profile picture size must not exceed ${approvedProfilePicSizeMB}MB`
+      );
     } else {
-      const { confirmPassword, ...others } = registerFormData;
-
-      return others;
+      setProfilePictureSizeError("");
     }
   };
 
-  // -----------------------------------------------------------------------
+  const onSubmit: SubmitHandler<FormData> = async (
+    data: FormData,
+    e?: React.BaseSyntheticEvent
+  ) => {
+    e?.preventDefault();
+    console.log(data);
+  };
 
-  console.log(registerFormData);
-  // console.log(registerFormData.profilePicture);
-  // console.log(isFileLarger);
-  // console.log(profilePicturePreview);
-  // console.log("typeof", typeof profilePicturePreview);
+  {
+    profilePictureSizeError !== "" && toast.error(profilePictureSizeError);
+  }
+  // console.log(profilePictureSizeError);
 
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
@@ -243,204 +193,125 @@ const RegisterPage = () => {
         {/* Right */}
         <div className="w-[50%] p-8">
           {/* Form inputs */}
-
           <form
-            action=""
-            onSubmit={handleRegister}
+            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-2"
           >
-            {/* First Name */}
-            <div>
+            {/* First Name------------------------------------------------------------------- */}
+            {errors.firstName ? (
+              <p className={errorClassName}>{errors.firstName.message}</p>
+            ) : (
               <label htmlFor="firstName" className={labelClassName}>
                 First Name
               </label>
-              <input
-                type="text"
-                id="firstName"
-                placeholder="Enter First name"
-                name="firstName"
-                value={firstName}
-                onChange={handleChange}
-                className={inputClassname}
-              />
-            </div>
-            {/* Last Name */}
-            <div>
+            )}
+            <input
+              type="text"
+              placeholder="Enter First name"
+              {...register("firstName")}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
+
+            {/* Last Name------------------------------------------------------------------- */}
+            {errors.lastName ? (
+              <p className={errorClassName}>{errors.lastName.message}</p>
+            ) : (
               <label htmlFor="lastName" className={labelClassName}>
                 Last Name
               </label>
-              <input
-                type="text"
-                id="lastName"
-                placeholder="Enter Last name"
-                name="lastName"
-                value={lastName}
-                onChange={handleChange}
-                className={inputClassname}
-              />
-            </div>
+            )}
+            <input
+              type="text"
+              placeholder="Enter Last name"
+              {...register("lastName")}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
 
-            {/* Email */}
-            <div>
+            {/* Email------------------------------------------------------------------- */}
+            {errors.email ? (
+              <p className={errorClassName}>{errors.email.message}</p>
+            ) : (
               <label htmlFor="email" className={labelClassName}>
                 Email
               </label>
-              <input
-                type="text"
-                id="email"
-                placeholder="Enter email"
-                name="email"
-                value={email}
-                onChange={handleChange}
-                className={inputClassname}
-              />
-            </div>
-            {/* Username */}
-            <div>
-              <label htmlFor="username" className={labelClassName}>
+            )}
+            <input
+              type="email"
+              placeholder="Enter Email"
+              {...register("email")}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
+
+            {/* User Name-------------------------------------------------------------------  */}
+            {errors.userName ? (
+              <p className={errorClassName}>{errors.userName.message}</p>
+            ) : (
+              <label htmlFor="userName" className={labelClassName}>
                 Username
               </label>
-              <input
-                type="text"
-                id="username"
-                placeholder="Enter your preferred username"
-                name="userName"
-                value={userName}
-                onChange={handleChange}
-                className={inputClassname}
-              />
-            </div>
+            )}
+            <input
+              type="text"
+              placeholder="Enter Username"
+              {...register("userName")}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
 
-            {/* Password */}
-            <div>
+            {/* Password------------------------------------------------------------------- */}
+            {errors.password ? (
+              <p className={errorClassName}>{errors.password.message}</p>
+            ) : (
               <label htmlFor="password" className={labelClassName}>
                 Password
               </label>
-              <div className="relative">
-                <input
-                  type={`${showPassword ? "text" : "password"}`}
-                  id="password"
-                  placeholder="Enter Password"
-                  name="password"
-                  value={password}
-                  onChange={handleChange}
-                  className={inputClassname}
-                />
+            )}
+            <input
+              type="password"
+              placeholder="Enter Password"
+              {...register("password")}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
 
-                {showPassword && (
-                  <FiEyeOff
-                    size={14}
-                    className="absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                )}
-                {!showPassword && (
-                  <FiEye
-                    size={14}
-                    className="absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-
-            {/*Confirm  Password */}
-            <div>
-              <label htmlFor="password" className={labelClassName}>
+            {/* Confirm Password------------------------------------------------------------------- */}
+            {errors.confirmPassword ? (
+              <p className={errorClassName}>{errors.confirmPassword.message}</p>
+            ) : (
+              <label htmlFor="confirmPassword" className={labelClassName}>
                 Confirm Password
               </label>
-              <div className="relative">
-                <input
-                  type={`${showPassword ? "text" : "password"}`}
-                  id="password"
-                  placeholder="Confirm Password"
-                  name="confirmPassword"
-                  value={confirmPassword}
-                  onChange={handleChange}
-                  className={inputClassname}
-                />
+            )}
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              {...register("confirmPassword")}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
 
-                {showPassword && (
-                  <FiEyeOff
-                    size={14}
-                    className="absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                )}
-                {!showPassword && (
-                  <FiEye
-                    size={14}
-                    className="absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                )}
-              </div>
-            </div>
+            {/* Profile Picture------------------------------------------------------------------- */}
 
-            {/* Profile Picture */}
-            <div className=" flex items-center gap-2.5 mt-1 mb-1">
-              {profilePicture && (
-                <div className=" flex justify-center items-center w-8 h-8 rounded-full">
-                  {isFileLarger === false ? (
-                    <img
-                      src={profilePicturePreview}
-                      alt="profilePic"
-                      className="w-8 h-8 object-cover rounded-full"
-                    />
-                  ) : (
-                    <FaUserCircle
-                      size={24}
-                      className="text-whiteColor dark:text-secondaryColor"
-                    />
-                  )}
-                </div>
-              )}
-
-              <div className=" relative flex gap-3 items-center pt-1 pb-1 pl-2 pr-2 bg-whiteColor rounded-lg hover:bg-offlineGray/[10%]">
-                <div>
-                  <FaCloudUploadAlt size={22} className="text-secondaryColor" />
-                </div>
-                <small className="whitespace-nowrap text-secondaryColor  ">
-                  Upload Profile Picture ({`max. ${approvedFileSize} mb`})
-                </small>
-
-                <input
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  name="profilePicture"
-                  id="profilePicture"
-                  title=""
-                  className="absolute left-0 mt-1 mb-1 w-64 opacity-0"
-                  onChange={handleChange}
-                  ref={profilePictureRef}
-                />
-              </div>
-            </div>
+            <input
+              type="file"
+              accept=".jpg, .jpeg, .png"
+              {...register("profilePicture")}
+              className={inputClassname}
+              onChange={handleProfilePictureChange}
+            />
+            {/* ---------------------------------------------------------------------------- */}
 
             <button className="btnPrimary" type="submit">
-              {isLoading ? <Spinner /> : "Register"}
+              Register
             </button>
-            <small className="text-center">
-              Already have an account?
-              <Link
-                to="/login"
-                className="underline ml-1 hover:text-primaryColor"
-              >
-                Login
-              </Link>
-            </small>
           </form>
         </div>
       </div>
     </div>
   );
 };
-export default RegisterPage;
+
+export default Register;
