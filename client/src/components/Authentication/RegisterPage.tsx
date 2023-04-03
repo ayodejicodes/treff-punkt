@@ -4,10 +4,13 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BsMoon, BsSun } from "react-icons/bs";
 import useTheme from "../../hooks/useTheme";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaCloudUploadAlt, FaUserCircle } from "react-icons/fa";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import Spinner from "../Spinner";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:5173";
 
 type FormData = {
   firstName: string;
@@ -34,7 +37,7 @@ const validationSchema = yup.object().shape({
   userName: yup.string().required("Username is required"),
   password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
+    .min(5, "Password must be at least 5 characters")
     .required("Password is required"),
   confirmPassword: yup
     .string()
@@ -96,10 +99,14 @@ const Register = () => {
   const [file, setFile] = useState<File | undefined>();
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    event.preventDefault();
     const file = event.target.files?.[0];
     setFile(file);
 
@@ -113,10 +120,6 @@ const Register = () => {
       setProfilePictureSizeError("");
     }
   };
-
-  // Upload to Cloudinary and submit Registration form
-  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
   const [registerFormData, setRegisterFormData] = useState<FormData>({
     firstName: "",
@@ -140,14 +143,20 @@ const Register = () => {
     }
   }, [file]);
 
+  // Upload to Cloudinary and submit Registration form
+  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
   const onSubmit: SubmitHandler<FormData> = async (
-    data: FormData,
-    e?: React.BaseSyntheticEvent
+    // event: React.FormEvent<HTMLFormElement>,
+    data: FormData
   ) => {
-    e?.preventDefault();
+    // event.preventDefault()
     setRegisterFormData(data);
+    setIsLoading(true);
 
     if (profilePicture === "") {
+      setIsLoading(false);
       return registerFormData;
     }
 
@@ -176,6 +185,95 @@ const Register = () => {
           throw new Error("Unable to fetch back the Profile Picture", error);
         });
     }
+
+    try {
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     // 'Authorization': `Bearer ${token}` // Add authorization header if needed
+      //   },
+      // };
+
+      // const { confirmPassword, ...others } = registerFormData;
+      const {
+        firstName,
+        lastName,
+        email,
+        userName,
+        password,
+        confirmPassword,
+        profilePicture,
+      } = registerFormData;
+
+      const API_URL = "/api/users/register/";
+
+      const { data } = await axios.post(API_URL, {
+        firstName,
+        lastName,
+        email,
+        userName,
+        password,
+        confirmPassword,
+        profilePicture,
+      });
+
+      if (data) {
+        toast.success("Registration Successful");
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setIsLoading(false);
+      }
+      navigate("/home");
+    } catch (error: any) {
+      setIsLoading(false);
+      toast.error("Error while Registering");
+
+      console.log(error);
+    }
+
+    // try {
+    //   const {
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     userName,
+    //     password,
+    //     confirmPassword,
+    //     profilePicture,
+    //   } = registerFormData;
+
+    //   const data = {
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     userName,
+    //     password,
+    //     confirmPassword,
+    //     profilePicture,
+    //   };
+
+    //   const response = await fetch("http://localhost:6000/api/users/register", {
+    //     method: "POST",
+
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
+
+    //   if (response.ok) {
+    //     const responseData = await response.json();
+    //     localStorage.setItem("userInfo", JSON.stringify(responseData));
+    //     toast.success("Registration Successful");
+    //     setIsLoading(false);
+    //     // navigate("/home");
+    //   } else {
+    //     throw new Error("Network response was not ok.");
+    //   }
+    // } catch (error: any) {
+    //   setIsLoading(false);
+    //   toast.error("Error while Registering");
+    //   console.log(error);
+    // }
   };
 
   // Throw an error if file is larger than approved size
@@ -192,9 +290,13 @@ const Register = () => {
     }
   }, [profilePictureSizeError]);
 
+  // Console.log the data
   useEffect(() => {
     console.log(registerFormData);
   }, [registerFormData]);
+
+  console.log(registerFormData);
+  // console.log(import.meta.env.VITE_API_BASE_URL);
 
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
@@ -419,8 +521,8 @@ const Register = () => {
                 {file && profilePictureSizeError === "" ? (
                   <img
                     src={profilePicture}
-                    alt="profilePic"
-                    className="w-8 h-8 object-cover rounded-full"
+                    alt=""
+                    className="w-8 h-8 object-cover rounded-full bg-red-500"
                   />
                 ) : (
                   <FaUserCircle
@@ -453,7 +555,7 @@ const Register = () => {
             {/* ---------------------------------------------------------------------------- */}
 
             <button className="btnPrimary" type="submit">
-              Register
+              {isLoading ? <Spinner /> : "Register"}
             </button>
 
             <small className="text-center">

@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Cross Origin sharing
-app.use(cors({ origin: "*" }));
+app.use(cors());
 
 // Routes
 app.use("/api/posts", require("./routes/postRoutes"));
