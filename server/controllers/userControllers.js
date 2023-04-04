@@ -9,15 +9,8 @@ const UserModel = require("../models/UserModel");
 // @Route       POST (/api/users/register)
 // @Access      Public
 const register = asyncHandler(async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    userName,
-    password,
-    confirmPassword,
-    profilePicture,
-  } = req.body;
+  const { firstName, lastName, email, userName, password, confirmPassword } =
+    req.body;
 
   //   validation check
   if (
@@ -26,8 +19,7 @@ const register = asyncHandler(async (req, res) => {
     !email ||
     !userName ||
     !password ||
-    !confirmPassword ||
-    !profilePicture
+    !confirmPassword
   ) {
     res.status(400);
     throw new Error("All fields are required");

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,7 +6,7 @@ import { BsMoon, BsSun } from "react-icons/bs";
 import useTheme from "../../hooks/useTheme";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaCloudUploadAlt, FaUserCircle } from "react-icons/fa";
+
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Spinner from "../Spinner";
 import axios from "axios";
@@ -19,15 +19,7 @@ type FormData = {
   userName: string;
   password: string;
   confirmPassword: string;
-  profilePicture: FileList | string;
 };
-
-// Approved File Size
-// in Bytes
-const approvedProfilePicSizeBytes = 5 * 1000000;
-const approvedProfilePicSizeMB = Math.round(
-  approvedProfilePicSizeBytes / 1000000
-);
 
 // Form Validation---------------------------------------------------
 const validationSchema = yup.object().shape({
@@ -43,26 +35,6 @@ const validationSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), undefined], "Passwords must match")
     .required("Confirm Password is required"),
-  profilePicture: yup
-    .mixed()
-    .test(
-      "fileSize",
-      `Profile picture size must not exceed ${approvedProfilePicSizeMB}MB`,
-      (value) =>
-        !value ||
-        !(value as FileList)[0] ||
-        (value as FileList)[0].size <= approvedProfilePicSizeBytes
-    )
-    .test(
-      "fileType",
-      "Profile picture must be a JPG, JPEG, PNG, or GIF",
-      (value) =>
-        !value ||
-        !(value as FileList)[0] ||
-        ["image/jpg", "image/jpeg", "image/png", "image/gif"].includes(
-          (value as FileList)[0].type
-        )
-    ),
 });
 
 // ------------------------------------------------------------------
@@ -72,11 +44,10 @@ const Register = () => {
 
   // Styling--------------------------------------
   const inputClassname =
-    "w-full text-sm pr-4 pl-4 pt-2 pb-2 mt-1 rounded-lg  dark:text-secondaryColor text-secondaryColor outline-none pr-10";
+    "w-full text-sm pr-4 pl-4 pt-2 pb-2 mt-1 mb-1.5 rounded-lg  dark:text-secondaryColor text-secondaryColor outline-none pr-10";
 
-  const labelClassName = "text-[12.5px] font-semibold mb-[-4px]";
-  const errorClassName =
-    "text-[12.5px] font-semibold mb-[-4px]  text-red-500 ml-1";
+  const labelClassName = "text-[12.5px] font-semibold mb-[-8px] ";
+  const errorClassName = "text-[12.5px] font-semibold mb-[-8px] text-red-500";
 
   let activeClassName =
     "rounded-full bg-primaryColor pt-2 pb-2 pl-4 pr-4 text-sm cursor-pointer";
@@ -89,112 +60,33 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(validationSchema) });
 
   // ----------------------------------------------
-  // Checking File Size
 
-  const [profilePictureSizeError, setProfilePictureSizeError] = useState("");
-  const [file, setFile] = useState<File | undefined>();
-  const [profilePicture, setProfilePicture] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRegistrationLoading, setIsRegistrationLoading] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
-  const handleProfilePictureChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    event.preventDefault();
-    const file = event.target.files?.[0];
-    setFile(file);
-
-    // ------------------------------------------------------
-
-    if (file && file.size > approvedProfilePicSizeBytes) {
-      setProfilePictureSizeError(
-        `Profile picture size must not exceed ${approvedProfilePicSizeMB}MB`
-      );
-    } else {
-      setProfilePictureSizeError("");
-    }
+  const registerDataObject = {
+    firstName: watch("firstName"),
+    lastName: watch("lastName"),
+    userName: watch("userName"),
+    email: watch("email"),
+    password: watch("password"),
+    confirmPassword: watch("confirmPassword"),
   };
 
-  const [registerFormData, setRegisterFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    userName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    profilePicture: "",
-  });
+  // console.log(registerDataObject);
 
-  // Setting Preview---------------------------------------
-  useEffect(() => {
-    if (file && profilePictureSizeError === "") {
-      const reader = new FileReader();
-      reader.readAsDataURL(file as Blob);
-
-      reader.onload = () => {
-        setProfilePicture(reader.result as string);
-      };
-    }
-  }, [file]);
-
-  // Upload to Cloudinary and submit Registration form
-  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  const onSubmit: SubmitHandler<FormData> = async (
-    // event: React.FormEvent<HTMLFormElement>,
-    data: FormData
-  ) => {
-    // event.preventDefault()
-    setRegisterFormData(data);
-    setIsLoading(true);
-
-    if (profilePicture === "") {
-      setIsLoading(false);
-      return registerFormData;
-    }
-
-    if (file && profilePictureSizeError === "") {
-      setProfilePictureSizeError("");
-    }
-
-    if (profilePicture && profilePicture !== "") {
-      const data = new FormData();
-      data.append("file", profilePicture);
-      data.append("upload_preset", `${upload_preset}`);
-      data.append("cloud_name", `${cloud_name}`);
-
-      await fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setRegisterFormData((prev) => ({
-            ...prev,
-            profilePicture: data.url,
-          }));
-        })
-        .catch((error) => {
-          throw new Error("Unable to fetch back the Profile Picture", error);
-        });
-    }
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    setIsRegistrationLoading(true);
 
     try {
-      // const config = {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     // 'Authorization': `Bearer ${token}` // Add authorization header if needed
-      //   },
-      // };
-
-      // const { confirmPassword, ...others } = registerFormData;
       const {
         firstName,
         lastName,
@@ -202,8 +94,7 @@ const Register = () => {
         userName,
         password,
         confirmPassword,
-        profilePicture,
-      } = registerFormData;
+      } = registerDataObject;
 
       const API_URL = "/api/users/register/";
 
@@ -214,89 +105,21 @@ const Register = () => {
         userName,
         password,
         confirmPassword,
-        profilePicture,
       });
 
       if (data) {
         toast.success("Registration Successful");
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        setIsLoading(false);
+        localStorage.setItem("user", JSON.stringify(data));
+        setIsRegistrationLoading(false);
       }
       navigate("/home");
     } catch (error: any) {
-      setIsLoading(false);
+      setIsRegistrationLoading(false);
       toast.error("Error while Registering");
 
       console.log(error);
     }
-
-    // try {
-    //   const {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     userName,
-    //     password,
-    //     confirmPassword,
-    //     profilePicture,
-    //   } = registerFormData;
-
-    //   const data = {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     userName,
-    //     password,
-    //     confirmPassword,
-    //     profilePicture,
-    //   };
-
-    //   const response = await fetch("http://localhost:6000/api/users/register", {
-    //     method: "POST",
-
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
-
-    //   if (response.ok) {
-    //     const responseData = await response.json();
-    //     localStorage.setItem("userInfo", JSON.stringify(responseData));
-    //     toast.success("Registration Successful");
-    //     setIsLoading(false);
-    //     // navigate("/home");
-    //   } else {
-    //     throw new Error("Network response was not ok.");
-    //   }
-    // } catch (error: any) {
-    //   setIsLoading(false);
-    //   toast.error("Error while Registering");
-    //   console.log(error);
-    // }
   };
-
-  // Throw an error if file is larger than approved size
-  useEffect(() => {
-    {
-      profilePictureSizeError !== "" && toast.error(profilePictureSizeError);
-    }
-  }, [profilePictureSizeError]);
-
-  // Set back to an empty string if large file was attached
-  useEffect(() => {
-    if (profilePictureSizeError !== "" && file) {
-      setProfilePictureSizeError("");
-    }
-  }, [profilePictureSizeError]);
-
-  // Console.log the data
-  useEffect(() => {
-    console.log(registerFormData);
-  }, [registerFormData]);
-
-  console.log(registerFormData);
-  // console.log(import.meta.env.VITE_API_BASE_URL);
 
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
@@ -359,7 +182,7 @@ const Register = () => {
 
       {/* Register */}
       {/* Form */}
-      <div className="flex w-[55em] h-[37em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl ">
+      <div className="flex w-[55em] h-[36em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl ">
         {/* left */}
         <div className="w-[50%]   rounded-xl ">
           <img
@@ -515,47 +338,8 @@ const Register = () => {
 
             {/* ---------------------------------------------------------------------------- */}
 
-            {/* Profile Picture */}
-            <div className=" flex items-center gap-2.5 mt-1 mb-1">
-              <div className=" flex justify-center items-center w-8 h-8 rounded-full">
-                {file && profilePictureSizeError === "" ? (
-                  <img
-                    src={profilePicture}
-                    alt=""
-                    className="w-8 h-8 object-cover rounded-full bg-red-500"
-                  />
-                ) : (
-                  <FaUserCircle
-                    size={24}
-                    className="text-whiteColor dark:text-secondaryColor"
-                  />
-                )}
-              </div>
-
-              <div className=" relative flex gap-3 items-center pt-1 pb-1 pl-2 pr-2 bg-whiteColor rounded-lg hover:bg-offlineGray/[10%]">
-                <div>
-                  <FaCloudUploadAlt size={22} className="text-secondaryColor" />
-                </div>
-                <small className="whitespace-nowrap text-secondaryColor  ">
-                  Upload Profile Picture (
-                  {`max. ${approvedProfilePicSizeMB} mb`})
-                </small>
-
-                <input
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  title=""
-                  {...register("profilePicture")}
-                  onChange={handleProfilePictureChange}
-                  className="absolute left-0 mt-1 mb-1 w-64 opacity-0"
-                />
-              </div>
-            </div>
-
-            {/* ---------------------------------------------------------------------------- */}
-
-            <button className="btnPrimary" type="submit">
-              {isLoading ? <Spinner /> : "Register"}
+            <button className="btnPrimary mt-4" type="submit">
+              {isRegistrationLoading ? <Spinner /> : "Register"}
             </button>
 
             <small className="text-center">

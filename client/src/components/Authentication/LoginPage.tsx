@@ -1,31 +1,35 @@
 import useTheme from "../../hooks/useTheme";
 import { BsMoon, BsSun } from "react-icons/bs";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+
+import axios from "axios";
+import { toast } from "react-toastify";
+
+type FormData = {
+  email: string;
+
+  password: string;
+};
 
 const RegisterPage = () => {
   const { theme, setTheme } = useTheme();
 
+  // Styling--------------------------------------
   const inputClassname =
-    "w-full text-sm pr-4 pl-4 pt-2 pb-2 mt-1 rounded-lg  dark:text-secondaryColor text-secondaryColor outline-none pr-10";
+    "w-full text-sm pr-4 pl-4 pt-2 pb-2 mt-1 mb-1.5 rounded-lg  dark:text-secondaryColor text-secondaryColor outline-none pr-10";
 
-  const labelClassName = "text-[12.5px] font-semibold";
+  const labelClassName = "text-[12.5px] font-semibold mb-[-8px] ";
+  const errorClassName = "text-[12.5px] font-semibold mb-[-8px] text-red-500";
 
   let activeClassName =
     "rounded-full bg-primaryColor pt-2 pb-2 pl-4 pr-4 text-sm cursor-pointer";
 
   let inActiveClassName =
-    "rounded-full bg-offlineGray pt-2 pb-2 pl-4 pr-4 text-sm cursor-pointer text-white";
+    "rounded-full bg-offlineGray bg- pt-2 pb-2 pl-4 pr-4 text-sm cursor-pointer";
 
-  // Buttons Handlers\
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-  // }
-
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-  };
+  // --------------------------------------------
 
   const [emailField, setEmailField] = useState<string>("");
   const [passwordField, setPasswordField] = useState<string>("");
@@ -35,6 +39,47 @@ const RegisterPage = () => {
   const [guestEmail, setGuestEmail] = useState<string>("");
   const [guestPassword, setGuestPassword] = useState<string>("");
   const [isGuestClicked, setIsGuestClicked] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  // --------------------------------------------
+
+  // ----------------------------------------------
+
+  const loginDetails = {
+    email: guestEmail ? guestEmail : emailField,
+    password: guestPassword ? guestPassword : passwordField,
+  };
+
+  console.log("email", loginDetails.email);
+  console.log("password", loginDetails.password);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoginLoading(true);
+
+    try {
+      const API_URL = "/api/users/login/";
+
+      const { data } = await axios.post(API_URL, {
+        email: loginDetails.email,
+        password: loginDetails.password,
+      });
+      console.log("data posted");
+
+      if (data) {
+        toast.success("Login Successful");
+        localStorage.setItem("user", JSON.stringify(data));
+        setIsLoginLoading(false);
+      }
+      navigate("/home");
+    } catch (error: any) {
+      setIsLoginLoading(false);
+      toast.error("Incorrect Email/Password, Login Failed");
+      console.log(error);
+    }
+  };
 
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
@@ -97,7 +142,7 @@ const RegisterPage = () => {
 
       {/* Register */}
       {/* Form */}
-      <div className="flex w-[55em] h-[37em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl ">
+      <div className="flex w-[55em] h-[36em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl ">
         {/* left */}
         <div className="w-[50%] rounded-xl ">
           <img
@@ -115,72 +160,69 @@ const RegisterPage = () => {
 
           {/* Form inputs */}
 
-          <form
-            action=""
-            onSubmit={handleLogin}
-            className=" flex flex-col gap-2"
-          >
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className={labelClassName}>
-                Email or Username
-              </label>
+          <form action="" onSubmit={onSubmit} className=" flex flex-col gap-2">
+            {/* Email------------------------------------------------------------------- */}
+
+            <label htmlFor="email" className={labelClassName}>
+              Email
+            </label>
+
+            <input
+              type="text"
+              name="email"
+              id="email"
+              placeholder="Enter email"
+              value={guestEmail !== "" ? guestEmail : emailField}
+              disabled={isDisabled}
+              onChange={(e) => setEmailField(e.target.value)}
+              className={inputClassname}
+            />
+            {/* ---------------------------------------------------------------------------- */}
+
+            {/* Password------------------------------------------------------------------- */}
+
+            <label htmlFor="password" className={labelClassName}>
+              Password
+            </label>
+
+            <div className="relative">
               <input
-                type="text"
-                name=""
-                id="email"
-                placeholder="Enter email"
-                value={guestEmail ? guestEmail : emailField}
-                onChange={(e) => setEmailField(e.target.value)}
+                type={`${showPassword ? "text" : "password"}`}
+                name="password"
+                id="password"
+                placeholder="Enter Password"
+                value={guestPassword !== "" ? guestPassword : passwordField}
+                disabled={isDisabled}
+                onChange={(e) => setPasswordField(e.target.value)}
                 className={inputClassname}
               />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className={labelClassName}>
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={`${showPassword ? "text" : "password"}`}
-                  name=""
-                  id="password"
-                  placeholder="Enter Password"
-                  value={guestPassword ? guestPassword : passwordField}
-                  onChange={(e) => setPasswordField(e.target.value)}
-                  className={inputClassname}
+              {showPassword && (
+                <FiEyeOff
+                  size={14}
+                  className="  absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
                 />
-
-                {showPassword && (
-                  <FiEyeOff
-                    size={14}
-                    className="absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                )}
-                {!showPassword && (
-                  <FiEye
-                    size={14}
-                    className="absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                )}
-              </div>
+              )}
+              {!showPassword && (
+                <FiEye
+                  size={14}
+                  className=" absolute top-[38%] right-[5%] text-secondaryColor cursor-pointer"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                />
+              )}
             </div>
 
-            {!isGuestClicked && (
-              <button className="btnPrimary mt-4">Login</button>
-            )}
-            {isGuestClicked && (
-              <button className="btnPrimary mt-4">Login As Guest</button>
-            )}
+            {/* ---------------------------------------------------------------------------- */}
 
-            <div className="flex flex-col gap-2">
+            <button type="submit" className="btnPrimary mt-4">
+              {!isGuestClicked ? "Login" : "Login As Guest"}
+            </button>
+
+            <div className="flex flex-col justify-center gap-2">
               <small className="text-center mb-2">
                 Don't have an account yet?
                 <Link
@@ -189,6 +231,20 @@ const RegisterPage = () => {
                 >
                   Register
                 </Link>
+                {isGuestClicked && (
+                  <Link
+                    to="/login"
+                    className="underline ml-1 hover:text-primaryColor"
+                    onClick={() => {
+                      setIsGuestClicked(false);
+                      setGuestEmail("");
+                      setGuestPassword("");
+                      setIsDisabled(false);
+                    }}
+                  >
+                    or Login as a User
+                  </Link>
+                )}
               </small>
 
               {/* Guest User */}
@@ -201,6 +257,7 @@ const RegisterPage = () => {
                       setGuestEmail("guestemail@tref.co");
                       setGuestPassword("guestpasswordtest123");
                       setIsGuestClicked(true);
+                      setIsDisabled(true);
                     }}
                   >
                     Login As a Guest
