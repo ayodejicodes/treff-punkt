@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,13 +6,13 @@ import { BsMoon, BsSun } from "react-icons/bs";
 import useTheme from "../../hooks/useTheme";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Spinner from "../Spinner";
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:5173";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, reset } from "../../features/auth/authSlice";
+import { AppDispatch, RootState } from "../../../src/app/store";
 
-type FormData = {
+export type FormData = {
   firstName: string;
   lastName: string;
   email: string;
@@ -62,15 +62,15 @@ const Register = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(validationSchema) });
+  } = useForm<FormData>({
+    resolver: yupResolver(validationSchema),
+  });
 
   // ----------------------------------------------
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isRegistrationLoading, setIsRegistrationLoading] =
     useState<boolean>(false);
-
-  const navigate = useNavigate();
 
   const registerDataObject = {
     firstName: watch("firstName"),
@@ -81,44 +81,45 @@ const Register = () => {
     confirmPassword: watch("confirmPassword"),
   };
 
-  // console.log(registerDataObject);
+  const { firstName, lastName, email, userName, password, confirmPassword } =
+    registerDataObject;
 
-  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-    setIsRegistrationLoading(true);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-    try {
-      const {
-        firstName,
-        lastName,
-        email,
-        userName,
-        password,
-        confirmPassword,
-      } = registerDataObject;
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.auth
+  );
 
-      const API_URL = "/api/users/register/";
-
-      const { data } = await axios.post(API_URL, {
-        firstName,
-        lastName,
-        email,
-        userName,
-        password,
-        confirmPassword,
-      });
-
-      if (data) {
-        toast.success("Registration Successful");
-        localStorage.setItem("user", JSON.stringify(data));
-        setIsRegistrationLoading(false);
-      }
-      navigate("/home");
-    } catch (error: any) {
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
       setIsRegistrationLoading(false);
-      toast.error("Error while Registering");
-
-      console.log(error);
+      // toast.error("Error while Registering");
     }
+    if (isSuccess || user) {
+      toast.success("Registration Successful");
+      setIsRegistrationLoading(false);
+      navigate("/home");
+    }
+    dispatch(reset());
+  }, [user, isLoading, isError, message, navigate, dispatch]);
+
+  register;
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    // setIsRegistrationLoading(true);
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      userName,
+      password,
+      confirmPassword,
+    };
+
+    dispatch(registerUser(userData));
+
+    // setIsRegistrationLoading(false);
   };
 
   return (

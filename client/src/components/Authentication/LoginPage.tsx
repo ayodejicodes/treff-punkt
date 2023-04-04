@@ -9,11 +9,10 @@ import { toast } from "react-toastify";
 
 type FormData = {
   email: string;
-
   password: string;
 };
 
-const RegisterPage = () => {
+const LoginPage = () => {
   const { theme, setTheme } = useTheme();
 
   // Styling--------------------------------------
@@ -51,9 +50,6 @@ const RegisterPage = () => {
     email: guestEmail ? guestEmail : emailField,
     password: guestPassword ? guestPassword : passwordField,
   };
-
-  console.log("email", loginDetails.email);
-  console.log("password", loginDetails.password);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -271,4 +267,4 @@ const RegisterPage = () => {
     </div>
   );
 };
-export default RegisterPage;
+export default LoginPage;

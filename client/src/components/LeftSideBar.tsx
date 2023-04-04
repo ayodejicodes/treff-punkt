@@ -4,6 +4,9 @@ import { FaRegUser, FaUser } from "react-icons/fa";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi";
 import MenuComponent from "./MenuComponent";
 import ShortProfile from "./ShortProfile";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../app/store";
 
 // Menu Links
 
@@ -37,12 +40,17 @@ const navLinks = [
 ];
 
 const LeftSideBar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { user } = useSelector((state: RootState) => state.auth);
+
   return (
     <div className="hidden  md:flex flex-col gap-5 p-7  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl  overflow-y-scroll  pageViewportHeight scrollbar dark:scrollbarDark absolute left-0 w-[24%] top-[10vh] mt-2">
       {/* Short-Profile */}
       <div className=" flex flex-col bg-whiteColor dark:bg-secondaryColor gap-3 rounded-xl p-4">
         <h3 className="font-semibold text-secondaryColor dark:text-whiteColor text-[16px] ">
-          Welcome, FirstName
+          {`Welcome, ${user?.firstName}`}
         </h3>
         {/* Line Break */}
         <hr className="border-t-1  w-full  border borderSecondaryColorLight dark:borderWhiteColorLight "></hr>
