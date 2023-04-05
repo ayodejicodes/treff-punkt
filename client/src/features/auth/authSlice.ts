@@ -6,6 +6,25 @@ const user = JSON.parse(localStorage.getItem("user") || "null");
 interface User {
   firstName: string;
   lastName: string;
+  userName: string;
+  email: string;
+  password: string;
+  profilePic: string;
+  coverPic: string;
+  followings: string[];
+  followers: string[];
+  role: "user" | "admin";
+  bio?: string;
+  posts: string[];
+  stories: string[];
+  bookmarkedPosts: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface NewUser {
+  firstName: string;
+  lastName: string;
   email: string;
   userName: string;
   password: string;
@@ -36,7 +55,7 @@ const initialState: AuthState = {
 
 export const registerUser = createAsyncThunk(
   "auth/register",
-  async (user: User, thunkAPI) => {
+  async (user: NewUser, thunkAPI) => {
     try {
       return await authService.register(user);
     } catch (error: any) {

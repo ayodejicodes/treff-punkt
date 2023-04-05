@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const PostModel = require("../models/PostModel");
+const Post = require("../models/PostModel");
 
 // ------------------------Gets Posts------------------------
 
@@ -7,7 +7,7 @@ const PostModel = require("../models/PostModel");
 // @Route       POST (/api/posts)
 // @Access      Public
 const getPostsController = asyncHandler(async (req, res) => {
-  const posts = await PostModel.find();
+  const posts = await Post.find();
 
   // Filters only posts of authenticated user
   const filteredPosts = posts.filter(
@@ -31,7 +31,7 @@ const createPostController = asyncHandler(async (req, res) => {
   }
 
   // create new Post
-  const newPost = await PostModel.create({
+  const newPost = await Post.create({
     title,
     photo,
     video,
@@ -50,7 +50,7 @@ const updatePostController = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   // Check if Post exists
-  const foundPost = await PostModel.findById(id);
+  const foundPost = await Post.findById(id);
 
   if (!foundPost) {
     res.status(400);
@@ -59,7 +59,7 @@ const updatePostController = asyncHandler(async (req, res) => {
 
   // Authorization check
   if (req.user.id === foundPost.userID.toString()) {
-    const updatedPost = await PostModel.findByIdAndUpdate(id, req.body, {
+    const updatedPost = await Post.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     res.status(200).json(updatedPost);
@@ -78,7 +78,7 @@ const deletePostController = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   // Check if Post exists
-  const foundPost = await PostModel.findById(id);
+  const foundPost = await Post.findById(id);
 
   if (!foundPost) {
     res.status(400);
@@ -87,7 +87,7 @@ const deletePostController = asyncHandler(async (req, res) => {
 
   // Authorization check
   if (req.user.id === foundPost.userID.toString()) {
-    const deletedPost = await PostModel.findByIdAndDelete(id);
+    const deletedPost = await Post.findByIdAndDelete(id);
 
     res.status(200).json(deletedPost.id);
   } else {

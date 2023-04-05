@@ -1,17 +1,10 @@
-import {
-  BsChatRightQuoteFill,
-  BsChatDots,
-  BsBell,
-  BsFillSunFill,
-  BsFillMoonFill,
-} from "react-icons/bs";
+import { BsChatRightQuoteFill, BsChatDots, BsBell } from "react-icons/bs";
 import { BiChevronDown } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
 import InputText from "../InputText";
 import NotificationIcon from "../Notifications/NotificationIcon";
 import { Link, useNavigate } from "react-router-dom";
-// import useTheme from "../../hooks/useTheme";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
@@ -21,11 +14,10 @@ import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
 import { toast } from "react-toastify";
 
 const NavBar = () => {
-  // const { theme, setTheme } = useTheme();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const navigate = useNavigate();
   const dropDownRef = useRef<HTMLDivElement>(null);
 
+  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -58,9 +50,6 @@ const NavBar = () => {
 
     toast.success("Logged Out");
   };
-  // useEffect(() => {
-
-  // }, []);
 
   return (
     <div>
@@ -153,17 +142,18 @@ const NavBar = () => {
       {/* Profile Dropdown */}
       {profileDropdownOpen ? (
         <div
-          className="absolute top-7 right-4 w-[10em]  mt-8 z-40 "
+          className="absolute top-9 right-9 w-[10em]  mt-8 z-40 "
           ref={dropDownRef}
         >
           <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div>
           <div className="flex flex-col p-4 gap-5 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
-            <small
+            <Link
+              to={"/profile"}
               className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer text-sm "
               onClick={() => setProfileDropdownOpen(false)}
             >
-              <Link to={"/profile"}>Profile</Link>
-            </small>
+              <small className="text-sm">Profile</small>
+            </Link>
             <button className="btnPrimary" onClick={handleLogout}>
               Log Out
             </button>

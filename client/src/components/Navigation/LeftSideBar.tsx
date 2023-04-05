@@ -54,7 +54,9 @@ const LeftSideBar = () => {
         {/* Line Break */}
         <hr className="border-t-1  w-full  border borderSecondaryColorLight dark:borderWhiteColorLight "></hr>
 
-        <ShortProfile />
+        <div>
+          <ShortProfile />
+        </div>
       </div>
 
       {/* Navigation */}

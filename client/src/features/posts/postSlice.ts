@@ -3,8 +3,19 @@ import postService from "./postService";
 
 interface Post {
   _id: string;
-  title: string;
-  content: string;
+  author: string;
+  postImage: string;
+  caption: string;
+  likes: string[];
+  comments: {
+    _id: string;
+    author: string;
+    text: string;
+    createdAt: string;
+  }[];
+  shares: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface PostsState {

@@ -2,6 +2,7 @@ import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
+import ProfilePicture from "./Profile/ProfilePicture";
 
 const ShortProfile = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -10,21 +11,17 @@ const ShortProfile = () => {
   return (
     <div>
       <div className="flex justify-center w-full">
-        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl ">
+        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl overf ">
           {/* Image */}
-          <div>
-            <div className="relative w-10 h-10">
-              <img
-                src="../src/assets/ayo.jpg"
-                alt=""
-                className=" rounded-full "
-              />
-              {online ? (
-                <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
-              ) : (
-                <div className="absolute border-4 border-whiteColor bg-offlineGray w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
-              )}
-            </div>
+
+          <div className="relative ">
+            <ProfilePicture size={10} />
+
+            {online ? (
+              <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
+            ) : (
+              <div className="absolute border-4 border-whiteColor bg-offlineGray w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
+            )}
           </div>
 
           {/* Details */}

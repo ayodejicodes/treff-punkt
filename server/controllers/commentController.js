@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const CommentModel = require("../models/CommentModel");
+const Comment = require("../models/CommentModel");
 
 // ------------------------Gets Comments------------------------
 
@@ -7,7 +7,7 @@ const CommentModel = require("../models/CommentModel");
 // @Route       POST (/api/comments)
 // @Access      Public
 const getcommentsController = asyncHandler(async (req, res) => {
-  const comments = await CommentModel.find();
+  const comments = await Comment.find();
 
   // Filters only comments of authenticated user
   const filteredComments = comments.filter(
@@ -31,7 +31,7 @@ const createCommentController = asyncHandler(async (req, res) => {
   }
 
   // create new Comment
-  const newComment = await CommentModel.create({
+  const newComment = await Comment.create({
     text,
 
     userID: req.user.id,
@@ -48,7 +48,7 @@ const updateCommentController = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   // Check if Comment exists
-  const foundComment = await CommentModel.findById(id);
+  const foundComment = await Comment.findById(id);
 
   if (!foundComment) {
     res.status(400);
@@ -57,7 +57,7 @@ const updateCommentController = asyncHandler(async (req, res) => {
 
   // Authorization check
   if (req.user.id === foundComment.userID.toString()) {
-    const updatedComment = await CommentModel.findByIdAndUpdate(id, req.body, {
+    const updatedComment = await Comment.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     res.status(200).json(updatedComment);
@@ -76,7 +76,7 @@ const deleteCommentController = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   // Check if Comment exists
-  const foundComment = await CommentModel.findById(id);
+  const foundComment = await Comment.findById(id);
 
   if (!foundComment) {
     res.status(400);
@@ -85,7 +85,7 @@ const deleteCommentController = asyncHandler(async (req, res) => {
 
   // Authorization check
   if (req.user.id === foundComment.userID.toString()) {
-    const deletedComment = await CommentModel.findByIdAndDelete(id);
+    const deletedComment = await Comment.findByIdAndDelete(id);
 
     res.status(200).json(deletedComment.id);
   } else {

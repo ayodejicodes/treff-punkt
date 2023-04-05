@@ -105,7 +105,6 @@ const Register = () => {
 
   // -------------------------------------------------------------------------
 
-  register;
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     const userData = {
       firstName,

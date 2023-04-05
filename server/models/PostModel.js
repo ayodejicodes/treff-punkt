@@ -1,41 +1,40 @@
 const mongoose = require("mongoose");
 
-const postSchema = mongoose.Schema(
+const postSchema = new mongoose.Schema(
   {
-    userID: {
+    author: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      ref: "UserModel",
     },
-    title: {
+    postImage: {
       type: String,
       required: true,
-      min: 4,
+      validate: {
+        validator: function (url) {
+          const urlRegex =
+            /^https?:\/\/(?:www\.)?([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}\/?$/;
+          return urlRegex.test(url);
+        },
+        message: (props) => `${props.value} is not a valid URL!`,
+      },
     },
-
-    photo: {
-      type: String,
-      default: "",
-    },
-
-    video: {
-      type: String,
-      default: "",
-    },
-
-    location: {
-      type: String,
-      default: "",
-    },
-
-    comments: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CommentModel",
-      default: [],
-    },
+    caption: { type: String, maxlength: 500 },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    comments: [
+      {
+        author: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        text: { type: String, required: true, maxlength: 500 },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+    shares: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
 
-const PostModel = mongoose.model("post", postSchema);
-module.exports = PostModel;
+module.exports = mongoose.model("Post", postSchema);
