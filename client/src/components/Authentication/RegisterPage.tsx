@@ -84,6 +84,8 @@ const Register = () => {
   const { firstName, lastName, email, userName, password, confirmPassword } =
     registerDataObject;
 
+  // ---Redux Tool kit--------------------------------------------------------------
+
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -95,15 +97,16 @@ const Register = () => {
     if (isError) {
       toast.error(message);
       setIsRegistrationLoading(false);
-      // toast.error("Error while Registering");
     }
     if (isSuccess || user) {
       toast.success("Registration Successful");
       setIsRegistrationLoading(false);
-      navigate("/home");
+      navigate("/");
     }
     dispatch(reset());
-  }, [user, isLoading, isError, message, navigate, dispatch]);
+  }, [user, isLoading, isError, message, dispatch]);
+
+  // -------------------------------------------------------------------------
 
   register;
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
@@ -209,6 +212,7 @@ const Register = () => {
               </label>
             )}
             <input
+              id="firstName"
               type="text"
               placeholder="Enter First name"
               {...register("firstName")}
@@ -225,6 +229,7 @@ const Register = () => {
               </label>
             )}
             <input
+              id="lastName"
               type="text"
               placeholder="Enter Last name"
               {...register("lastName")}
@@ -241,6 +246,7 @@ const Register = () => {
               </label>
             )}
             <input
+              id="email"
               type="email"
               placeholder="Enter Email"
               {...register("email")}
@@ -257,6 +263,7 @@ const Register = () => {
               </label>
             )}
             <input
+              id="userName"
               type="text"
               placeholder="Enter Username"
               {...register("userName")}
@@ -274,6 +281,7 @@ const Register = () => {
             )}
             <div className="relative">
               <input
+                id="password"
                 type={`${showPassword ? "text" : "password"}`}
                 placeholder="Enter Password"
                 {...register("password")}
@@ -311,6 +319,7 @@ const Register = () => {
             )}
             <div className="relative">
               <input
+                id="confirmPassword"
                 type={`${showPassword ? "text" : "password"}`}
                 placeholder="Confirm Password"
                 {...register("confirmPassword")}

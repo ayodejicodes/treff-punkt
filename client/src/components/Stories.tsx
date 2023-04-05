@@ -33,7 +33,7 @@ const Stories = () => {
       <motion.div
         drag="x"
         dragConstraints={{ right: 0, left: -width }}
-        className=" flex  gap-[1.88rem] z-0 "
+        className=" flex  gap-[1.88rem]  "
       >
         {/* Authenticated User Story */}
         <div className=" w-[7.5em] h-40 bgSecondaryColorLight dark:bgWhiteColorLight rounded-lg cursor-pointer ">

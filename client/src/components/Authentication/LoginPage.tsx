@@ -1,11 +1,14 @@
 import useTheme from "../../hooks/useTheme";
 import { BsMoon, BsSun } from "react-icons/bs";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AppDispatch, RootState } from "../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { login, registerUser, reset } from "../../features/auth/authSlice";
 
 type FormData = {
   email: string;
@@ -40,41 +43,41 @@ const LoginPage = () => {
   const [isGuestClicked, setIsGuestClicked] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   // --------------------------------------------
 
-  // ----------------------------------------------
+  // ---Redux Tool kit--------------------------------------------------------------
 
-  const loginDetails = {
-    email: guestEmail ? guestEmail : emailField,
-    password: guestPassword ? guestPassword : passwordField,
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess || user) {
+      toast.success("Login Successful");
+
+      navigate("/");
+    }
+    dispatch(reset());
+  }, [user, isLoading, isError, message, dispatch]);
+
+  // -------------------------------------------------------------------------
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoginLoading(true);
 
-    try {
-      const API_URL = "/api/users/login/";
+    const userData = {
+      email: guestEmail ? guestEmail : emailField,
+      password: guestPassword ? guestPassword : passwordField,
+    };
 
-      const { data } = await axios.post(API_URL, {
-        email: loginDetails.email,
-        password: loginDetails.password,
-      });
-      console.log("data posted");
-
-      if (data) {
-        toast.success("Login Successful");
-        localStorage.setItem("user", JSON.stringify(data));
-        setIsLoginLoading(false);
-      }
-      navigate("/home");
-    } catch (error: any) {
-      setIsLoginLoading(false);
-      toast.error("Incorrect Email/Password, Login Failed");
-      console.log(error);
-    }
+    dispatch(login(userData));
   };
 
   return (

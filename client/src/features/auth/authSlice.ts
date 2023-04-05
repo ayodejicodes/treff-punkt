@@ -12,6 +12,12 @@ interface User {
   confirmPassword: string;
 }
 
+interface loginUser {
+  email: string;
+
+  password: string;
+}
+
 export interface AuthState {
   user: User | null;
   isLoading: boolean;
@@ -53,18 +59,23 @@ export const logout = createAsyncThunk(
   }
 );
 
-export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
-  try {
-    return await authService.login(user);
-  } catch (error: any) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const login = createAsyncThunk(
+  "auth/login",
+  async (user: loginUser, thunkAPI) => {
+    try {
+      return await authService.login(user);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 const authSlice = createSlice({
   name: "auth",

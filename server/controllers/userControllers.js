@@ -62,7 +62,7 @@ const register = asyncHandler(async (req, res) => {
 // @Route       POST (/api/users/login)
 // @Access      Public
 const login = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     res.status(400);
@@ -83,9 +83,10 @@ const login = asyncHandler(async (req, res) => {
   if (userExists && comparedPassword) {
     res.status(201).json({
       id: userExists._id,
+      firstName: userExists.firstName,
+      lastName: userExists.lastName,
       email: userExists.email,
-      username: userExists.username,
-      name: userExists.name,
+      userName: userExists.userName,
       token: generateToken(userExists._id),
     });
   } else {

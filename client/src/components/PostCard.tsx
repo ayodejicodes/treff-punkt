@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiTwotoneLike } from "react-icons/ai";
 import { MdVerified } from "react-icons/md";
 import { FiSend } from "react-icons/fi";
@@ -21,8 +21,30 @@ const PostCard = () => {
   const [updateDeleteOpen, setUpdateDeleteOpen] = useState(false);
   const [allCommentsOpen, setAllCommentsOpen] = useState(false);
 
+  const updateDeleteOpenRef = useRef<HTMLDivElement>(null);
+
+  // Handles Outside box Click---------------------------------------
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      updateDeleteOpenRef.current &&
+      !updateDeleteOpenRef.current.contains(e.target as Node)
+    ) {
+      setUpdateDeleteOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [updateDeleteOpenRef]);
+  // -----------------------------------------------------------------------
+
   return (
-    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4 z-0 ">
+    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4  ">
       {/* User details and post creation date */}
       <div className="flex justify-between">
         {/* left */}
@@ -78,13 +100,22 @@ const PostCard = () => {
           {/* Edit, Delete Modal */}
 
           {updateDeleteOpen ? (
-            <div className="absolute top-0 right-0  mt-8">
+            <div
+              className="absolute top-0 right-0  mt-8"
+              ref={updateDeleteOpenRef}
+            >
               <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div>
               <div className="flex flex-col p-4 gap-3 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
-                <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                <small
+                  className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
+                  onClick={() => setUpdateDeleteOpen(false)}
+                >
                   Edit
                 </small>
-                <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                <small
+                  className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
+                  onClick={() => setUpdateDeleteOpen(false)}
+                >
                   Delete
                 </small>
               </div>

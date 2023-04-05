@@ -1,7 +1,7 @@
-import SideChat from "./SideChat";
-import SuggestedFriend from "./SuggestedFriend";
+import SideChat from "../SideChat";
+import SuggestedFriend from "../SuggestedFriend";
 import { RxMagnifyingGlass } from "react-icons/rx";
-import InputText from "./InputText";
+import InputText from "../InputText";
 
 const RightSideBar = () => {
   return (

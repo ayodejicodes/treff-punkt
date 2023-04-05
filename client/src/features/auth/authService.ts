@@ -32,11 +32,16 @@ const login = async (userData: any) => {
 
     if (data) {
       localStorage.setItem("user", JSON.stringify(data));
+      console.log("Local Storage set");
     }
 
     return data;
   } catch (error: any) {
-    throw new Error(`Could not Register: ${error}`);
+    if (import.meta.env.VITE_ENV !== "development") {
+      throw new Error(`Could not Login: ${error}`);
+    } else {
+      throw new Error("Incorrect Email/Password, Try Again");
+    }
   }
 };
 

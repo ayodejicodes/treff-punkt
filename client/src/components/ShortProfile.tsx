@@ -1,7 +1,11 @@
 import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 const ShortProfile = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const online = useOnlineStatus();
   return (
     <div>
@@ -28,7 +32,7 @@ const ShortProfile = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1 ">
                 <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold">
-                  FirstName LastName
+                  {`${user?.firstName} ${user?.lastName}`}
                 </small>
                 <span>
                   <MdVerified
@@ -38,7 +42,7 @@ const ShortProfile = () => {
                 </span>
               </div>
               <small className="text-secondaryColor dark:text-whiteColor italic">
-                @dejifabz
+                {`@${user?.userName}`}
               </small>
             </div>
 
