@@ -2,8 +2,8 @@ import {
   BsChatRightQuoteFill,
   BsChatDots,
   BsBell,
-  BsSun,
-  BsMoon,
+  BsFillSunFill,
+  BsFillMoonFill,
 } from "react-icons/bs";
 import { BiChevronDown } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
@@ -11,15 +11,17 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import InputText from "../InputText";
 import NotificationIcon from "../Notifications/NotificationIcon";
 import { Link, useNavigate } from "react-router-dom";
-import useTheme from "../../hooks/useTheme";
-import { ReactEventHandler, useEffect, useRef, useState } from "react";
+// import useTheme from "../../hooks/useTheme";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { AppDispatch } from "../../app/store";
 import { logout, reset } from "../../features/auth/authSlice";
+import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
+import { toast } from "react-toastify";
 
 const NavBar = () => {
-  const { theme, setTheme } = useTheme();
+  // const { theme, setTheme } = useTheme();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropDownRef = useRef<HTMLDivElement>(null);
@@ -46,6 +48,19 @@ const NavBar = () => {
     };
   }, [dropDownRef]);
   // -----------------------------------------------------------------------
+
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
+
+    toast.success("Logged Out");
+  };
+  // useEffect(() => {
+
+  // }, []);
 
   return (
     <div>
@@ -76,40 +91,29 @@ const NavBar = () => {
 
         <div className=" flex gap-5 grow-[1] items-center justify-end m-3">
           <div className="flex gap-5 ">
-            {/* ---------Light/Dark ----------*/}
+            {/* ---------Light/Dark --------------------------------------------*/}
 
-            {/* {theme === "dark" ? (
-              <BsSun
-                size={24}
-                className="cursor-pointer text-secondaryColor dark:text-whiteColor "
-                onClick={() => {
-                  setTheme("light");
-                }}
-              />
-            ) : (
-              <BsMoon
-                size={22}
-                className="cursor-pointer text-secondaryColor  "
-                onClick={() => setTheme("dark")}
-              />
-            )} */}
-            {/* ------------------------- */}
+            <div className="flex items-center justify-center">
+              <ThemeSwitcherIcon size={16} />
+            </div>
 
-            <div className="relative">
+            {/* ----------------------------------------------------------------------- */}
+
+            <div className="relative flex items-center justify-center">
               <BsChatDots
                 size={22}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
               />
-              <div className="absolute right-[-5px] top-[-4px]">
+              <div className="absolute right-[-5px] top-[-2px]">
                 <NotificationIcon />
               </div>
             </div>
-            <div className="relative">
+            <div className="relative flex items-center justify-center">
               <BsBell
                 size={22}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
               />
-              <div className="absolute right-[-2px] top-[-4px]">
+              <div className="absolute right-[-2px] top-[-2px]">
                 <NotificationIcon />
               </div>
             </div>
@@ -160,16 +164,7 @@ const NavBar = () => {
             >
               <Link to={"/profile"}>Profile</Link>
             </small>
-            <button
-              className="btnPrimary"
-              onClick={(e) => {
-                e.preventDefault();
-
-                dispatch(logout());
-                dispatch(reset());
-                navigate("/login");
-              }}
-            >
+            <button className="btnPrimary" onClick={handleLogout}>
               Log Out
             </button>
           </div>

@@ -1,41 +1,62 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const useTheme = () => {
-  const [theme, setTheme] = useState<string>("");
+  const sunRef = useRef<HTMLInputElement>(null);
+  const moonRef = useRef<HTMLInputElement>(null);
+  const [isDarkMode, setIsDarkMode] = useState<Boolean>(false);
 
-  // Check for window prefered theme
   useEffect(() => {
-    // Checks if theme is already set in localstorage
-    const preferredLocalStorageTheme = localStorage.getItem("theme");
-    // -------------------------------------
-
-    // Add a class to the body to indicate that the theme is loading
-    document.body.classList.add("loading");
-
-    if (preferredLocalStorageTheme) {
-      setTheme(preferredLocalStorageTheme);
-    } else if (window.matchMedia("(prefers-color-scheme:dark)").matches) {
-      localStorage.setItem("theme", "dark");
-      setTheme("dark");
+    if (
+      localStorage.getItem("color-theme") === "dark" ||
+      (!("color-theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      sunRef.current?.classList.remove("hidden");
+      setIsDarkMode(true);
     } else {
-      setTheme("light");
+      moonRef.current?.classList.remove("hidden");
+      setIsDarkMode(false);
     }
   }, []);
 
-  // Toggle Light/Dark Mode
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+  //   useEffect(() => {
+  //     localStorage.getItem("color-theme");
+  //   }, []);
+
+  useEffect;
+
+  const onSwitchClick = () => {
+    // toggle icons inside button
+    sunRef.current?.classList.toggle("hidden");
+    moonRef.current?.classList.toggle("hidden");
+    document.documentElement.classList.toggle("dark");
+
+    // if set via local storage previously
+    if (localStorage.getItem("color-theme")) {
+      if (localStorage.getItem("color-theme") === "dark") {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("color-theme", "light");
+        setIsDarkMode(false);
+      } else {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("color-theme", "dark");
+        setIsDarkMode(true);
+      }
+
+      // if NOT set via local storage previously
     } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      if (document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("color-theme", "light");
+        setIsDarkMode(false);
+      } else {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("color-theme", "dark");
+        setIsDarkMode(true);
+      }
     }
+  };
 
-    // Remove the loading class to apply the preferred theme
-    document.body.classList.remove("loading");
-  }, [theme]);
-
-  return { theme, setTheme };
+  return { isDarkMode, onSwitchClick, sunRef, moonRef };
 };
 export default useTheme;

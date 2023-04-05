@@ -1,23 +1,14 @@
-import useTheme from "../../hooks/useTheme";
-import { BsMoon, BsSun } from "react-icons/bs";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-import axios from "axios";
 import { toast } from "react-toastify";
 import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { login, registerUser, reset } from "../../features/auth/authSlice";
-
-type FormData = {
-  email: string;
-  password: string;
-};
+import { login, reset } from "../../features/auth/authSlice";
+import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
 
 const LoginPage = () => {
-  const { theme, setTheme } = useTheme();
-
   // Styling--------------------------------------
   const inputClassname =
     "w-full text-sm pr-4 pl-4 pt-2 pb-2 mt-1 mb-1.5 rounded-lg  dark:text-secondaryColor text-secondaryColor outline-none pr-10";
@@ -84,24 +75,9 @@ const LoginPage = () => {
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
       {/* ---------Light/Dark ----------*/}
       <div className="absolute top-8 right-12 flex items-center gap-2 ">
-        <small>{`${
-          theme == "dark" ? "Light" : "Dark"
-        } mode? Click icon`}</small>
-        {theme === "dark" ? (
-          <BsSun
-            size={20}
-            className="cursor-pointer text-secondaryColor dark:text-whiteColor "
-            onClick={() => {
-              setTheme("light");
-            }}
-          />
-        ) : (
-          <BsMoon
-            size={18}
-            className="cursor-pointer text-secondaryColor  "
-            onClick={() => setTheme("dark")}
-          />
-        )}
+        <small>Switch Theme</small>
+
+        <ThemeSwitcherIcon size={20} />
       </div>
       {/* ------------------------- */}
 
