@@ -20,7 +20,14 @@ const protect = asyncHandler(async (req, res, next) => {
       // Authorized User
       const authorizedUser = await User.findById(decoded.id);
 
+      // Check if user exists
+      if (!authorizedUser) {
+        res.status(403);
+        throw new Error("Unauthorized User, user does not exist");
+      }
+
       req.user = authorizedUser;
+
       next();
     } catch (error) {
       res.status(403);

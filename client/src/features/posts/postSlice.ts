@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "./postService";
 
 interface Post {
   _id: string;
   author: string;
-  postImage: string;
   caption: string;
+  postImage: string | { type: string; data: Buffer }; //  string or Buffer (Image or Video)
   likes: string[];
   comments: {
     _id: string;

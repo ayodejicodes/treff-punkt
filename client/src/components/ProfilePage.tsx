@@ -3,11 +3,11 @@ import ProfilePicture from "./Profile/ProfilePicture";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../app/store";
 import { BsFillTrashFill } from "react-icons/bs";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { reset } from "../features/auth/authSlice";
+import moment from "moment";
 
 const ProfilePage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -69,7 +69,7 @@ const ProfilePage = () => {
         <div className="text-center">
           <div className="flex items-center gap-1  ">
             <small className="text-secondaryColor dark:text-whiteColor text-[16px] font-semibold text-center">
-              {`${user?.firstName} ${user?.lastName}`}
+              {`${user?.firstName} ${user?.bio}`}
             </small>
             <span>
               <MdVerified

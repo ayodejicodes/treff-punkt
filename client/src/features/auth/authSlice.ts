@@ -4,20 +4,21 @@ import authService from "./authService";
 const user = JSON.parse(localStorage.getItem("user") || "null");
 
 interface User {
+  _id: string;
   firstName: string;
   lastName: string;
-  userName: string;
   email: string;
-  password: string;
+  userName: string;
   profilePic: string;
   coverPic: string;
   followings: string[];
   followers: string[];
   role: "user" | "admin";
-  bio?: string;
+  bio: string;
   posts: string[];
   stories: string[];
   bookmarkedPosts: string[];
+  blocked: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -31,9 +32,8 @@ interface NewUser {
   confirmPassword: string;
 }
 
-interface loginUser {
+interface LoginUser {
   email: string;
-
   password: string;
 }
 
@@ -80,7 +80,7 @@ export const logout = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (user: loginUser, thunkAPI) => {
+  async (user: LoginUser, thunkAPI) => {
     try {
       return await authService.login(user);
     } catch (error: any) {

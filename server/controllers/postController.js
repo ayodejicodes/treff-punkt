@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Post = require("../models/PostModel");
+const User = require("../models/UserModel");
 
 // ------------------------Gets Posts------------------------
 
@@ -11,7 +12,7 @@ const getPostsController = asyncHandler(async (req, res) => {
 
   // Filters only posts of authenticated user
   const filteredPosts = posts.filter(
-    (post) => req.user.id === post.userID.toString()
+    (post) => req.user.id.toString() === post.author.toString()
   );
   res.status(200).json(filteredPosts);
 });
@@ -22,22 +23,32 @@ const getPostsController = asyncHandler(async (req, res) => {
 // @Route       POST (/api/posts)
 // @Access      Public
 const createPostController = asyncHandler(async (req, res) => {
-  const { title, photo, video, location } = req.body;
+  const { caption, postImage } = req.body;
 
   // Validation check
-  if (!title) {
+  if (!caption && !postImage) {
     res.status(400);
     throw new Error("What's on your mind field is empty");
   }
 
   // create new Post
   const newPost = await Post.create({
-    title,
-    photo,
-    video,
-    location,
-    userID: req.user.id,
+    caption,
+    postImage,
+    author: req.user.id,
   });
+
+  // Pushing the Post to the User posts array
+  const foundUser = await User.findById({ _id: req.user._id });
+  if (!foundUser) {
+    throw new Error("Can not push Post to an invalid user ID");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    { _id: req.user._id },
+    { $push: { posts: newPost._id } },
+    { new: true }
+  );
   res.status(200).json(newPost);
 });
 
@@ -58,14 +69,14 @@ const updatePostController = asyncHandler(async (req, res) => {
   }
 
   // Authorization check
-  if (req.user.id === foundPost.userID.toString()) {
+  if (req.user._id.toString() === foundPost.author.toString()) {
     const updatedPost = await Post.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     res.status(200).json(updatedPost);
   } else {
     res.status(403);
-    throw new Error("Update failed, Unauthorized User");
+    throw new Error("Update Post failed, Unauthorized User");
   }
 });
 
@@ -86,7 +97,7 @@ const deletePostController = asyncHandler(async (req, res) => {
   }
 
   // Authorization check
-  if (req.user.id === foundPost.userID.toString()) {
+  if (req.user._id.toString() === foundPost.author.toString()) {
     const deletedPost = await Post.findByIdAndDelete(id);
 
     res.status(200).json(deletedPost.id);

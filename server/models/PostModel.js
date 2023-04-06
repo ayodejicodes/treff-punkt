@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema(
       validate: {
         validator: function (url) {
           const urlRegex =
-            /^https?:\/\/(?:www\.)?([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}\/?$/;
+            /^https?:\/\/[a-zA-Z0-9-]+\.cloudinary\.com\/[a-zA-Z0-9-]+\/image\/upload\/v\d+\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|gif|bmp)$/i;
           return urlRegex.test(url);
         },
         message: (props) => `${props.value} is not a valid URL!`,
@@ -21,17 +21,7 @@ const postSchema = new mongoose.Schema(
     },
     caption: { type: String, maxlength: 500 },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    comments: [
-      {
-        author: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-        text: { type: String, required: true, maxlength: 500 },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     shares: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }

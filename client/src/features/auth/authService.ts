@@ -32,7 +32,6 @@ const login = async (userData: any) => {
 
     if (data) {
       localStorage.setItem("user", JSON.stringify(data));
-      console.log("Local Storage set");
     }
 
     return data;

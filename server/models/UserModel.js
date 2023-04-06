@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
-      //   maxlength: 30,
     },
 
     profilePic: {
@@ -49,7 +48,7 @@ const userSchema = new mongoose.Schema(
       validate: {
         validator: function (url) {
           const urlRegex =
-            /^https?:\/\/(?:www\.)?([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}\/?$/;
+            /^https?:\/\/[a-zA-Z0-9-]+\.cloudinary\.com\/[a-zA-Z0-9-]+\/image\/upload\/v\d+\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|gif|bmp)$/i;
           return urlRegex.test(url);
         },
         message: (props) => `${props.value} is not a valid URL!`,
@@ -73,6 +72,7 @@ const userSchema = new mongoose.Schema(
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     stories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Story" }],
     bookmarkedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    blocked: { type: Boolean, default: false }, // added blocked field
   },
   { timestamps: true }
 );
@@ -93,4 +93,33 @@ userSchema.post("save", function (error, doc, next) {
   }
 });
 
-module.exports = mongoose.model("User", userSchema);
+// Block a user
+userSchema.methods.blockUser = function (userId) {
+  if (!this.blockedUsers.includes(userId)) {
+    this.blockedUsers.push(userId);
+  }
+  return this.save();
+};
+
+// Unblock a user
+userSchema.methods.unblockUser = function (userId) {
+  const index = this.blockedUsers.indexOf(userId);
+  if (index !== -1) {
+    this.blockedUsers.splice(index, 1);
+  }
+  return this.save();
+};
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
+
+// Assuming you have a User model instance called currentUser
+// const userIdToUnblock = "12345"; // The userId of the user to unblock
+// currentUser.unblockUser(userIdToUnblock)
+//   .then(updatedUser => {
+//     console.log(`User with userId ${userIdToUnblock} has been unblocked successfully.`);
+//   })
+//   .catch(error => {
+//     console.error(`Failed to unblock user: ${error}`);
+//   });
