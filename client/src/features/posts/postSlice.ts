@@ -27,7 +27,7 @@ export type PostsState = {
 };
 
 export type CreateNewPost = {
-  caption: string | undefined;
+  caption?: string | undefined;
   postImage?: string | undefined;
 };
 

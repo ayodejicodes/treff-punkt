@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,61 +10,16 @@ import Spinner from "./Spinner";
 
 const PostForm = () => {
   const [caption, setCaption] = useState<string | undefined>();
-  const [postImage, setPostImage] = useState<File | string | undefined>();
-  const [base64, setBase64] = useState<string>();
+  const [postImage, setPostImage] = useState<File | undefined>();
+  const [base64, setBase64] = useState<string | undefined>();
   const [isBase64Open, setIsBase64Open] = useState<Boolean>(false);
-  const [postURL, setPostURL] = useState<string | undefined>();
+  // const [postURL, setPostURL] = useState<string | undefined>();
   const [isPostLoading, setIsPostLoading] = useState<Boolean>(false);
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Upload to Cloudinary
-  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsPostLoading(true);
-
-    // console.log("Loading set true");
-
-    if (!base64) {
-      setPostURL(undefined);
-      setIsPostLoading(false);
-
-      // console.log("No 64");
-      console.log("Loading set false");
-    }
-    if (base64) {
-      const data = new FormData();
-      data.append("file", base64 as string);
-      data.append("upload_preset", `${upload_preset}`);
-      data.append("cloud_name", `${cloud_name}`);
-
-      try {
-        await fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
-          method: "post",
-          body: data,
-        })
-          .then(async (res) => await res.json())
-          .then(async (data) => {
-            await data;
-            setPostURL(data.url.toString());
-            setIsPostLoading(false);
-          });
-      } catch (error) {
-        setIsPostLoading(false);
-        throw new Error("Upload Failed");
-      }
-    }
-
-    if (!isPostLoading && (postURL !== undefined || caption !== undefined)) {
-      dispatch(createPost(postFormDetails));
-    }
-  };
-
+  // Set Preview------------------------------------------------------------
   useEffect(() => {
-    console.log("postImage", postImage);
     const reader = new FileReader();
     if (postImage) {
       reader.readAsDataURL(postImage as File);
@@ -82,30 +31,14 @@ const PostForm = () => {
     }
   }, [postImage]);
 
-  const postFormDetails = {
-    caption,
-    postImage: postURL,
-  };
-
   // ---Redux Tool kit--------------------------------------------------------------
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { posts, isLoading, isSuccess, isError, message } = useSelector(
+  const { posts, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.posts
   );
-
-  // -------------------------------------------------------------------------
-
-  // useEffect(() => {
-  // if (!isPostLoading && (postURL !== undefined || caption !== undefined)) {
-  //   dispatch(createPost(postFormDetails));
-  // }
-  // !isPostLoading && postURL && console.log(postFormDetails);
-  // console.log("isPostLoading", isPostLoading);
-  // console.log("postFormDetails", postFormDetails);
-  // }, [postImage]);
 
   useEffect(() => {
     if (isError) {
@@ -113,12 +46,105 @@ const PostForm = () => {
       // setIsRegistrationLoading(false);
     }
     if (isSuccess) {
-      toast.success("Posted Successful");
-      // setIsRegistrationLoading(false);
+      toast.success("Posted Successfully");
+      setCaption("");
+      setBase64(undefined);
+      setIsBase64Open(false);
       // navigate("/");
     }
     dispatch(resetPost());
   }, [posts, isSuccess, isError, message, dispatch]);
+  // -------------------------------------------------------------------------
+
+  // Upload to Cloudinary
+  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+  const handlePostUpload = async () => {
+    if (!base64) {
+      setBase64(undefined);
+      setIsPostLoading(false);
+    }
+
+    if (base64) {
+      const data = new FormData();
+      data.append("file", base64 as string);
+      data.append("upload_preset", `${upload_preset}`);
+      data.append("cloud_name", `${cloud_name}`);
+
+      try {
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/dpcdcpyln/upload",
+          {
+            method: "post",
+            body: data,
+          }
+        );
+        const responseData = await response.json();
+
+        return responseData;
+      } catch (error) {
+        setIsPostLoading(false);
+        throw new Error("Upload Failed");
+      }
+    }
+  };
+
+  const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPostLoading(true);
+
+    const responseData = await handlePostUpload();
+
+    // Wrap setPostURL in a Promise and resolve it
+    await new Promise<void>((resolve) => {
+      resolve();
+    });
+
+    if (!responseData) {
+      setIsPostLoading(false);
+      dispatch(
+        createPost({
+          caption,
+        })
+      );
+    }
+
+    if (responseData && !isPostLoading && !caption) {
+      // setPostURL(responseData.url.toString());
+      setIsPostLoading(false);
+
+      dispatch(
+        createPost({
+          postImage: responseData.url.toString(),
+        })
+      );
+    }
+
+    if (responseData && !isPostLoading && caption) {
+      setIsPostLoading(false);
+
+      dispatch(
+        createPost({
+          caption,
+          postImage: responseData.url.toString(),
+        })
+      );
+    }
+
+    console.log("caption", caption);
+    console.log("postimage", postImage);
+
+    // if (caption && !responseData) {
+    //   dispatch(
+    //     createPost({
+    //       caption,
+
+    //     })
+    //   );
+    // }
+  };
+
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-2 ">
       {/* What would you like to post? */}
@@ -190,7 +216,7 @@ const PostForm = () => {
                         onClick={() => {
                           setIsBase64Open(false);
                           setPostImage(undefined);
-                          setPostURL(undefined);
+                          setBase64(undefined);
                         }}
                       />
                     </div>
@@ -204,7 +230,14 @@ const PostForm = () => {
             {isPostLoading ? (
               <Spinner />
             ) : (
-              <button className="btnPrimary">Post</button>
+              <button
+                className={`btnPrimary ${
+                  !caption && !base64 ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+                disabled={!caption && !base64}
+              >
+                Post
+              </button>
             )}
           </div>
         </div>
