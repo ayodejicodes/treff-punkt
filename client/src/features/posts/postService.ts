@@ -17,16 +17,21 @@ const createPost = async (postData: CreateNewPost, token: string) => {
   }
 };
 
-// const getPosts = async (token) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-//   const response = await axios.get(API_URL, config);
+const getPosts = async (token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
-//   return response.data;
-// };
+  try {
+    const response = await axios.get(API_URL, config);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Posts could not be fetched");
+  }
+};
 
 // const deletePost = async (postId, token) => {
 //   const config = {
@@ -42,7 +47,7 @@ const createPost = async (postData: CreateNewPost, token: string) => {
 
 const postService = {
   createPost,
-  // getPosts,
+  getPosts,
   // deletePost,
 };
 

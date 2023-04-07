@@ -60,26 +60,26 @@ export const createPost = createAsyncThunk(
   }
 );
 
-// export const getPosts = createAsyncThunk(
-//   "posts/getPosts",
-//   async (_, thunkAPI) => {
-//     try {
-//       const token = (
-//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
-//       ).auth.user?.token;
+export const getPosts = createAsyncThunk(
+  "posts/getPosts",
+  async (_, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
 
-//       return postService.getPosts(token as string);
-//     } catch (error: any) {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString();
-//       return thunkAPI.rejectWithValue(message);
-//     }
-//   }
-// );
+      return postService.getPosts(token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 // export const deletePost = createAsyncThunk(
 //   "posts/delete",

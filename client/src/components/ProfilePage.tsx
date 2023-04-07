@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { reset } from "../features/auth/authSlice";
 import moment from "moment";
 
+import { format, parse, addDays } from "date-fns";
+
 const ProfilePage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const createdAt = moment(user?.createdAt).format("MMMM DD YYYY");
@@ -83,7 +85,10 @@ const ProfilePage = () => {
               {`@${user?.userName}`}
             </small>
             <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-1.5 ">
-              {`Joined ${createdAt}`}
+              {`Joined ${format(
+                new Date(user?.createdAt as string),
+                "  dd MMM yyyy"
+              )}`}
             </small>
           </div>
           {/* Edit/Message/Follow */}
