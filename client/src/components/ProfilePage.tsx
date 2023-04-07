@@ -85,10 +85,10 @@ const ProfilePage = () => {
               {`@${user?.userName}`}
             </small>
             <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-1.5 ">
-              {`Joined ${format(
+              {/* {`Joined ${format(
                 new Date(user?.createdAt as string),
                 "  dd MMM yyyy"
-              )}`}
+              )}`} */}
             </small>
           </div>
           {/* Edit/Message/Follow */}
