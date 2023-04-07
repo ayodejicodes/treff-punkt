@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,60 +10,15 @@ import Spinner from "./Spinner";
 
 const PostForm = () => {
   const [caption, setCaption] = useState<string | undefined>();
-  const [postImage, setPostImage] = useState<File | string | undefined>();
-  const [base64, setBase64] = useState<string>();
+  const [postImage, setPostImage] = useState<File | undefined>();
+  const [base64, setBase64] = useState<string | undefined>();
   const [isBase64Open, setIsBase64Open] = useState<Boolean>(false);
   const [isPostLoading, setIsPostLoading] = useState<Boolean>(false);
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Upload to Cloudinary
-  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsPostLoading(true);
-
-    // console.log("Loading set true");
-
-    if (!base64) {
-      setPostURL(undefined);
-      setIsPostLoading(false);
-
-      // console.log("No 64");
-      console.log("Loading set false");
-    }
-    if (base64) {
-      const data = new FormData();
-      data.append("file", base64 as string);
-      data.append("upload_preset", `${upload_preset}`);
-      data.append("cloud_name", `${cloud_name}`);
-
-      try {
-        await fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
-          method: "post",
-          body: data,
-        })
-          .then(async (res) => await res.json())
-          .then(async (data) => {
-            await data;
-            setPostURL(data.url.toString());
-            setIsPostLoading(false);
-          });
-      } catch (error) {
-        setIsPostLoading(false);
-        throw new Error("Upload Failed");
-      }
-    }
-
-    if (!isPostLoading && (postURL !== undefined || caption !== undefined)) {
-      dispatch(createPost(postFormDetails));
-    }
-  };
-
+  // Set Preview------------------------------------------------------------
   useEffect(() => {
-    console.log("postImage", postImage);
     const reader = new FileReader();
     if (postImage) {
       reader.readAsDataURL(postImage as File);
@@ -81,38 +30,24 @@ const PostForm = () => {
     }
   }, [postImage]);
 
-  const postFormDetails = {
-    caption,
-    postImage: postURL,
-  };
-
   // ---Redux Tool kit--------------------------------------------------------------
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { posts, isLoading, isSuccess, isError, message } = useSelector(
+  const { posts, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.posts
   );
-
-  // -------------------------------------------------------------------------
-
-  // useEffect(() => {
-  // if (!isPostLoading && (postURL !== undefined || caption !== undefined)) {
-  //   dispatch(createPost(postFormDetails));
-  // }
-  // !isPostLoading && postURL && console.log(postFormDetails);
-  // console.log("isPostLoading", isPostLoading);
-  // console.log("postFormDetails", postFormDetails);
-  // }, [postImage]);
 
   useEffect(() => {
     if (isError) {
       toast.error(message);
     }
     if (isSuccess) {
-      toast.success("Posted Successful");
-      // setIsRegistrationLoading(false);
+      toast.success("Posted Successfully");
+      setCaption("");
+      setBase64(undefined);
+      setIsBase64Open(false);
       // navigate("/");
     }
     dispatch(resetPost());
@@ -280,7 +215,7 @@ const PostForm = () => {
                         onClick={() => {
                           setIsBase64Open(false);
                           setPostImage(undefined);
-                          setPostURL(undefined);
+                          setBase64(undefined);
                         }}
                       />
                     </div>

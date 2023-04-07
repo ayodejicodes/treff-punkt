@@ -13,8 +13,6 @@ import { RiShareForwardLine } from "react-icons/ri";
 import { VscSmiley } from "react-icons/vsc";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 import CommentCard from "./CommentCard";
-import { RootState } from "../app/store";
-import { useSelector } from "react-redux";
 
 const PostCard = () => {
   const [toggleLike, setToggleLike] = useState(false);
@@ -24,15 +22,6 @@ const PostCard = () => {
   const [allCommentsOpen, setAllCommentsOpen] = useState(false);
 
   const updateDeleteOpenRef = useRef<HTMLDivElement>(null);
-
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { posts } = useSelector((state: RootState) => state.posts);
-
-  // useEffect(() => {
-  console.log(posts);
-  // }, [user?.posts]);
-
-  // format(new Date(user?.createdAt as string), "  dd MMM yyyy");
 
   // Handles Outside box Click---------------------------------------
 
@@ -71,7 +60,7 @@ const PostCard = () => {
             <div>
               <div className="flex items-center gap-1 ">
                 <h3 className="font-bold text-secondaryColor dark:text-whiteColor cursor-pointer">
-                  {`${user?.firstName} ${user?.lastName}`}
+                  Firstname Lastname
                 </h3>
                 <span>
                   <MdVerified
@@ -81,7 +70,7 @@ const PostCard = () => {
                 </span>
               </div>
               <small className=" text-secondaryColor dark:text-whiteColor">
-                {/* {`${posts[0]} at 08:25 PM`} */}
+                17 March at 08:25 PM
               </small>
             </div>
           </div>
