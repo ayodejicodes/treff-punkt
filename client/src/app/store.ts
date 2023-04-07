@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer, { AuthState } from "../features/auth/authSlice";
-import postsReducer from "../features/posts/postSlice";
+import postsReducer, { PostsState } from "../features/posts/postSlice";
 
 export interface RootState {
   auth: AuthState;
+  posts: PostsState;
   // Add other slices here
 }
 

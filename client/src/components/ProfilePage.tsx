@@ -69,7 +69,7 @@ const ProfilePage = () => {
         <div className="text-center">
           <div className="flex items-center gap-1  ">
             <small className="text-secondaryColor dark:text-whiteColor text-[16px] font-semibold text-center">
-              {`${user?.firstName} ${user?.bio}`}
+              {`${user?.firstName} ${user?.lastName}`}
             </small>
             <span>
               <MdVerified

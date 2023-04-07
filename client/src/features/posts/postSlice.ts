@@ -18,13 +18,18 @@ interface Post {
   updatedAt: string;
 }
 
-interface PostsState {
+export type PostsState = {
   posts: Post[];
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
   message: string;
-}
+};
+
+export type CreateNewPost = {
+  caption: string | undefined;
+  postImage?: string | undefined;
+};
 
 const initialState: PostsState = {
   posts: [],
@@ -36,13 +41,13 @@ const initialState: PostsState = {
 
 export const createPost = createAsyncThunk(
   "posts/create",
-  async (post, thunkAPI) => {
+  async (post: CreateNewPost, thunkAPI) => {
     try {
       const token = (
         thunkAPI.getState() as { auth: { user?: { token?: string } } }
       ).auth.user?.token;
 
-      return postService.createPost(post, token);
+      return postService.createPost(post, token as string);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -55,53 +60,53 @@ export const createPost = createAsyncThunk(
   }
 );
 
-export const getPosts = createAsyncThunk(
-  "posts/getPosts",
-  async (_, thunkAPI) => {
-    try {
-      const token = (
-        thunkAPI.getState() as { auth: { user?: { token?: string } } }
-      ).auth.user?.token;
+// export const getPosts = createAsyncThunk(
+//   "posts/getPosts",
+//   async (_, thunkAPI) => {
+//     try {
+//       const token = (
+//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
+//       ).auth.user?.token;
 
-      return postService.getPosts(token);
-    } catch (error: any) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
+//       return postService.getPosts(token as string);
+//     } catch (error: any) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 
-export const deletePost = createAsyncThunk(
-  "posts/delete",
-  async (id, thunkAPI) => {
-    try {
-      const token = (
-        thunkAPI.getState() as { auth: { user?: { token?: string } } }
-      ).auth.user?.token;
+// export const deletePost = createAsyncThunk(
+//   "posts/delete",
+//   async (id, thunkAPI) => {
+//     try {
+//       const token = (
+//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
+//       ).auth.user?.token;
 
-      return postService.deletePost(id, token);
-    } catch (error: any) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
+//       return postService.deletePost(id, token);
+//     } catch (error: any) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 
 const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    resetPosts: (state) => {
+    resetPost: (state) => {
       state = initialState;
     },
   },
@@ -119,37 +124,37 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
-      })
-      .addCase(getPosts.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getPosts.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.posts = action.payload;
-      })
-      .addCase(getPosts.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload as string;
-      })
-      .addCase(deletePost.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(deletePost.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.posts = state.posts.filter(
-          (post) => post._id !== action.payload.id
-        );
-      })
-      .addCase(deletePost.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload as string;
       });
+    // .addCase(getPosts.pending, (state) => {
+    //   state.isLoading = true;
+    // })
+    // .addCase(getPosts.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isSuccess = true;
+    //   state.posts = action.payload;
+    // })
+    // .addCase(getPosts.rejected, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isError = true;
+    //   state.message = action.payload as string;
+    // })
+    // .addCase(deletePost.pending, (state) => {
+    //   state.isLoading = true;
+    // })
+    // .addCase(deletePost.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isSuccess = true;
+    //   state.posts = state.posts.filter(
+    //     (post) => post._id !== action.payload.id
+    //   );
+    // })
+    // .addCase(deletePost.rejected, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isError = true;
+    //   state.message = action.payload as string;
+    // });
   },
 });
 
-export const { resetPosts } = postsSlice.actions;
+export const { resetPost } = postsSlice.actions;
 export default postsSlice.reducer;

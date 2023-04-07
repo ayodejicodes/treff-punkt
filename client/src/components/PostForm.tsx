@@ -1,43 +1,124 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AiOutlinePicture } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch } from "../app/store";
-import { createPost } from "../features/posts/postSlice";
+import { AppDispatch, RootState } from "../app/store";
+import { createPost, resetPost } from "../features/posts/postSlice";
 import { RxCross2 } from "react-icons/rx";
+import { toast } from "react-toastify";
+import Spinner from "./Spinner";
 
 const PostForm = () => {
-  const [caption, setCaption] = useState<string>("");
-  const [postImage, setPostImage] = useState<File | null>();
-  const [preview, setPreview] = useState<string>();
-  const [isPreviewOpen, setIsPreviewOpen] = useState<Boolean>(false);
+  const [caption, setCaption] = useState<string | undefined>();
+  const [postImage, setPostImage] = useState<File | string | undefined>();
+  const [base64, setBase64] = useState<string>();
+  const [isBase64Open, setIsBase64Open] = useState<Boolean>(false);
+  const [postURL, setPostURL] = useState<string | undefined>();
+  const [isPostLoading, setIsPostLoading] = useState<Boolean>(false);
+
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Upload to Cloudinary
+  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+  const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPostLoading(true);
+
+    // console.log("Loading set true");
+
+    if (!base64) {
+      setPostURL(undefined);
+      setIsPostLoading(false);
+
+      // console.log("No 64");
+      console.log("Loading set false");
+    }
+    if (base64) {
+      const data = new FormData();
+      data.append("file", base64 as string);
+      data.append("upload_preset", `${upload_preset}`);
+      data.append("cloud_name", `${cloud_name}`);
+
+      try {
+        await fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
+          method: "post",
+          body: data,
+        })
+          .then(async (res) => await res.json())
+          .then(async (data) => {
+            await data;
+            setPostURL(data.url.toString());
+            setIsPostLoading(false);
+          });
+      } catch (error) {
+        setIsPostLoading(false);
+        throw new Error("Upload Failed");
+      }
+    }
+
+    if (!isPostLoading && (postURL !== undefined || caption !== undefined)) {
+      dispatch(createPost(postFormDetails));
+    }
+  };
+
+  useEffect(() => {
+    console.log("postImage", postImage);
+    const reader = new FileReader();
+    if (postImage) {
+      reader.readAsDataURL(postImage as File);
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        // base64-encoded string
+        setBase64(e.target?.result as string);
+        setIsBase64Open(true);
+      };
+    }
+  }, [postImage]);
+
+  const postFormDetails = {
+    caption,
+    postImage: postURL,
+  };
+
+  // ---Redux Tool kit--------------------------------------------------------------
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const reader = new FileReader();
-  if (postImage) {
-    reader.readAsDataURL(postImage);
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      // base64-encoded string
-      setPreview(event?.target?.result as string);
-      setIsPreviewOpen(true);
-    };
-  }
+  const { posts, isLoading, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.posts
+  );
 
-  const handlePostSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // -------------------------------------------------------------------------
 
-    const postFormDetails = {
-      caption,
-      postImage,
-    };
+  // useEffect(() => {
+  // if (!isPostLoading && (postURL !== undefined || caption !== undefined)) {
+  //   dispatch(createPost(postFormDetails));
+  // }
+  // !isPostLoading && postURL && console.log(postFormDetails);
+  // console.log("isPostLoading", isPostLoading);
+  // console.log("postFormDetails", postFormDetails);
+  // }, [postImage]);
 
-    console.log(postFormDetails);
-
-    // dispatch(createPost(postFormDetails));
-  };
-
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+      // setIsRegistrationLoading(false);
+    }
+    if (isSuccess) {
+      toast.success("Posted Successful");
+      // setIsRegistrationLoading(false);
+      // navigate("/");
+    }
+    dispatch(resetPost());
+  }, [posts, isSuccess, isError, message, dispatch]);
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-2 ">
       {/* What would you like to post? */}
@@ -52,16 +133,14 @@ const PostForm = () => {
             />
           </div>
 
-          <input
-            type="text"
+          <textarea
             placeholder="What would you like to share?"
             name="caption"
             value={caption}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setCaption(e.target.value)
-            }
+            onChange={() => setCaption(textAreaRef?.current?.value)}
             className="  resize-none inputStyle bgSecondaryColorLight dark:bgWhiteColorLight w-full focus:outline-none text-secondaryColor dark:text-whiteColor rounded-lg p-3 h-14"
-          />
+            ref={textAreaRef}
+          ></textarea>
         </div>
 
         {/* Line Break */}
@@ -85,7 +164,7 @@ const PostForm = () => {
                 className=" opacity-0 cursor-none bg-transparent"
               />
               <div className=" absolute items-center top-2 left-0    ">
-                <div className="flex gap-2 hoverSecondaryColorLight p-2 cursor-pointer rounded-lg dark:hoverWhiteColorLight">
+                <div className="flex gap-2 hoverSecondaryColorLight pt-1 pb-1 pl-2 pr-2 cursor-pointer rounded-lg dark:hoverWhiteColorLight">
                   <AiOutlinePicture
                     size={20}
                     className="text-secondaryColor dark:text-whiteColor "
@@ -97,11 +176,11 @@ const PostForm = () => {
                     Click to upload Photo / Video
                   </label>
                 </div>
-                {isPreviewOpen && (
+                {isBase64Open && (
                   <div className="">
                     <div className="relative w-8 h-8 bg-green-500 ml-2 mt-[0.5]">
                       <img
-                        src={preview}
+                        src={base64}
                         alt=""
                         className="w-8 h-8 object-cover"
                       />
@@ -109,8 +188,9 @@ const PostForm = () => {
                         size={14}
                         className="absolute top-0 right-0 text-red-500 cursor-pointer  "
                         onClick={() => {
-                          setIsPreviewOpen(false);
-                          setPostImage(null);
+                          setIsBase64Open(false);
+                          setPostImage(undefined);
+                          setPostURL(undefined);
                         }}
                       />
                     </div>
@@ -121,7 +201,11 @@ const PostForm = () => {
           </div>
 
           <div className="flex justify-end">
-            <button className="btnPrimary">Post</button>
+            {isPostLoading ? (
+              <Spinner />
+            ) : (
+              <button className="btnPrimary">Post</button>
+            )}
           </div>
         </div>
       </form>

@@ -9,7 +9,7 @@ const postSchema = new mongoose.Schema(
     },
     postImage: {
       type: String,
-      required: true,
+      // required: true,
       validate: {
         validator: function (url) {
           const urlRegex =
