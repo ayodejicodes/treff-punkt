@@ -21,6 +21,7 @@ interface User {
   blocked: boolean;
   createdAt: string;
   updatedAt: string;
+  token: string;
 }
 
 interface NewUser {

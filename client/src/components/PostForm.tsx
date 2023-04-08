@@ -51,7 +51,7 @@ const PostForm = () => {
       // navigate("/");
     }
     dispatch(resetPost());
-  }, [posts, isSuccess, isError, message, dispatch]);
+  }, [isSuccess, isError, message, dispatch]);
 
   // -------------------------------------------------------------------------
 
@@ -96,9 +96,11 @@ const PostForm = () => {
     const responseData = await handlePostUpload();
 
     // Wrap setPostURL in a Promise and resolve it
-    await new Promise<void>((resolve) => {
-      resolve();
-    });
+    // await new Promise<void>((resolve) => {
+    //   resolve();
+    // });
+
+    await Promise.resolve();
 
     if (!responseData) {
       setIsPostLoading(false);
@@ -159,7 +161,7 @@ const PostForm = () => {
           </div>
 
           <textarea
-            placeholder="What would you like to share?"
+            placeholder="Start typing...What would you like to share?"
             name="caption"
             value={caption}
             onChange={() => setCaption(textAreaRef?.current?.value)}

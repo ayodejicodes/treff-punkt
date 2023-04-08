@@ -8,13 +8,18 @@ const User = require("../models/UserModel");
 // @Route       POST (/api/posts)
 // @Access      Public
 const getPostsController = asyncHandler(async (req, res) => {
-  const posts = await Post.find();
+  try {
+    const posts = await Post.find().populate("author").sort({ updatedAt: -1 });
 
-  // Filters only posts of authenticated user
-  const filteredPosts = posts.filter(
-    (post) => req.user.id.toString() === post.author.toString()
-  );
-  res.status(200).json(filteredPosts);
+    // Filters only posts of authenticated user
+    // const filteredPosts = posts.filter(
+    //   (post) => req.user.id.toString() === post.author.toString()
+    // );
+
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 // ------------------------Create New Post------------------------

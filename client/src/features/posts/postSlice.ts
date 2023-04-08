@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "./postService";
 
-interface Post {
+// postImage: string| Buffer | undefined | { type: string; data: Buffer }; //  string or Buffer (Image or Video)
+
+export type Post = {
   _id: string;
-  author: string;
+  author: { firstName: string; lastName: string; profilePic: string };
   caption: string;
-  postImage: string | { type: string; data: Buffer }; //  string or Buffer (Image or Video)
+  postImage: string | undefined;
   likes: string[];
   comments: {
     _id: string;
@@ -16,7 +18,7 @@ interface Post {
   shares: string[];
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type PostsState = {
   posts: Post[];
