@@ -62,7 +62,7 @@ const ProfilePage = () => {
         />
 
         <div className=" absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center w-28 h-28 ">
-          <ProfilePicture size={28} />
+          <ProfilePicture />
         </div>
       </div>
 

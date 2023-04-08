@@ -100,7 +100,8 @@ const PostCard = ({ post }: PostCard) => {
   //   dispatch(getPosts());
   // }, []);
 
-  const { author, caption, postImage, comments, createdAt } = post;
+  const { author, caption, postImage, likes, comments, shares, createdAt } =
+    post;
 
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4  ">
@@ -131,7 +132,7 @@ const PostCard = ({ post }: PostCard) => {
               </div>
               <small className=" text-secondaryColor dark:text-whiteColor">
                 {/* 17 March at 08:25 PM */}
-                {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm:ss")}`}
+                {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
               </small>
             </div>
           </div>
@@ -223,7 +224,10 @@ const PostCard = ({ post }: PostCard) => {
             )}
 
             <small className="text-secondaryColor dark:text-whiteColor text-sm cursor-pointer">
-              2.3k Likes
+              {/* 2.3k Likes */}
+              {likes.length === 0
+                ? "Be the first to like"
+                : `${likes.length} Like${likes.length > 1 ? "s" : ""}`}
             </small>
           </div>
 
@@ -239,7 +243,10 @@ const PostCard = ({ post }: PostCard) => {
               className="text-secondaryColor dark:text-whiteColor"
             />
             <small className="text-secondaryColor dark:text-whiteColor text-sm">
-              250 Comments
+              {/* 250 Comments */}
+              {comments.length === 0
+                ? `No Comment`
+                : `${comments.length} Comment${comments.length > 1 ? "s" : ""}`}
             </small>
           </div>
         </div>
@@ -251,7 +258,10 @@ const PostCard = ({ post }: PostCard) => {
             className="text-secondaryColor dark:text-whiteColor"
           />
           <small className="text-secondaryColor dark:text-whiteColor text-sm">
-            80 Shares
+            {/* 80 Shares */}
+            {shares.length === 0
+              ? `No Share`
+              : `${shares.length} Share${shares.length > 1 ? "s" : ""}`}
           </small>
         </div>
       </div>

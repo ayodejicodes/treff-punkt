@@ -12,6 +12,7 @@ import { AppDispatch } from "../../app/store";
 import { logout, reset } from "../../features/auth/authSlice";
 import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
 import { toast } from "react-toastify";
+import ProfilePicture from "../Profile/ProfilePicture";
 
 const NavBar = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -113,11 +114,7 @@ const NavBar = () => {
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
           >
             <div className=" relative w-7 h-7">
-              <img
-                src="../src/assets/ayo.jpg"
-                alt=""
-                className=" rounded-full object-cover"
-              />
+              <ProfilePicture />
             </div>
             <BiChevronDown
               size={22}

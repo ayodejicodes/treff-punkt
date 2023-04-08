@@ -79,14 +79,45 @@ const login = asyncHandler(async (req, res) => {
 
   const comparedPassword = await bcrypt.compare(password, userExists.password);
 
+  const {
+    _id,
+    firstName,
+    lastName,
+    userName,
+    profilePic,
+    coverPic,
+    followings,
+    followers,
+    role,
+    bio,
+    posts,
+    stories,
+    bookmarkedPosts,
+    blocked,
+    createdAt,
+    updatedAt,
+  } = userExists;
+
   //   Authenticate User
   if (userExists && comparedPassword) {
     res.status(201).json({
-      id: userExists._id,
-      firstName: userExists.firstName,
-      lastName: userExists.lastName,
-      email: userExists.email,
-      userName: userExists.userName,
+      _id,
+      email,
+      firstName,
+      lastName,
+      userName,
+      profilePic,
+      coverPic,
+      followings,
+      followers,
+      role,
+      bio,
+      posts,
+      stories,
+      bookmarkedPosts,
+      blocked,
+      createdAt,
+      updatedAt,
       token: generateToken(userExists._id),
     });
   } else {

@@ -14,8 +14,8 @@ const ShortProfile = () => {
         <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl overf ">
           {/* Image */}
 
-          <div className="relative ">
-            <ProfilePicture size={10} />
+          <div className="relative w-10 h-10">
+            <ProfilePicture />
 
             {online ? (
               <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>

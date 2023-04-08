@@ -7,6 +7,7 @@ import { createPost, resetPost } from "../features/posts/postSlice";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
+import ProfilePicture from "./Profile/ProfilePicture";
 
 const PostForm = () => {
   const [caption, setCaption] = useState<string | undefined>();
@@ -39,6 +40,9 @@ const PostForm = () => {
     (state: RootState) => state.posts
   );
 
+  const { user } = useSelector((state: RootState) => state.auth);
+  console.log(user);
+
   useEffect(() => {
     if (isError) {
       toast.error(message);
@@ -51,7 +55,7 @@ const PostForm = () => {
       // navigate("/");
     }
     dispatch(resetPost());
-  }, [isSuccess, isError, message, dispatch]);
+  }, [posts, isSuccess, isError, message, dispatch]);
 
   // -------------------------------------------------------------------------
 
@@ -152,12 +156,8 @@ const PostForm = () => {
 
       <form onSubmit={handlePostSubmit}>
         <div className="flex gap-4">
-          <div className="  w-12 h-12">
-            <img
-              src="../src/assets/ayo.jpg"
-              alt=""
-              className=" rounded-full cursor-pointer"
-            />
+          <div className="  w-12 h-12 bg-red-500">
+            <ProfilePicture />
           </div>
 
           <textarea
