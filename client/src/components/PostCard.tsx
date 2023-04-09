@@ -17,7 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../app/store";
 import { toast } from "react-toastify";
-import { Post, getPosts, resetPost } from "../features/posts/postSlice";
+import {
+  Post,
+  // fetchInitialStateLike,
+  getPosts,
+  likeDislikePost,
+  resetPost,
+} from "../features/posts/postSlice";
 import { format, parseISO } from "date-fns";
 import ProfilePicture from "./Profile/ProfilePicture";
 
@@ -38,7 +44,26 @@ interface PostCard {
 }
 
 const PostCard = ({ post }: PostCard) => {
-  const [toggleLike, setToggleLike] = useState(false);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { posts, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.posts
+  );
+
+  const {
+    _id,
+    author,
+    caption,
+    postImage,
+    likes,
+    comments,
+    shares,
+    createdAt,
+  } = post;
+
+  const [toggleLike, setToggleLike] = useState<Boolean>(
+    post.likes.includes(user?._id as string)
+  );
+  const [likeCount, setLikeCount] = useState<number>(post.likes.length);
   const [savedPost, setSavedPost] = useState(false);
   const [commentOpen, setCommentOpen] = useState(false);
   const [updateDeleteOpen, setUpdateDeleteOpen] = useState(false);
@@ -50,11 +75,6 @@ const PostCard = ({ post }: PostCard) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { posts, isSuccess, isError, message } = useSelector(
-    (state: RootState) => state.posts
-  );
 
   // const imageUrl = post.postImage ? post.postImage : undefined; // Assign a valid URL or undefined based on some condition
   // const imgProps: React.ImgHTMLAttributes<HTMLImageElement> = {
@@ -72,7 +92,7 @@ const PostCard = ({ post }: PostCard) => {
       // navigate("/");
     }
     dispatch(resetPost());
-  }, [posts, isSuccess, isError, message, dispatch]);
+  }, [isError, message]);
 
   // -------------------------------------------------------------------------
 
@@ -100,9 +120,39 @@ const PostCard = ({ post }: PostCard) => {
   //   dispatch(getPosts());
   // }, []);
 
-  const { author, caption, postImage, likes, comments, shares, createdAt } =
-    post;
+  // Fetch initial likes and dispatch the action to update Redux state
+  // const fetchInitialLikesData = async () => {
+  //   try {
+  //     const response = await dispatch(fetchInitialStateLike(_id));
+  //     return response;
+  //   } catch (error) {
+  //     console.error("Error fetching initial likes data:", error);
+  //   }
+  // };
 
+  const handleLikeDislike = async () => {
+    await dispatch(likeDislikePost({ id: _id, userID: user?._id as string }));
+    await Promise.resolve();
+
+    setToggleLike((prev) => !prev);
+
+    if (toggleLike) {
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikeCount(likeCount + 1);
+    }
+
+    console.log("Finished the handle task");
+    return post;
+  };
+
+  useEffect(() => {
+    console.log(post);
+    console.log("likeCount", likeCount);
+    console.log("toggleLike", toggleLike);
+  }, [user?._id, likes, toggleLike]);
+
+  // console.log(toggleLike);
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4  ">
       {/* User details and post creation date */}
@@ -209,25 +259,22 @@ const PostCard = ({ post }: PostCard) => {
               <AiTwotoneLike
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-                onClick={() => {
-                  setToggleLike(!toggleLike);
-                }}
+                onClick={handleLikeDislike}
               />
             ) : (
               <BiLike
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-                onClick={() => {
-                  setToggleLike(!toggleLike);
-                }}
+                onClick={handleLikeDislike}
               />
             )}
 
             <small className="text-secondaryColor dark:text-whiteColor text-sm cursor-pointer">
               {/* 2.3k Likes */}
-              {likes.length === 0
+
+              {likeCount === 0
                 ? "Be the first to like"
-                : `${likes.length} Like${likes.length > 1 ? "s" : ""}`}
+                : `${likeCount} Like${likeCount > 1 ? "s" : ""}`}
             </small>
           </div>
 

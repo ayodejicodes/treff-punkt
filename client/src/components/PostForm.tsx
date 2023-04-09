@@ -41,7 +41,7 @@ const PostForm = () => {
   );
 
   const { user } = useSelector((state: RootState) => state.auth);
-  console.log(user);
+  // console.log(user);
 
   useEffect(() => {
     if (isError) {
@@ -55,7 +55,7 @@ const PostForm = () => {
       // navigate("/");
     }
     dispatch(resetPost());
-  }, [posts, isSuccess, isError, message, dispatch]);
+  }, [isError, message]);
 
   // -------------------------------------------------------------------------
 

@@ -104,6 +104,48 @@ export const getPosts = createAsyncThunk(
 //   }
 // );
 
+// export const fetchInitialStateLike = createAsyncThunk(
+//   "posts/getPosts/getLikes",
+//   async (id: string, thunkAPI) => {
+//     try {
+//       const token = (
+//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
+//       ).auth.user?.token;
+
+//       return postService.fetchInitialStateLike(id, token as string);
+//     } catch (error: any) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
+
+export const likeDislikePost = createAsyncThunk(
+  "posts/like",
+  async ({ id, userID }: { id: string; userID: string }, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
+
+      return postService.likeDislikePost(id, { userID }, token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -123,6 +165,34 @@ const postsSlice = createSlice({
         state.posts.push(action.payload as Post);
       })
       .addCase(createPost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+
+      // .addCase(fetchInitialStateLike.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(fetchInitialStateLike.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+      //   state.posts = action.payload;
+      // })
+      // .addCase(fetchInitialStateLike.rejected, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isError = true;
+      //   state.message = action.payload as string;
+      // })
+
+      .addCase(likeDislikePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(likeDislikePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(likeDislikePost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

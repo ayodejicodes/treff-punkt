@@ -45,10 +45,50 @@ const getPosts = async (token: string) => {
 //   return response.data;
 // };
 
+// const fetchInitialStateLike = async (id: string, token: string) => {
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+
+//   try {
+//     const response = await axios.get(`${API_URL}${id}`, config);
+
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Likes could not be fetched");
+//   }
+// };
+
+const likeDislikePost = async (
+  id: string,
+  { userID }: { userID: string },
+  token: string
+) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.put(
+      `${API_URL}${id}/like`,
+      { userID },
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Like was not sent");
+  }
+};
+
 const postService = {
   createPost,
   getPosts,
   // deletePost,
+  // fetchInitialStateLike,
+  likeDislikePost,
 };
 
 export default postService;

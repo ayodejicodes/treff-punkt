@@ -31,7 +31,7 @@ const HomePage = () => {
     fetchedPosts();
   }, []);
 
-  console.log("posts", posts);
+  // console.log("posts", posts);
 
   // -------------------------------------------------------------------------
 

@@ -78,6 +78,7 @@ const updatePostController = asyncHandler(async (req, res) => {
     const updatedPost = await Post.findByIdAndUpdate(id, req.body, {
       new: true,
     });
+
     res.status(200).json(updatedPost);
   } else {
     res.status(403);
@@ -112,9 +113,71 @@ const deletePostController = asyncHandler(async (req, res) => {
   }
 });
 
+// ------------------------Gets Initial Likes------------------------
+
+// @desc        Gets Initial Likes for a post
+// @Route       GET (/api/posts/:id)
+// @Access      Private
+const fetchInitialStateLike = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if Post exists
+  const foundPost = await Post.findById(id);
+
+  if (!foundPost) {
+    res.status(400);
+    throw new Error("Unable to find Post with that ID");
+  }
+
+  if (foundPost) {
+    res.status(200).json(foundPost.likes);
+    // console.log("Data fetched");
+  }
+});
+
+// ------------------------Like/Dislike Post------------------------
+
+// @desc        Like/Dislike Post
+// @Route       PUT (/api/posts/:id/like)
+// @Access      Private
+const likeDislikePostController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if Post exists
+  const foundPost = await Post.findById(id);
+
+  if (!foundPost) {
+    res.status(400);
+    throw new Error("Unable to find Post with that ID");
+  }
+
+  // Logic
+  if (foundPost.likes.includes(req.user._id.toString())) {
+    // Remove Like if already liked
+    const removedLike = await Post.findByIdAndUpdate(
+      id,
+      { $pull: { likes: req.user._id } },
+      { new: true }
+    );
+
+    res.status(200).json(removedLike);
+  } else {
+    // Add Like if not included
+    const addedLike = await Post.findByIdAndUpdate(
+      id,
+      { $push: { likes: req.user._id } },
+      { new: true }
+    );
+
+    res.status(200).json(addedLike);
+  }
+});
+
 module.exports = {
   getPostsController,
   createPostController,
   updatePostController,
   deletePostController,
+  fetchInitialStateLike,
+  likeDislikePostController,
 };
