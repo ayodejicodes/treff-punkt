@@ -41,21 +41,21 @@ const PostForm = () => {
   );
 
   const { user } = useSelector((state: RootState) => state.auth);
-  // console.log(user);
+  console.log(user);
 
   useEffect(() => {
     if (isError) {
       toast.error(message);
     }
     if (isSuccess) {
-      toast.success("Posted Successfully");
+      // toast.success("Posted Successfully");
       setCaption("");
       setBase64(undefined);
       setIsBase64Open(false);
       // navigate("/");
     }
     dispatch(resetPost());
-  }, [isError, message]);
+  }, [posts, isSuccess, isError, message, dispatch]);
 
   // -------------------------------------------------------------------------
 
@@ -99,11 +99,6 @@ const PostForm = () => {
 
     const responseData = await handlePostUpload();
 
-    // Wrap setPostURL in a Promise and resolve it
-    // await new Promise<void>((resolve) => {
-    //   resolve();
-    // });
-
     await Promise.resolve();
 
     if (!responseData) {
@@ -136,18 +131,6 @@ const PostForm = () => {
         })
       );
     }
-
-    // console.log("caption", caption);
-    // console.log("postimage", postImage);
-
-    // if (caption && !responseData) {
-    //   dispatch(
-    //     createPost({
-    //       caption,
-
-    //     })
-    //   );
-    // }
   };
 
   return (

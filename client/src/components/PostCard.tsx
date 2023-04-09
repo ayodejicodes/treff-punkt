@@ -19,6 +19,7 @@ import { AppDispatch, RootState } from "../app/store";
 import { toast } from "react-toastify";
 import {
   Post,
+  deletePost,
   // fetchInitialStateLike,
   getPosts,
   likeDislikePost,
@@ -26,18 +27,6 @@ import {
 } from "../features/posts/postSlice";
 import { format, parseISO } from "date-fns";
 import ProfilePicture from "./Profile/ProfilePicture";
-
-// {
-//   _id,
-//   author,
-//   caption,
-//   postImage,
-//   likes,
-//   comments,
-//   shares,
-//   createdAt,
-//   updatedAt,
-// }
 
 interface PostCard {
   post: Post;
@@ -75,12 +64,6 @@ const PostCard = ({ post }: PostCard) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  // const imageUrl = post.postImage ? post.postImage : undefined; // Assign a valid URL or undefined based on some condition
-  // const imgProps: React.ImgHTMLAttributes<HTMLImageElement> = {
-  //   src: imageUrl,
-
-  // };
 
   useEffect(() => {
     if (isError) {
@@ -141,20 +124,17 @@ const PostCard = ({ post }: PostCard) => {
     } else {
       setLikeCount(likeCount + 1);
     }
-
-    console.log("Finished the handle task");
-    return post;
   };
 
-  useEffect(() => {
-    console.log(post);
-    console.log("likeCount", likeCount);
-    console.log("toggleLike", toggleLike);
-  }, [user?._id, likes, toggleLike]);
+  const handleDelete = async () => {
+    await dispatch(deletePost(_id));
+  };
 
-  // console.log(toggleLike);
+  // console.log(author._id === user?._id);
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4  ">
+      {/* Update Component */}
+
       {/* User details and post creation date */}
       <div className="flex justify-between">
         {/* left */}
@@ -204,11 +184,13 @@ const PostCard = ({ post }: PostCard) => {
             />
           )}
 
-          <BiDotsVerticalRounded
-            size={20}
-            className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-            onClick={() => setUpdateDeleteOpen(!updateDeleteOpen)}
-          />
+          {author._id === user?._id && (
+            <BiDotsVerticalRounded
+              size={20}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => setUpdateDeleteOpen(!updateDeleteOpen)}
+            />
+          )}
           {/* Edit, Delete Modal */}
 
           {updateDeleteOpen ? (
@@ -226,7 +208,10 @@ const PostCard = ({ post }: PostCard) => {
                 </small>
                 <small
                   className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
-                  onClick={() => setUpdateDeleteOpen(false)}
+                  onClick={() => {
+                    handleDelete();
+                    setUpdateDeleteOpen(false);
+                  }}
                 >
                   Delete
                 </small>

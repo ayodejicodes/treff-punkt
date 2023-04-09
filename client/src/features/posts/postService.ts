@@ -33,17 +33,17 @@ const getPosts = async (token: string) => {
   }
 };
 
-// const deletePost = async (postId, token) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
+const deletePost = async (id: string, token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
-//   const response = await axios.delete(API_URL + postId, config);
+  const response = await axios.delete(`${API_URL}${id}`, config);
 
-//   return response.data;
-// };
+  return response.data;
+};
 
 // const fetchInitialStateLike = async (id: string, token: string) => {
 //   const config = {
@@ -86,7 +86,7 @@ const likeDislikePost = async (
 const postService = {
   createPost,
   getPosts,
-  // deletePost,
+  deletePost,
   // fetchInitialStateLike,
   likeDislikePost,
 };

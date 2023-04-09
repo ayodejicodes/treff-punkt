@@ -5,7 +5,12 @@ import postService from "./postService";
 
 export type Post = {
   _id: string;
-  author: { firstName: string; lastName: string; profilePic: string };
+  author: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    profilePic: string;
+  };
   caption: string;
   postImage: string | undefined;
   likes: string[];
@@ -83,26 +88,26 @@ export const getPosts = createAsyncThunk(
   }
 );
 
-// export const deletePost = createAsyncThunk(
-//   "posts/delete",
-//   async (id, thunkAPI) => {
-//     try {
-//       const token = (
-//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
-//       ).auth.user?.token;
+export const deletePost = createAsyncThunk(
+  "posts/delete",
+  async (id: string, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
 
-//       return postService.deletePost(id, token);
-//     } catch (error: any) {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString();
-//       return thunkAPI.rejectWithValue(message);
-//     }
-//   }
-// );
+      return postService.deletePost(id, token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 // export const fetchInitialStateLike = createAsyncThunk(
 //   "posts/getPosts/getLikes",
@@ -196,35 +201,35 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
+      })
+      // .addCase(getPosts.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(getPosts.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+      //   state.posts = action.payload;
+      // })
+      // .addCase(getPosts.rejected, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isError = true;
+      //   state.message = action.payload as string;
+      // })
+      .addCase(deletePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = state.posts.filter(
+          (post) => post._id !== action.payload.id
+        );
+      })
+      .addCase(deletePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
       });
-    // .addCase(getPosts.pending, (state) => {
-    //   state.isLoading = true;
-    // })
-    // .addCase(getPosts.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isSuccess = true;
-    //   state.posts = action.payload;
-    // })
-    // .addCase(getPosts.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isError = true;
-    //   state.message = action.payload as string;
-    // })
-    // .addCase(deletePost.pending, (state) => {
-    //   state.isLoading = true;
-    // })
-    // .addCase(deletePost.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isSuccess = true;
-    //   state.posts = state.posts.filter(
-    //     (post) => post._id !== action.payload.id
-    //   );
-    // })
-    // .addCase(deletePost.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isError = true;
-    //   state.message = action.payload as string;
-    // });
   },
 });
 

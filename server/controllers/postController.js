@@ -9,7 +9,7 @@ const User = require("../models/UserModel");
 // @Access      Public
 const getPostsController = asyncHandler(async (req, res) => {
   try {
-    const posts = await Post.find().populate("author").sort({ updatedAt: -1 });
+    const posts = await Post.find().populate("author").sort({ createdAt: -1 });
 
     // Filters only posts of authenticated user
     // const filteredPosts = posts.filter(

@@ -13,25 +13,39 @@ const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [posts, setPosts] = useState<Post[]>();
+  const { posts, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.posts
+  );
+
+  const [postArray, setPostArray] = useState<Post[]>();
+
+  const fetchPost = async () => {
+    const res = await dispatch(getPosts());
+    return res;
+  };
 
   useEffect(() => {
-    const fetchPost = async () => {
-      const res = await dispatch(getPosts());
-      return res;
-    };
-
-    const fetchedPosts = async () => {
+    const fetchedPost = async () => {
       const response = await fetchPost();
-
       await Promise.resolve();
-
-      setPosts(response.payload);
+      setPostArray(response.payload);
     };
-    fetchedPosts();
+    fetchedPost();
   }, []);
 
-  // console.log("posts", posts);
+  const fetchNewPost = async () => {
+    const res = await fetchPost();
+    return res;
+  };
+
+  useEffect(() => {
+    const homeFeedPosts = async () => {
+      const res = await fetchNewPost();
+      await Promise.resolve();
+      setPostArray(res.payload);
+    };
+    homeFeedPosts();
+  }, [posts, dispatch]);
 
   // -------------------------------------------------------------------------
 
@@ -41,7 +55,7 @@ const HomePage = () => {
 
       <PostForm />
 
-      {posts?.map((post: Post, index: number) => (
+      {postArray?.map((post: Post, index: number) => (
         <PostCard post={post} key={index} />
       ))}
     </div>
