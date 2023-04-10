@@ -38,6 +38,12 @@ export type CreateNewPost = {
   postImage?: string | undefined;
 };
 
+export type UpdatePost = {
+  id: string;
+  caption?: string | undefined;
+  postImage?: string | undefined;
+};
+
 const initialState: PostsState = {
   posts: [],
   isLoading: false,
@@ -76,6 +82,27 @@ export const getPosts = createAsyncThunk(
       ).auth.user?.token;
 
       return postService.getPosts(token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updatePost = createAsyncThunk(
+  "posts/update",
+  async (post: UpdatePost, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
+
+      return postService.updatePost(post, token as string);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -215,6 +242,19 @@ const postsSlice = createSlice({
       //   state.isError = true;
       //   state.message = action.payload as string;
       // })
+      .addCase(updatePost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
       .addCase(deletePost.pending, (state) => {
         state.isLoading = true;
       })

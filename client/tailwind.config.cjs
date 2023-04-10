@@ -11,7 +11,7 @@ module.exports = {
         primaryColor: "#fb8500",
         secondaryColor: "#023047",
         whiteColor: "rgba(255, 255, 255, 0.85)",
-        reject: "#e76f51",
+        reject: "rgba(255, 0, 0, 0.65)",
         blackColor: "#000000",
         notificationRed: "#e63946",
         onlineGreen: "#0ead69",

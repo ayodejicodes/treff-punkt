@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateNewPost } from "./postSlice";
+import { CreateNewPost, UpdatePost } from "./postSlice";
 
 const API_URL = "/api/posts/";
 
@@ -31,6 +31,24 @@ const getPosts = async (token: string) => {
   } catch (error) {
     throw new Error("Posts could not be fetched");
   }
+};
+
+const updatePost = async (postData: UpdatePost, token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const { id, caption, postImage } = postData;
+
+  const response = await axios.put(
+    `${API_URL}${id}`,
+    { caption, postImage },
+    config
+  );
+
+  return response.data;
 };
 
 const deletePost = async (id: string, token: string) => {
@@ -86,6 +104,7 @@ const likeDislikePost = async (
 const postService = {
   createPost,
   getPosts,
+  updatePost,
   deletePost,
   // fetchInitialStateLike,
   likeDislikePost,

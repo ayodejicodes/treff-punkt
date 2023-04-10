@@ -64,6 +64,13 @@ const createPostController = asyncHandler(async (req, res) => {
 // @Access      Public
 const updatePostController = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const { caption, postImage } = req.body;
+
+  // Validation check
+  if (!caption && !postImage) {
+    res.status(400);
+    throw new Error("What's on your mind field is empty");
+  }
 
   // Check if Post exists
   const foundPost = await Post.findById(id);
@@ -75,9 +82,13 @@ const updatePostController = asyncHandler(async (req, res) => {
 
   // Authorization check
   if (req.user._id.toString() === foundPost.author.toString()) {
-    const updatedPost = await Post.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { caption, postImage },
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json(updatedPost);
   } else {
