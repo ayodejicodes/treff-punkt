@@ -19,6 +19,7 @@ import { AppDispatch, RootState } from "../app/store";
 import { toast } from "react-toastify";
 import {
   Post,
+  bookmarkPost,
   deletePost,
   // fetchInitialStateLike,
   getPosts,
@@ -28,6 +29,7 @@ import {
 } from "../features/posts/postSlice";
 import { format, parseISO } from "date-fns";
 import { RxCross2 } from "react-icons/rx";
+import Spinner from "./Spinner";
 
 interface PostCard {
   post: Post;
@@ -47,6 +49,7 @@ const PostCard = ({ post }: PostCard) => {
     likes,
     comments,
     shares,
+    bookmarkedPostsUsers,
     createdAt,
     updatedAt,
   } = post;
@@ -54,15 +57,19 @@ const PostCard = ({ post }: PostCard) => {
   const [toggleLike, setToggleLike] = useState<Boolean>(
     likes.includes(user?._id as string)
   );
+  const [toggleBookmark, setToggleBookmark] = useState<Boolean>(
+    bookmarkedPostsUsers.includes(user?._id as string)
+  );
   const [likeCount, setLikeCount] = useState<number>(likes.length);
-  const [savedPost, setSavedPost] = useState(false);
+  const [bookmarkCount, setBookmarkCount] = useState<number>(
+    bookmarkedPostsUsers.length
+  );
+
   const [commentOpen, setCommentOpen] = useState(false);
   const [updateDeleteOpen, setUpdateDeleteOpen] = useState(false);
   const [allCommentsOpen, setAllCommentsOpen] = useState(false);
 
   const updateDeleteOpenRef = useRef<HTMLDivElement>(null);
-
-  const [isEditClicked, setIsEditClicked] = useState(false);
 
   const updatePostObject = {
     caption,
@@ -70,14 +77,9 @@ const PostCard = ({ post }: PostCard) => {
   };
   const shallowUpdatePostObject = { ...updatePostObject };
 
-  const isSameImage = postImage === shallowUpdatePostObject.postImage;
-
-  console.log("isSameImage", isSameImage);
-
-  const [updateCaption, setUpdateCaption] = useState<string>(
+  const [updateCaption, setUpdateCaption] = useState<string | undefined>(
     shallowUpdatePostObject.caption
   );
-  const [postImageUpdate, setPostImageUpdate] = useState<string>("");
 
   const [updateImageFile, setUpdateImageFile] = useState<File | undefined>();
 
@@ -87,7 +89,6 @@ const PostCard = ({ post }: PostCard) => {
 
   const [isUpdateLoading, setIsUpdateLoading] = useState<Boolean>(false);
   const [base64Update, setBase64Update] = useState<string | undefined>();
-  const [isBase64UpdateOpen, setIsBase64UpdateOpen] = useState<Boolean>(false);
   const [isUpdateFieldOpen, setIsUpdateFieldOpen] = useState<Boolean>(false);
   const [isTheSameImage, setIsTheSameImage] = useState<Boolean>(
     postImage === shallowUpdatePostObject.postImage
@@ -162,15 +163,22 @@ const PostCard = ({ post }: PostCard) => {
     }
   };
 
+  const handleBookmark = async () => {
+    await dispatch(bookmarkPost({ id: _id, userID: user?._id as string }));
+    await Promise.resolve();
+
+    setToggleBookmark((prev) => !prev);
+
+    if (toggleBookmark) {
+      setBookmarkCount(bookmarkCount - 1);
+    } else {
+      setBookmarkCount(bookmarkCount + 1);
+    }
+  };
+
   const handleDelete = async () => {
     await dispatch(deletePost(_id));
   };
-
-  console.log(post);
-
-  console.log("updateCaption", updateCaption);
-  // console.log("shallowVakue", shallowVakue);
-  console.log("updateImage", updateImage);
 
   // --------------------------Update Post-----------------------------------------
 
@@ -224,8 +232,6 @@ const PostCard = ({ post }: PostCard) => {
 
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    console.log("update Clicked from handle");
 
     setIsUpdateLoading(true);
 
@@ -286,11 +292,13 @@ const PostCard = ({ post }: PostCard) => {
       );
       setIsUpdateFieldOpen(false);
       setIsPostEditedClient(true);
+      setUpdateCaption("");
+      setBase64Update("");
     }
   };
 
-  console.log("base64Update", base64Update);
-  console.log("updateImage", updateImage);
+  // console.log("base64Update", base64Update);
+  // console.log("updateImage", updateImage);
 
   // ------------------------------------------------------------------------------
   return (
@@ -324,9 +332,7 @@ const PostCard = ({ post }: PostCard) => {
               <div className="flex items-center">
                 <small className=" text-secondaryColor dark:text-whiteColor">
                   {/* 17 March at 08:25 PM */}
-                  {isPostEdited
-                    ? `${format(parseISO(updatedAt), "dd MMM yyyy HH:mm a")}`
-                    : `${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
+                  {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
                 </small>
                 {isPostEditedClient && (
                   <div className="flex items-center ml-3 gap-1">
@@ -335,7 +341,7 @@ const PostCard = ({ post }: PostCard) => {
                       className="text-secondaryColor dark:text-whiteColor "
                     />
                     <small className=" text-secondaryColor dark:text-whiteColor ">
-                      Edited
+                      Updated
                     </small>
                   </div>
                 )}
@@ -346,18 +352,32 @@ const PostCard = ({ post }: PostCard) => {
 
         {/* right */}
         <div className="flex relative gap-3">
-          {savedPost ? (
-            <FaBookmark
-              size={20}
-              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-              onClick={() => setSavedPost(!savedPost)}
-            />
+          {toggleBookmark ? (
+            <div className="flex flex-col items-center ">
+              <FaBookmark
+                size={20}
+                className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+                onClick={handleBookmark}
+              />
+              {bookmarkCount > 0 && (
+                <small className="dark:text-whiteColor text-secondaryColor text-[12px]">
+                  {bookmarkCount}
+                </small>
+              )}
+            </div>
           ) : (
-            <FaRegBookmark
-              size={20}
-              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-              onClick={() => setSavedPost(!savedPost)}
-            />
+            <div className="flex flex-col items-center ">
+              <FaRegBookmark
+                size={20}
+                className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+                onClick={handleBookmark}
+              />
+              {bookmarkCount > 0 && (
+                <small className="dark:text-whiteColor text-secondaryColor text-[12px]">
+                  {bookmarkCount}
+                </small>
+              )}
+            </div>
           )}
 
           {author._id === user?._id && (
@@ -418,7 +438,7 @@ const PostCard = ({ post }: PostCard) => {
       )}
       {/* Post Picture */}
       {postImage && !isUpdateFieldOpen && (
-        <div className="relative flex justify-center items-center w-full h-[400px] bg-red-500 rounded-lg">
+        <div className="relative flex justify-center items-center w-full h-[540px] bg-red-500 rounded-lg">
           <img
             src={postImage}
             alt={postImage}
@@ -493,9 +513,13 @@ const PostCard = ({ post }: PostCard) => {
       {/* Update Button---------------------------------------------------- */}
       {isUpdateFieldOpen && (
         <div className="text-right">
-          <button className={`btnPrimary `} onClick={handleUpdate}>
-            Update
-          </button>
+          {isUpdateLoading ? (
+            <Spinner />
+          ) : (
+            <button className={`btnPrimary `} onClick={handleUpdate}>
+              Update
+            </button>
+          )}
         </div>
       )}
 

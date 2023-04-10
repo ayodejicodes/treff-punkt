@@ -5,18 +5,35 @@ const Post = require("../models/PostModel");
 // ------------------------Gets Comments------------------------
 
 // @desc        Gets all Comments
-// @Route       POST (/api/comments)
+// @Route       POST (/api/comments/:postID)
 // @Access      Public
 const getcommentsController = asyncHandler(async (req, res) => {
   const { postID } = req.params;
 
-  const comments = await Comment.find();
+  const foundComments = await Comment.find();
 
-  // Filters only comments of authenticated user
-  const filteredComments = comments.filter(
+  // Filters only comments of a Post
+  const filteredComments = foundComments.filter(
     (comment) => comment.post.toString() === postID
   );
-  res.status(200).json(filteredComments);
+
+  const comments = async () => {
+    const populatedComments = await Promise.all(
+      filteredComments.map(async (filteredComment) => {
+        const result = await filteredComment.populate({
+          path: "author",
+          model: "User",
+          select: "-password",
+        });
+        return result;
+      })
+    );
+
+    return populatedComments;
+  };
+
+  const populatedComments = await comments();
+  res.status(200).json(populatedComments);
 });
 
 // ------------------------Create New Comment------------------------
@@ -58,6 +75,7 @@ const createCommentController = asyncHandler(async (req, res) => {
     { $push: { comments: newComment._id } },
     { new: true }
   );
+
   res.status(200).json(newComment);
 });
 

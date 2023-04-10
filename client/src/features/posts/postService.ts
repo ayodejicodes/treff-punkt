@@ -101,6 +101,28 @@ const likeDislikePost = async (
   }
 };
 
+const bookmarkPost = async (
+  id: string,
+  { userID }: { userID: string },
+  token: string
+) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.put(
+      `${API_URL}${id}/bookmark`,
+      { userID },
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Post was not Bookmarked");
+  }
+};
+
 const postService = {
   createPost,
   getPosts,
@@ -108,6 +130,7 @@ const postService = {
   deletePost,
   // fetchInitialStateLike,
   likeDislikePost,
+  bookmarkPost,
 };
 
 export default postService;

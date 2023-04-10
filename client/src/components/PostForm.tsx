@@ -41,7 +41,6 @@ const PostForm = () => {
   );
 
   const { user } = useSelector((state: RootState) => state.auth);
-  console.log(user);
 
   useEffect(() => {
     if (isError) {

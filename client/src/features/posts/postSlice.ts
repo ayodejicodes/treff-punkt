@@ -14,6 +14,7 @@ export type Post = {
   caption: string;
   postImage: string | undefined;
   likes: string[];
+
   comments: {
     _id: string;
     author: string;
@@ -21,7 +22,7 @@ export type Post = {
     createdAt: string;
   }[];
   shares: string[];
-
+  bookmarkedPostsUsers: string[];
   createdAt: string;
   updatedAt: string;
 };
@@ -178,6 +179,26 @@ export const likeDislikePost = createAsyncThunk(
     }
   }
 );
+export const bookmarkPost = createAsyncThunk(
+  "posts/bookmark",
+  async ({ id, userID }: { id: string; userID: string }, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
+
+      return postService.bookmarkPost(id, { userID }, token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const postsSlice = createSlice({
   name: "posts",
@@ -196,6 +217,8 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.posts.push(action.payload as Post);
+
+        console.log("pushstate", typeof state.posts);
       })
       .addCase(createPost.rejected, (state, action) => {
         state.isLoading = false;
@@ -226,6 +249,19 @@ const postsSlice = createSlice({
         state.posts = action.payload;
       })
       .addCase(likeDislikePost.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+      .addCase(bookmarkPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(bookmarkPost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+      })
+      .addCase(bookmarkPost.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

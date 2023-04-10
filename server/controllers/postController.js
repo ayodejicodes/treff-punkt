@@ -9,7 +9,9 @@ const User = require("../models/UserModel");
 // @Access      Public
 const getPostsController = asyncHandler(async (req, res) => {
   try {
-    const posts = await Post.find().populate("author").sort({ createdAt: -1 });
+    const posts = await Post.find()
+      .populate("author", ["-posts", "-password"])
+      .sort({ createdAt: -1 });
 
     // Filters only posts of authenticated user
     // const filteredPosts = posts.filter(
@@ -129,22 +131,22 @@ const deletePostController = asyncHandler(async (req, res) => {
 // @desc        Gets Initial Likes for a post
 // @Route       GET (/api/posts/:id)
 // @Access      Private
-const fetchInitialStateLike = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+// const fetchInitialStateLike = asyncHandler(async (req, res) => {
+//   const { id } = req.params;
 
-  // Check if Post exists
-  const foundPost = await Post.findById(id);
+//   // Check if Post exists
+//   const foundPost = await Post.findById(id);
 
-  if (!foundPost) {
-    res.status(400);
-    throw new Error("Unable to find Post with that ID");
-  }
+//   if (!foundPost) {
+//     res.status(400);
+//     throw new Error("Unable to find Post with that ID");
+//   }
 
-  if (foundPost) {
-    res.status(200).json(foundPost.likes);
-    // console.log("Data fetched");
-  }
-});
+//   if (foundPost) {
+//     res.status(200).json(foundPost.likes);
+//     // console.log("Data fetched");
+//   }
+// });
 
 // ------------------------Like/Dislike Post------------------------
 
@@ -184,11 +186,62 @@ const likeDislikePostController = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc        Bookmark Post
+// @Route       PUT (/api/posts/:id/bookmark)
+// @Access      Private
+const bookmarkPostController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if Post exists
+  const foundPost = await Post.findById(id);
+
+  if (!foundPost) {
+    res.status(400);
+    throw new Error("Unable to find Post with that ID");
+  }
+
+  // Logic
+  if (foundPost.bookmarkedPostsUsers.includes(req.user._id.toString())) {
+    // Remove post from bookmarked Array
+    const removedBookmarkedPostsUsers = await Post.findByIdAndUpdate(
+      id,
+      { $pull: { bookmarkedPostsUsers: req.user._id } },
+      { new: true }
+    );
+
+    // Remove User bookmarked Post
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { bookmarkedPosts: foundPost._id } },
+      { new: true }
+    );
+
+    res.status(200).json(removedBookmarkedPostsUsers);
+  } else {
+    // Add user if not already included in bookmarked Array
+    const addedBookmarkedPostsUsers = await Post.findByIdAndUpdate(
+      id,
+      { $push: { bookmarkedPostsUsers: req.user._id } },
+      { new: true }
+    );
+
+    // Push to User bookmarked Post
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { bookmarkedPosts: foundPost._id } },
+      { new: true }
+    );
+
+    res.status(200).json(addedBookmarkedPostsUsers);
+  }
+});
+
 module.exports = {
   getPostsController,
   createPostController,
   updatePostController,
   deletePostController,
-  fetchInitialStateLike,
+  // fetchInitialStateLike,
   likeDislikePostController,
+  bookmarkPostController,
 };
