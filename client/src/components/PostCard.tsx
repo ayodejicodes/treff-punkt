@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AiOutlinePicture, AiTwotoneLike } from "react-icons/ai";
-import { MdVerified } from "react-icons/md";
+import { MdModeEdit, MdVerified } from "react-icons/md";
 import { FiSend } from "react-icons/fi";
 import {
   BiLike,
@@ -48,6 +48,7 @@ const PostCard = ({ post }: PostCard) => {
     comments,
     shares,
     createdAt,
+    updatedAt,
   } = post;
 
   const [toggleLike, setToggleLike] = useState<Boolean>(
@@ -69,12 +70,14 @@ const PostCard = ({ post }: PostCard) => {
   };
   const shallowUpdatePostObject = { ...updatePostObject };
 
+  const isSameImage = postImage === shallowUpdatePostObject.postImage;
+
+  console.log("isSameImage", isSameImage);
+
   const [updateCaption, setUpdateCaption] = useState<string>(
     shallowUpdatePostObject.caption
   );
-  // const [postImage, setPostImage] = useState<string>(
-  //   shallowUpdatePostObject.caption
-  // );
+  const [postImageUpdate, setPostImageUpdate] = useState<string>("");
 
   const [updateImageFile, setUpdateImageFile] = useState<File | undefined>();
 
@@ -86,6 +89,13 @@ const PostCard = ({ post }: PostCard) => {
   const [base64Update, setBase64Update] = useState<string | undefined>();
   const [isBase64UpdateOpen, setIsBase64UpdateOpen] = useState<Boolean>(false);
   const [isUpdateFieldOpen, setIsUpdateFieldOpen] = useState<Boolean>(false);
+  const [isTheSameImage, setIsTheSameImage] = useState<Boolean>(
+    postImage === shallowUpdatePostObject.postImage
+  );
+
+  const isPostEdited = createdAt !== updatedAt;
+  const [isPostEditedClient, setIsPostEditedClient] =
+    useState<Boolean>(isPostEdited);
 
   // ---Redux Tool kit--------------------------------------------------------------
 
@@ -217,7 +227,7 @@ const PostCard = ({ post }: PostCard) => {
 
     console.log("update Clicked from handle");
 
-    // setIsUpdateLoading(true);
+    setIsUpdateLoading(true);
 
     const responseData = await handleUpdateImageUpload();
 
@@ -225,12 +235,44 @@ const PostCard = ({ post }: PostCard) => {
 
     if (!isUpdateLoading && !responseData && updateCaption) {
       setIsUpdateLoading(false);
-      dispatch(updatePost({ id: _id, caption: updateCaption }));
+      dispatch(updatePost({ id: _id, caption: updateCaption, postImage: "" }));
+      setIsUpdateFieldOpen(false);
+      setIsPostEditedClient(true);
+    }
+
+    // When Image is not changed
+    if (!isUpdateLoading && updateCaption && isTheSameImage) {
+      setIsUpdateLoading(false);
+      dispatch(
+        updatePost({
+          id: _id,
+          caption: updateCaption,
+          postImage: postImage,
+        })
+      );
+      setIsUpdateFieldOpen(false);
+      setIsPostEditedClient(true);
+    }
+
+    // When there is no caption and the image is the same
+    if (!isUpdateLoading && !updateCaption && isTheSameImage) {
+      setIsUpdateLoading(false);
+      dispatch(
+        updatePost({
+          id: _id,
+          caption: "",
+          postImage: postImage,
+        })
+      );
+      setIsUpdateFieldOpen(false);
+      setIsPostEditedClient(true);
     }
 
     if (!isUpdateLoading && responseData && !updateCaption) {
       setIsUpdateLoading(false);
       dispatch(updatePost({ id: _id, postImage: responseData.url.toString() }));
+      setIsUpdateFieldOpen(false);
+      setIsPostEditedClient(true);
     }
 
     if (!isUpdateLoading && updateCaption && responseData) {
@@ -242,29 +284,9 @@ const PostCard = ({ post }: PostCard) => {
           postImage: responseData.url.toString(),
         })
       );
+      setIsUpdateFieldOpen(false);
+      setIsPostEditedClient(true);
     }
-
-    // if (responseData && !isPostLoading && !caption) {
-    //   // setPostURL(responseData.url.toString());
-    //   setIsPostLoading(false);
-
-    //   dispatch(
-    //     createPost({
-    //       postImage: responseData.url.toString(),
-    //     })
-    //   );
-    // }
-
-    // if (responseData && !isPostLoading && caption) {
-    //   setIsPostLoading(false);
-
-    //   dispatch(
-    //     createPost({
-    //       caption,
-    //       postImage: responseData.url.toString(),
-    //     })
-    //   );
-    // }
   };
 
   console.log("base64Update", base64Update);
@@ -299,10 +321,25 @@ const PostCard = ({ post }: PostCard) => {
                   />
                 </span>
               </div>
-              <small className=" text-secondaryColor dark:text-whiteColor">
-                {/* 17 March at 08:25 PM */}
-                {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
-              </small>
+              <div className="flex items-center">
+                <small className=" text-secondaryColor dark:text-whiteColor">
+                  {/* 17 March at 08:25 PM */}
+                  {isPostEdited
+                    ? `${format(parseISO(updatedAt), "dd MMM yyyy HH:mm a")}`
+                    : `${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
+                </small>
+                {isPostEditedClient && (
+                  <div className="flex items-center ml-3 gap-1">
+                    <MdModeEdit
+                      size={13}
+                      className="text-secondaryColor dark:text-whiteColor "
+                    />
+                    <small className=" text-secondaryColor dark:text-whiteColor ">
+                      Edited
+                    </small>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -371,7 +408,7 @@ const PostCard = ({ post }: PostCard) => {
       {/* Edit Caption Functionality */}
       {isUpdateFieldOpen && (
         <textarea
-          placeholder="Start typing...What would you like to share?"
+          placeholder="Your edited caption goes here..."
           name="caption"
           value={updateCaption}
           onChange={(e) => setUpdateCaption(e.target.value)}
@@ -400,7 +437,8 @@ const PostCard = ({ post }: PostCard) => {
               onClick={() => {
                 setBase64Update(undefined);
                 setUpdateImage(undefined);
-                // setpost(undefined);
+                setIsTheSameImage(false);
+                // console.log(isTheSameImage);
               }}
             />
           )}
@@ -428,10 +466,8 @@ const PostCard = ({ post }: PostCard) => {
                 title=""
                 accept=".jpg,.png,.jpeg"
                 name="updateImageFile"
-                // value={postImage}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setUpdateImageFile(e.target?.files?.[0]);
-                  // setUpdateImage(shallowUpdatePostObject.postImage);
                 }}
                 className="w-full h-full  bg-blue-500 rounded-lg opacity-0 cursor-pointer "
               />
@@ -457,7 +493,7 @@ const PostCard = ({ post }: PostCard) => {
       {/* Update Button---------------------------------------------------- */}
       {isUpdateFieldOpen && (
         <div className="text-right">
-          <button className="btnPrimary" onClick={handleUpdate}>
+          <button className={`btnPrimary `} onClick={handleUpdate}>
             Update
           </button>
         </div>

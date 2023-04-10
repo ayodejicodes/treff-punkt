@@ -21,6 +21,7 @@ export type Post = {
     createdAt: string;
   }[];
   shares: string[];
+
   createdAt: string;
   updatedAt: string;
 };
