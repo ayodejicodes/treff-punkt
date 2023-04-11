@@ -8,7 +8,7 @@ const Post = require("../models/PostModel");
 // @Route       POST (/api/comments/:postID)
 // @Access      Public
 const getcommentsController = asyncHandler(async (req, res) => {
-  const { postID } = req.params;
+  const { postID } = req.body;
 
   const foundComments = await Comment.find({ post: postID });
 
@@ -36,8 +36,8 @@ const getcommentsController = asyncHandler(async (req, res) => {
 // @Route       POST (/api/comments)
 // @Access      Public
 const createCommentController = asyncHandler(async (req, res) => {
-  const { caption } = req.body;
-  const { postID } = req.params;
+  const { caption, postID } = req.body;
+  // const { postID } = req.params;
 
   // Validation check
   if (!caption) {

@@ -29,7 +29,11 @@ import Spinner from "./Spinner";
 import CommentCard, { CommentCardProps } from "./CommentCard";
 import { FiSend } from "react-icons/fi";
 import { VscSmiley } from "react-icons/vsc";
-import { Comment } from "../features/comments/commentSlice";
+import {
+  Comment,
+  createComment,
+  getComments,
+} from "../features/comments/commentSlice";
 
 interface PostCard {
   post: Post;
@@ -39,6 +43,9 @@ const PostCard = ({ post }: PostCard) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { posts, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.posts
+  );
+  const { comments: stateComment } = useSelector(
+    (state: RootState) => state.comments
   );
 
   const {
@@ -57,7 +64,9 @@ const PostCard = ({ post }: PostCard) => {
   // console.log("comments", comments);
   // console.log("post", post);
 
-  const [commentArr, setCommentArr] = useState<any>(comments);
+  // const [commentArr, setCommentArr] = useState<any>(comments);
+  const [commentCaption, setCommentCaption] = useState<string | undefined>();
+  const [isCommentloading, setIsCommentloading] = useState<Boolean>(false);
 
   // console.log("commentArr", commentArr);
 
@@ -111,8 +120,6 @@ const PostCard = ({ post }: PostCard) => {
   const [isPostEditedClient, setIsPostEditedClient] =
     useState<Boolean>(isPostEdited);
 
-  const [commentsArray, setCommentsArray] = useState<Comment[]>();
-
   // ---Redux Tool kit--------------------------------------------------------------
 
   const navigate = useNavigate();
@@ -149,26 +156,6 @@ const PostCard = ({ post }: PostCard) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [updateDeleteOpenRef]);
-
-  // --------------------Fetch Comments-----------------------------
-
-  // console.log("comments", comments);
-
-  // -----------------------------------------------------------------------
-
-  // useEffect(() => {
-  //   dispatch(getPosts());
-  // }, []);
-
-  // Fetch initial likes and dispatch the action to update Redux state
-  // const fetchInitialLikesData = async () => {
-  //   try {
-  //     const response = await dispatch(fetchInitialStateLike(_id));
-  //     return response;
-  //   } catch (error) {
-  //     console.error("Error fetching initial likes data:", error);
-  //   }
-  // };
 
   const handleLikeDislike = async () => {
     await dispatch(likeDislikePost({ id: _id, userID: user?._id as string }));
@@ -317,36 +304,51 @@ const PostCard = ({ post }: PostCard) => {
     }
   };
 
-  const handleMostRecentSortAscending = () => {
-    const commentsWithDate = comments.map((comment) => {
-      return {
-        ...comment,
-        updatedAt: new Date(comment.updatedAt),
-      };
-    });
+  // const handleMostRecentSortAscending = () => {
+  //   const commentsWithDate = comments.map((comment) => {
+  //     return {
+  //       ...comment,
+  //       updatedAt: new Date(comment.updatedAt),
+  //     };
+  //   });
 
-    // Sort the array by "updatedAt" property in ascending order
-    const mostRecentSortedArr = commentsWithDate.sort(
-      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
-    );
+  //   // Sort the array by "updatedAt" property in ascending order
+  //   const mostRecentSortedArr = commentsWithDate.sort(
+  //     (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+  //   );
 
-    setCommentArr(mostRecentSortedArr);
-  };
+  //   // setCommentArr(mostRecentSortedArr);
+  //   return mostRecentSortedArr;
+  // };
 
-  const handleMostRecentSortDescending = () => {
-    const commentsWithDate = comments.map((comment) => {
-      return {
-        ...comment,
-        updatedAt: new Date(comment.updatedAt),
-      };
-    });
+  // const handleMostRecentSortDescending = () => {
+  //   const commentsWithDate = comments.map((comment) => {
+  //     return {
+  //       ...comment,
+  //       updatedAt: new Date(comment.updatedAt),
+  //     };
+  //   });
 
-    // Sort the array by "updatedAt" property in ascending order
-    const mostRecentSortedArr = commentsWithDate.sort(
-      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()
-    );
+  //   // Sort the array by "updatedAt" property in ascending order
+  //   const mostRecentSortedArr = commentsWithDate.sort(
+  //     (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()
+  //   );
 
-    setCommentArr(mostRecentSortedArr);
+  //   // setCommentArr(mostRecentSortedArr);
+  // };
+
+  const handlecreateComment = () => {
+    setIsCommentloading(true);
+    if (commentCaption) {
+      dispatch(
+        createComment({
+          caption: commentCaption,
+          postID: _id,
+        })
+      );
+    }
+    setIsCommentloading(false);
+    setCommentCaption("");
   };
 
   // ------------------------------------------------------------------------------
@@ -656,10 +658,12 @@ const PostCard = ({ post }: PostCard) => {
             </div>
             <textarea
               placeholder={
-                commentArr.length === 0
+                comments.length === 0
                   ? `Be the first to comment on ${author?.firstName}'s post`
                   : `Comment on ${author?.firstName}'s post`
               }
+              value={commentCaption}
+              onChange={(e) => setCommentCaption(e.target.value)}
               className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
             ></textarea>
             <div className="flex items-center gap-4 absolute right-0 mr-6">
@@ -670,6 +674,7 @@ const PostCard = ({ post }: PostCard) => {
               <FiSend
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+                onClick={handlecreateComment}
               />
             </div>
           </div>
@@ -680,8 +685,6 @@ const PostCard = ({ post }: PostCard) => {
             <div
               className="flex items-center gap-0.5 cursor-pointer"
               onClick={() => {
-                // setCommentOpen(!commentOpen);
-                // setIsAllCommentControlOpen(!isAllCommentControlOpen);
                 setAllCommentsOpen(!allCommentsOpen);
               }}
             >
@@ -693,7 +696,7 @@ const PostCard = ({ post }: PostCard) => {
                 {`(${comments.length})`}
               </small>
 
-              {commentOpen ? (
+              {/* {commentOpen ? (
                 <BiChevronUp
                   size={22}
                   className="text-secondaryColor dark:text-whiteColor text-sm"
@@ -703,11 +706,11 @@ const PostCard = ({ post }: PostCard) => {
                   size={22}
                   className="text-secondaryColor dark:text-whiteColor text-sm"
                 />
-              )}
+              )} */}
             </div>
 
             {/* Right */}
-            <div className="flex items-center gap-0.5 ">
+            {/* <div className="flex items-center gap-0.5 ">
               <small className="text-secondaryColor dark:text-whiteColor text-sm">
                 Sort by
               </small>
@@ -725,14 +728,14 @@ const PostCard = ({ post }: PostCard) => {
                   Oldest
                 </option>
               </select>
-            </div>
+            </div> */}
           </div>
 
-          {commentArr?.slice(0, 2).map((comment: any, index: number) => (
+          {comments?.slice(0, 2).map((comment: any, index: number) => (
             <CommentCard comment={comment} key={index} />
           ))}
 
-          {commentArr.length > 2 && !isViewMoreOpen && (
+          {comments.length > 2 && !isViewMoreOpen && (
             <div
               className="text-center mt-1 pt-2 border-t-2  dark:borderWhiteColorLight w-full"
               onClick={() => setIsViewMoreOpen(true)}
@@ -744,7 +747,7 @@ const PostCard = ({ post }: PostCard) => {
           )}
 
           {isViewMoreOpen &&
-            commentArr
+            comments
               ?.slice(2)
               .map((comment: any, index: number) => (
                 <CommentCard comment={comment} key={index + 2} />

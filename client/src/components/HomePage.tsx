@@ -17,6 +17,8 @@ const HomePage = () => {
     (state: RootState) => state.posts
   );
 
+  const { comments } = useSelector((state: RootState) => state.comments);
+
   const [postArray, setPostArray] = useState<Post[]>();
 
   const fetchPost = async () => {
@@ -45,7 +47,7 @@ const HomePage = () => {
       setPostArray(res.payload);
     };
     homeFeedPosts();
-  }, [dispatch, postArray]);
+  }, [dispatch, posts, comments]);
 
   // -------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsReplyFill, BsArrowUpShort, BsArrowDownShort } from "react-icons/bs";
 import {
   BiChevronDown,
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   Comment,
+  deleteComment,
   downvoteComment,
   upvoteComment,
 } from "../features/comments/commentSlice";
@@ -49,8 +50,36 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     downvotes.includes(user?._id as string)
   );
   const [downvoteCount, setDownvoteCount] = useState<number>(downvotes.length);
+  const updateDeleteCommentOpenRef = useRef<HTMLDivElement>(null);
+  const [updateDeleteCommentOpen, setUpdateDeleteCommentOpen] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const handleClickOutsideComment = (e: MouseEvent) => {
+    if (
+      updateDeleteCommentOpenRef.current &&
+      !updateDeleteCommentOpenRef.current.contains(e.target as Node)
+    ) {
+      setUpdateDeleteCommentOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideComment);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideComment);
+    };
+  }, [updateDeleteCommentOpenRef]);
+
+  const handleCommentDelete = () => {
+    dispatch(
+      deleteComment({
+        id: _id,
+        postID: post,
+      })
+    );
+  };
 
   const handleUpvote = async () => {
     await dispatch(upvoteComment({ id: _id, postID: post as string }));
@@ -121,20 +150,37 @@ const CommentCard = ({ comment }: CommentCardProps) => {
                 <BiDotsVerticalRounded
                   size={20}
                   className="  text-secondaryColor dark:text-whiteColor cursor-pointer "
-                  onClick={() => setUpdateDeleteOpen(!updateDeleteOpen)}
+                  onClick={() =>
+                    setUpdateDeleteCommentOpen(!updateDeleteCommentOpen)
+                  }
                 />
               </div>
             </div>
 
             {/* Update, Delete Comment */}
-            {updateDeleteOpen ? (
-              <div className="absolute top-0 right-0  mt-8">
+            {updateDeleteCommentOpen ? (
+              <div
+                className="absolute top-0 right-0  mt-8"
+                ref={updateDeleteCommentOpenRef}
+              >
                 <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div>
                 <div className="flex flex-col p-4 gap-3 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
-                  <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                  {/* <small
+                    className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
+                    onClick={() => {
+                      handleCommentUpdate();
+                      setUpdateDeleteCommentOpen(false);
+                    }}
+                  >
                     Edit
-                  </small>
-                  <small className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer">
+                  </small> */}
+                  <small
+                    className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
+                    onClick={() => {
+                      handleCommentDelete();
+                      setUpdateDeleteCommentOpen(false);
+                    }}
+                  >
                     Delete
                   </small>
                 </div>
@@ -163,11 +209,23 @@ const CommentCard = ({ comment }: CommentCardProps) => {
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
               />
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px] ">
+              <small
+                className={
+                  toggleUpvote
+                    ? " text-onlineGreen text-[12px]"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px]"
+                }
+              >
                 Upvote
               </small>
 
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold">
+              <small
+                className={
+                  toggleUpvote
+                    ? " text-onlineGreen text-[12px] font-semibold"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px] font-semibold"
+                }
+              >
                 {/* 20k */}
                 {upvoteCount}
               </small>
@@ -185,11 +243,23 @@ const CommentCard = ({ comment }: CommentCardProps) => {
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
               />
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px] ">
+              <small
+                className={
+                  toggleDownvote
+                    ? " text-red-500 text-[12px]"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px]"
+                }
+              >
                 Downvote
               </small>
 
-              <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold">
+              <small
+                className={
+                  toggleDownvote
+                    ? " text-red-500 text-[12px] font-semibold"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px] font-semibold"
+                }
+              >
                 {/* 1k */}
                 {downvoteCount}
               </small>
@@ -198,8 +268,6 @@ const CommentCard = ({ comment }: CommentCardProps) => {
           </div>
         </div>
       </div>
-
-      {/* {comments.length > 0 && allCommentsOpen ? <CommentCard /> : ""} */}
     </div>
   );
 };
