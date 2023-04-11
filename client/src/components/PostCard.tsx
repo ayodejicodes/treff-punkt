@@ -1,18 +1,15 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AiOutlinePicture, AiTwotoneLike } from "react-icons/ai";
 import { MdModeEdit, MdVerified } from "react-icons/md";
-import { FiSend } from "react-icons/fi";
 import {
   BiLike,
   BiCommentDots,
   BiDotsVerticalRounded,
-  BiChevronDown,
   BiChevronUp,
+  BiChevronDown,
 } from "react-icons/bi";
 import { RiShareForwardLine } from "react-icons/ri";
-import { VscSmiley } from "react-icons/vsc";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
-import CommentCard from "./CommentCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../app/store";
@@ -22,7 +19,6 @@ import {
   bookmarkPost,
   deletePost,
   // fetchInitialStateLike,
-  getPosts,
   likeDislikePost,
   resetPost,
   updatePost,
@@ -30,6 +26,10 @@ import {
 import { format, parseISO } from "date-fns";
 import { RxCross2 } from "react-icons/rx";
 import Spinner from "./Spinner";
+import CommentCard, { CommentCardProps } from "./CommentCard";
+import { FiSend } from "react-icons/fi";
+import { VscSmiley } from "react-icons/vsc";
+import { Comment } from "../features/comments/commentSlice";
 
 interface PostCard {
   post: Post;
@@ -54,6 +54,13 @@ const PostCard = ({ post }: PostCard) => {
     updatedAt,
   } = post;
 
+  // console.log("comments", comments);
+  // console.log("post", post);
+
+  const [commentArr, setCommentArr] = useState<any>(comments);
+
+  // console.log("commentArr", commentArr);
+
   const [toggleLike, setToggleLike] = useState<Boolean>(
     likes.includes(user?._id as string)
   );
@@ -65,8 +72,14 @@ const PostCard = ({ post }: PostCard) => {
     bookmarkedPostsUsers.length
   );
 
-  const [commentOpen, setCommentOpen] = useState(false);
   const [updateDeleteOpen, setUpdateDeleteOpen] = useState(false);
+  const [commentOpen, setCommentOpen] = useState<Boolean>(false);
+  const [isCommentControlOpen, setIsCommentControlOpen] =
+    useState<Boolean>(false);
+  const [isAllCommentControlOpen, setIsAllCommentControlOpen] =
+    useState<Boolean>(false);
+  const [isViewMoreOpen, setIsViewMoreOpen] = useState<Boolean>(false);
+
   const [allCommentsOpen, setAllCommentsOpen] = useState(false);
 
   const updateDeleteOpenRef = useRef<HTMLDivElement>(null);
@@ -97,6 +110,8 @@ const PostCard = ({ post }: PostCard) => {
   const isPostEdited = createdAt !== updatedAt;
   const [isPostEditedClient, setIsPostEditedClient] =
     useState<Boolean>(isPostEdited);
+
+  const [commentsArray, setCommentsArray] = useState<Comment[]>();
 
   // ---Redux Tool kit--------------------------------------------------------------
 
@@ -134,6 +149,11 @@ const PostCard = ({ post }: PostCard) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [updateDeleteOpenRef]);
+
+  // --------------------Fetch Comments-----------------------------
+
+  // console.log("comments", comments);
+
   // -----------------------------------------------------------------------
 
   // useEffect(() => {
@@ -297,12 +317,41 @@ const PostCard = ({ post }: PostCard) => {
     }
   };
 
-  // console.log("base64Update", base64Update);
-  // console.log("updateImage", updateImage);
+  const handleMostRecentSortAscending = () => {
+    const commentsWithDate = comments.map((comment) => {
+      return {
+        ...comment,
+        updatedAt: new Date(comment.updatedAt),
+      };
+    });
+
+    // Sort the array by "updatedAt" property in ascending order
+    const mostRecentSortedArr = commentsWithDate.sort(
+      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+    );
+
+    setCommentArr(mostRecentSortedArr);
+  };
+
+  const handleMostRecentSortDescending = () => {
+    const commentsWithDate = comments.map((comment) => {
+      return {
+        ...comment,
+        updatedAt: new Date(comment.updatedAt),
+      };
+    });
+
+    // Sort the array by "updatedAt" property in ascending order
+    const mostRecentSortedArr = commentsWithDate.sort(
+      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime()
+    );
+
+    setCommentArr(mostRecentSortedArr);
+  };
 
   // ------------------------------------------------------------------------------
   return (
-    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4  ">
+    <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4 w-full  ">
       {/* Update Component */}
       {/* User details and post creation date */}
       <div className="flex justify-between">
@@ -557,8 +606,10 @@ const PostCard = ({ post }: PostCard) => {
             <div
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => {
-                setCommentOpen(!commentOpen);
+                // setCommentOpen(!commentOpen);
+                setIsCommentControlOpen(!isCommentControlOpen);
                 setAllCommentsOpen(!allCommentsOpen);
+                setIsViewMoreOpen(false);
               }}
             >
               <BiCommentDots
@@ -591,7 +642,8 @@ const PostCard = ({ post }: PostCard) => {
           </div>
         </div>
       )}
-      {comments.length > 0 && (
+
+      {isCommentControlOpen && (
         <div>
           {/* Comment Box */}
           <div className="relative flex items-center gap-4 ">
@@ -603,7 +655,11 @@ const PostCard = ({ post }: PostCard) => {
               />
             </div>
             <textarea
-              placeholder="Comment of fIrYYstName Post"
+              placeholder={
+                commentArr.length === 0
+                  ? `Be the first to comment on ${author?.firstName}'s post`
+                  : `Comment on ${author?.firstName}'s post`
+              }
               className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
             ></textarea>
             <div className="flex items-center gap-4 absolute right-0 mr-6">
@@ -624,7 +680,8 @@ const PostCard = ({ post }: PostCard) => {
             <div
               className="flex items-center gap-0.5 cursor-pointer"
               onClick={() => {
-                setCommentOpen(!commentOpen);
+                // setCommentOpen(!commentOpen);
+                // setIsAllCommentControlOpen(!isAllCommentControlOpen);
                 setAllCommentsOpen(!allCommentsOpen);
               }}
             >
@@ -632,7 +689,8 @@ const PostCard = ({ post }: PostCard) => {
                 All comments
               </small>
               <small className="text-secondaryColor dark:text-whiteColor text-sm">
-                (10)
+                {/* (10) */}
+                {`(${comments.length})`}
               </small>
 
               {commentOpen ? (
@@ -654,18 +712,45 @@ const PostCard = ({ post }: PostCard) => {
                 Sort by
               </small>
               <select className="text-secondaryColor dark:text-whiteColor text-sm bg-transparent focus:outline-none cursor-pointer">
-                <option className="text-secondaryColor  text-sm bg-transparent">
-                  Most recent
+                <option
+                  className="text-secondaryColor  text-sm bg-transparent"
+                  onClick={handleMostRecentSortAscending}
+                >
+                  Newest
                 </option>
-                <option className="text-secondaryColor text-sm bg-transparent">
-                  Most liked
+                <option
+                  className="text-secondaryColor text-sm bg-transparent"
+                  onClick={handleMostRecentSortDescending}
+                >
+                  Oldest
                 </option>
               </select>
             </div>
           </div>
+
+          {commentArr?.slice(0, 2).map((comment: any, index: number) => (
+            <CommentCard comment={comment} key={index} />
+          ))}
+
+          {commentArr.length > 2 && !isViewMoreOpen && (
+            <div
+              className="text-center mt-1 pt-2 border-t-2  dark:borderWhiteColorLight w-full"
+              onClick={() => setIsViewMoreOpen(true)}
+            >
+              <small className="text-secondaryColor text-center dark:text-whiteColor text-[12px] cursor-pointer p-2 hoverSecondaryColorLight dark:hoverWhiteColorLight rounded-lg">
+                View more comments
+              </small>
+            </div>
+          )}
+
+          {isViewMoreOpen &&
+            commentArr
+              ?.slice(2)
+              .map((comment: any, index: number) => (
+                <CommentCard comment={comment} key={index + 2} />
+              ))}
         </div>
       )}
-      {comments.length > 0 && allCommentsOpen ? <CommentCard /> : ""}
     </div>
   );
 };

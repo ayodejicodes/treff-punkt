@@ -17,9 +17,19 @@ export type Post = {
 
   comments: {
     _id: string;
-    author: string;
-    text: string;
-    createdAt: string;
+    author: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      userName: string;
+      profilePic: string;
+    };
+    post: string;
+    caption: string;
+    upvotes: string[];
+    downvotes: string[];
+    createdAt: Date;
+    updatedAt: Date;
   }[];
   shares: string[];
   bookmarkedPostsUsers: string[];

@@ -1,5 +1,5 @@
 import { MdVerified } from "react-icons/md";
-import ProfilePicture from "./Profile/ProfilePicture";
+import ProfilePicture from "./ProfilePicture/ProfilePicture";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../app/store";
 import { BsFillTrashFill } from "react-icons/bs";

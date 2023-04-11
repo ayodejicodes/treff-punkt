@@ -12,7 +12,7 @@ import { AppDispatch } from "../../app/store";
 import { logout, reset } from "../../features/auth/authSlice";
 import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
 import { toast } from "react-toastify";
-import ProfilePicture from "../Profile/ProfilePicture";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 
 const NavBar = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);

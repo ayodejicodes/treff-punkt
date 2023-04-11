@@ -2,7 +2,7 @@ import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import ProfilePicture from "./Profile/ProfilePicture";
+import ProfilePicture from "./ProfilePicture/ProfilePicture";
 
 const ShortProfile = () => {
   const { user } = useSelector((state: RootState) => state.auth);

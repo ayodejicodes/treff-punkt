@@ -7,7 +7,7 @@ import { createPost, resetPost } from "../features/posts/postSlice";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
-import ProfilePicture from "./Profile/ProfilePicture";
+import ProfilePicture from "./ProfilePicture/ProfilePicture";
 
 const PostForm = () => {
   const [caption, setCaption] = useState<string | undefined>();

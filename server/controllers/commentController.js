@@ -4,31 +4,25 @@ const Post = require("../models/PostModel");
 
 // ------------------------Gets Comments------------------------
 
-// @desc        Gets all Comments
+// @desc        Gets all Comments fo a Post
 // @Route       POST (/api/comments/:postID)
 // @Access      Public
 const getcommentsController = asyncHandler(async (req, res) => {
   const { postID } = req.params;
 
-  const foundComments = await Comment.find();
-
-  // Filters only comments of a Post
-  const filteredComments = foundComments.filter(
-    (comment) => comment.post.toString() === postID
-  );
+  const foundComments = await Comment.find({ post: postID });
 
   const comments = async () => {
     const populatedComments = await Promise.all(
-      filteredComments.map(async (filteredComment) => {
-        const result = await filteredComment.populate({
+      foundComments.map(async (foundComment) => {
+        const mappedCommentswithAuthors = await foundComment.populate({
           path: "author",
           model: "User",
-          select: "-password",
+          select: ["firstName", "lastName", "userName", "profilePic"],
         });
-        return result;
+        return mappedCommentswithAuthors;
       })
     );
-
     return populatedComments;
   };
 
@@ -110,7 +104,7 @@ const updateCommentController = asyncHandler(async (req, res) => {
 // ------------------------Delete Existing Comment------------------------
 
 // @desc        Delete Comment
-// @Route       DELETE (/api/comments/:id)
+// @Route       DELETE (/api/comments/:postID/:id)
 // @Access      Public
 const deleteCommentController = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -134,9 +128,114 @@ const deleteCommentController = asyncHandler(async (req, res) => {
   }
 });
 
+// ------------------------Upvote comment------------------------
+
+// @desc        Upvote Comment
+// @Route       PUT (/api/comments/:postID/:id/upvote)
+// @Access      Private
+const upvoteController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if Comment exists
+  const foundComment = await Comment.findById(id);
+
+  if (!foundComment) {
+    res.status(400);
+    throw new Error("Cannot upvote Comment with an invalid ID");
+  }
+
+  // Logic
+  if (foundComment.downvotes.includes(req.user._id.toString())) {
+    // Remove Downvote first
+    const removedDownvote = await Comment.findByIdAndUpdate(
+      id,
+      { $pull: { downvotes: req.user._id } },
+      { new: true }
+    );
+    const addedUpvote = await Comment.findByIdAndUpdate(
+      id,
+      { $push: { upvotes: req.user._id } },
+      { new: true }
+    );
+
+    res.status(200).json(addedUpvote);
+  } else if (foundComment.upvotes.includes(req.user._id.toString())) {
+    // Remove Upvote
+    const removedUpvote = await Comment.findByIdAndUpdate(
+      id,
+      { $pull: { upvotes: req.user._id } },
+      { new: true }
+    );
+    res.status(200).json(removedUpvote);
+  } else {
+    // Add upvote if not included
+    const addedUpvote = await Comment.findByIdAndUpdate(
+      id,
+      { $push: { upvotes: req.user._id } },
+      { new: true }
+    );
+    res.status(200).json(addedUpvote);
+  }
+});
+
+// ------------------------Downvote comment------------------------
+
+// @desc        Downvote Comment
+// @Route       PUT (/api/comments/:postID/:id/downvote)
+// @Access      Private
+const downvoteController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if Comment exists
+  const foundComment = await Comment.findById(id);
+
+  if (!foundComment) {
+    res.status(400);
+    throw new Error("Cannot downvote Comment with an invalid ID");
+  }
+
+  // Logic
+  if (foundComment.upvotes.includes(req.user._id.toString())) {
+    // Remove Upvote first
+    const removedUpvote = await Comment.findByIdAndUpdate(
+      id,
+      { $pull: { upvotes: req.user._id } },
+      { new: true }
+    );
+    const addedDownvote = await Comment.findByIdAndUpdate(
+      id,
+      { $push: { downvotes: req.user._id } },
+      { new: true }
+    );
+
+    res.status(200).json(addedDownvote);
+  } else if (foundComment.downvotes.includes(req.user._id.toString())) {
+    // Remove Downvote
+    const removedDownvote = await Comment.findByIdAndUpdate(
+      id,
+      { $pull: { downvotes: req.user._id } },
+      { new: true }
+    );
+
+    res.status(200).json(removedDownvote);
+  } else {
+    // Add downvote if not included
+
+    const addedDownvote = await Comment.findByIdAndUpdate(
+      id,
+      { $push: { downvotes: req.user._id } },
+      { new: true }
+    );
+
+    res.status(200).json(addedDownvote);
+  }
+});
+
 module.exports = {
   getcommentsController,
   createCommentController,
   updateCommentController,
   deleteCommentController,
+  upvoteController,
+  downvoteController,
 };

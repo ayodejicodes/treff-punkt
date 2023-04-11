@@ -45,7 +45,7 @@ const HomePage = () => {
       setPostArray(res.payload);
     };
     homeFeedPosts();
-  }, [posts, dispatch]);
+  }, [dispatch, postArray]);
 
   // -------------------------------------------------------------------------
 

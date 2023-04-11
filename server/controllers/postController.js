@@ -11,12 +11,23 @@ const getPostsController = asyncHandler(async (req, res) => {
   try {
     const posts = await Post.find()
       .populate("author", ["-posts", "-password"])
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          select: ["firstName", "lastName", "userName", "profilePic"],
+        },
+      })
       .sort({ createdAt: -1 });
 
     // Filters only posts of authenticated user
     // const filteredPosts = posts.filter(
     //   (post) => req.user.id.toString() === post.author.toString()
     // );
+
+    const mapPosts = posts.map((post) => {
+      return post;
+    });
 
     res.status(200).json(posts);
   } catch (error) {
