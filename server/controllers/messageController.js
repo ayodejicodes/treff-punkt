@@ -61,7 +61,7 @@ const getMessagesController = asyncHandler(async (req, res) => {
 
 const createMessageController = asyncHandler(async (req, res) => {
   const { chat } = req.params;
-  const { content } = req.body;
+  const { content, contentImage } = req.body;
 
   // Validation check
   if (!chat) {
@@ -99,8 +99,8 @@ const createMessageController = asyncHandler(async (req, res) => {
       const newMessage = await Message.create({
         chat,
         sender: req.user._id,
-
         content,
+        contentImage,
       });
 
       await Chat.findByIdAndUpdate(chat, { latestMessage: newMessage });

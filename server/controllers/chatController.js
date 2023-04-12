@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Chat = require("../models/ChatModel");
+const User = require("../models/UserModel");
 
 // ------------------------Get Chats------------------------
 
@@ -12,7 +13,10 @@ const getChatsController = asyncHandler(async (req, res) => {
       users: {
         $in: [req.user._id],
       },
-    });
+    })
+      .populate("sender", "firstName lastName profilePic")
+      .populate("receiver", "firstName lastName profilePic")
+      .populate("latestMessage");
 
     // Validation check
     if (!chats) {
@@ -48,8 +52,12 @@ const createChatController = asyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: userID } } },
       { users: { $size: 2 } },
     ],
-  });
+  })
+    .populate("sender", "firstName lastName profilePic")
+    .populate("receiver", "firstName lastName profilePic")
+    .populate("latestMessage");
 
+  const receiver = await User.findById(userID);
   // Validation check
   if (chatExists) {
     res.status(200).json(chatExists);
@@ -58,6 +66,7 @@ const createChatController = asyncHandler(async (req, res) => {
       // create new Chat
       const newChat = await Chat.create({
         sender: req.user._id,
+        receiver: receiver._id,
         users: [userID, req.user._id],
       });
 

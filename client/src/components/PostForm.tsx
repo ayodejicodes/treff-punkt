@@ -130,6 +130,8 @@ const PostForm = () => {
         })
       );
     }
+
+    dispatch(resetPost());
   };
 
   return (

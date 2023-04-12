@@ -14,6 +14,7 @@ const MyDropzone = ({}) => {
   const [preview, setPreview] = useState<string>();
   const [uploadedPicture, setUploadedPicture] = useState<string>();
   const [file, setFile] = useState<string | null>(null);
+  const [content, setContent] = useState<string | undefined>();
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -127,6 +128,7 @@ const MyDropzone = ({}) => {
   };
 
   console.log(uploadedPicture);
+
   // console.log("upload_preset:", `"${cloud_name}"`);
 
   return (
@@ -188,6 +190,8 @@ const MyDropzone = ({}) => {
                       id=""
                       placeholder="Start a Conversation"
                       className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
                     />
 
                     <div className="flex gap-1.5 items-center justify-center pl-3 pr-3">

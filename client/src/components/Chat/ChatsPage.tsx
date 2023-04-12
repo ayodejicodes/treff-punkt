@@ -4,8 +4,23 @@ import { MdVerified } from "react-icons/md";
 import Dropzone from "react-dropzone";
 import { BiPaperPlane } from "react-icons/bi";
 import MyDropzone from "../Dropzone/MyDropzone";
+import { RootState } from "../../app/store";
+import { useSelector } from "react-redux";
+import { Chat } from "../../features/chats/chatSlice";
 
-const ChatsPage = () => {
+interface ChatCard {
+  chat: Chat;
+}
+
+const ChatsPage = ({ chatID }: { chatID: string }) => {
+  const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.chats
+  );
+
+  const chat = chats.find((chat) => chat._id === selectedChatId);
+  const { _id, sender, receiver, users, latestMessage, createdAt, updatedAt } =
+    chat as Chat;
+
   return (
     <div className="md:w-[50%] flex flex-col bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
       {/* Chat Header-------------------------------------------- */}
@@ -13,7 +28,8 @@ const ChatsPage = () => {
         {/* Image */}
         <div className="  w-8 h-8 mb-1">
           <img
-            src="../src/assets/ayo.jpg"
+            src={"../src/assets/ayo.jpg"}
+            // src={receiver.profilePic}
             alt=""
             className=" rounded-full cursor-pointer"
           />
@@ -24,7 +40,7 @@ const ChatsPage = () => {
         <div>
           <div className="flex items-center gap-1">
             <small className="text-secondaryColor dark:text-whiteColor font-semibold">
-              FirstName LastName
+              {`${receiver.firstName} ${receiver.lastName}`}
             </small>
             <span>
               <MdVerified

@@ -1,15 +1,27 @@
 import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import NotificationIcon from "./Notifications/NotificationIcon";
+import { Chat } from "../features/chats/chatSlice";
 
-const SingleUserChatComponent = () => {
+interface ChatCard {
+  chat: Chat;
+  onClick: () => void;
+}
+
+const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
   const online = useOnlineStatus();
+
+  const { _id, sender, receiver, users, latestMessage, createdAt, updatedAt } =
+    chat;
 
   return (
     <div>
       {/* Image and Details */}
       <div className="border-t-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight cursor-pointer">
-        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 ">
+        <div
+          className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 "
+          onClick={onClick}
+        >
           {/* Image */}
           <div>
             <div className="relative w-10 h-10">
@@ -31,7 +43,7 @@ const SingleUserChatComponent = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1 ">
                 <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold ">
-                  FirstName LastName
+                  {`${receiver.firstName} ${receiver.lastName}`}
                 </small>
                 <span>
                   <MdVerified
