@@ -20,11 +20,6 @@ const getPostsController = asyncHandler(async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-    // Filters only posts of authenticated user
-    // const filteredPosts = posts.filter(
-    //   (post) => req.user.id.toString() === post.author.toString()
-    // );
-
     const mapPosts = posts.map((post) => {
       return post;
     });
@@ -136,28 +131,6 @@ const deletePostController = asyncHandler(async (req, res) => {
     throw new Error("Can not delete, Unauthorized User");
   }
 });
-
-// ------------------------Gets Initial Likes------------------------
-
-// @desc        Gets Initial Likes for a post
-// @Route       GET (/api/posts/:id)
-// @Access      Private
-// const fetchInitialStateLike = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-
-//   // Check if Post exists
-//   const foundPost = await Post.findById(id);
-
-//   if (!foundPost) {
-//     res.status(400);
-//     throw new Error("Unable to find Post with that ID");
-//   }
-
-//   if (foundPost) {
-//     res.status(200).json(foundPost.likes);
-//     // console.log("Data fetched");
-//   }
-// });
 
 // ------------------------Like/Dislike Post------------------------
 

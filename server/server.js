@@ -30,6 +30,8 @@ app.use(cors());
 app.use("/api/posts", require("./routes/postRoutes"));
 app.use("/api/comments", require("./routes/commentRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/chats", require("./routes/chatRoutes"));
+app.use("/api/messages", require("./routes/messageRoutes"));
 
 // Error Handling..
 app.use(errorHandlerMiddleware);
