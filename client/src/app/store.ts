@@ -5,12 +5,16 @@ import commentsReducer, {
   CommentsState,
 } from "../features/comments/commentSlice";
 import chatsReducer, { ChatsState } from "../features/chats/chatSlice";
+import messagesReducer, {
+  MessagesState,
+} from "../features/messages/messageSlice";
 
 export interface RootState {
   auth: AuthState;
   posts: PostsState;
   comments: CommentsState;
   chats: ChatsState;
+  messages: MessagesState;
   // Add other slices here
 }
 
@@ -20,6 +24,7 @@ export const store = configureStore({
     posts: postsReducer,
     comments: commentsReducer,
     chats: chatsReducer,
+    messages: messagesReducer,
   },
 });
 

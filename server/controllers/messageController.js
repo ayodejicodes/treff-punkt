@@ -60,8 +60,8 @@ const getMessagesController = asyncHandler(async (req, res) => {
 // @Access      Private
 
 const createMessageController = asyncHandler(async (req, res) => {
-  const { chat } = req.params;
-  const { content, contentImage } = req.body;
+  //   const { chat } = req.params;
+  const { chat, content, contentImage } = req.body;
 
   // Validation check
   if (!chat) {
@@ -69,7 +69,7 @@ const createMessageController = asyncHandler(async (req, res) => {
     throw new Error("No ChatID given");
   }
 
-  if (chat && !content) {
+  if (!content && !contentImage) {
     res.status(400);
     throw new Error("Add Content to Chat");
   }
@@ -102,6 +102,8 @@ const createMessageController = asyncHandler(async (req, res) => {
         content,
         contentImage,
       });
+
+      newMessage.populate("sender", "firstName lastName profilePic");
 
       await Chat.findByIdAndUpdate(chat, { latestMessage: newMessage });
 

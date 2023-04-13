@@ -1,20 +1,78 @@
 import { AiOutlineArrowUp, AiOutlinePaperClip } from "react-icons/ai";
 import { BiPaperPlane } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone, DropzoneState, FileRejection } from "react-dropzone";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Message,
+  createMessage,
+  getMessages,
+  resetMessage,
+} from "../../features/messages/messageSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
+import { useNavigate } from "react-router-dom";
+import { Chat } from "../../features/chats/chatSlice";
+import MessageComponent from "../MessageComponent";
 
-const MyDropzone = ({}) => {
+const MyDropzone = () => {
   const [acceptedFile, setAcceptedFile] = useState<File[] | undefined>();
   const [rejectedFile, setRejectedFile] = useState<
     FileRejection[] | undefined
   >();
-  const [preview, setPreview] = useState<string>();
-  const [uploadedPicture, setUploadedPicture] = useState<string>();
-  const [file, setFile] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | undefined>();
+  const [uploadedPicture, setUploadedPicture] = useState<string | undefined>();
+  const [file, setFile] = useState<string | undefined | null>(null);
   const [content, setContent] = useState<string | undefined>();
+  const [isMessageLoading, setIsMessageLoading] = useState<Boolean>(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.chats
+  );
+
+  const chat = chats.find((chat) => chat._id === selectedChatId);
+  const { _id, users, latestMessage, createdAt, updatedAt } = chat as Chat;
+
+  const [messagesArray, setMessagesArray] = useState<Message[]>([]);
+
+  const chatBoxScrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    chatBoxScrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messagesArray]);
+
+  const fetchMessages = async () => {
+    const res = await dispatch(getMessages(selectedChatId as string));
+    return res;
+  };
+
+  useEffect(() => {
+    const fetchedMessages = async () => {
+      const response = await fetchMessages();
+      await Promise.resolve();
+      setMessagesArray(response.payload);
+    };
+    fetchedMessages();
+  }, [messagesArray?.length]);
+
+  const fetchNewMessages = async () => {
+    const res = await fetchMessages();
+    return res;
+  };
+
+  useEffect(() => {
+    const messages = async () => {
+      const res = await fetchNewMessages();
+      await Promise.resolve();
+      setMessagesArray(res.payload);
+    };
+    messages();
+  }, [selectedChatId]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -89,7 +147,7 @@ const MyDropzone = ({}) => {
 
   useEffect(() => {
     if (acceptedFile && rejectedFile === undefined && acceptedFile.length > 0) {
-      toast.success("Image added successfully");
+      // toast.success("Image added successfully");
       //   console.log("acceptedFile", acceptedFile[0]["name"]);
     }
   }, [acceptedFile, rejectedFile]);
@@ -99,57 +157,127 @@ const MyDropzone = ({}) => {
     setAcceptedFile(undefined);
   };
 
-  console.log(file);
-
   // Upload to Cloudinary
+
   const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
   const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
-  const handleSubmit = () => {
+  const handleMessageUpload = async () => {
+    if (!file) {
+      setFile(undefined);
+      setIsMessageLoading(false);
+      return;
+    }
+
     if (file) {
       const data = new FormData();
       data.append("file", file);
       data.append("upload_preset", `${upload_preset}`);
       data.append("cloud_name", `${cloud_name}`);
 
-      fetch("https://api.cloudinary.com/v1_1/dpcdcpyln/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setUploadedPicture(data.url.toString());
-          setPreview("");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      try {
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/dpcdcpyln/upload",
+          {
+            method: "post",
+            body: data,
+          }
+        );
+        const responseData = await response.json();
+        console.log("uploaded", responseData);
+        return responseData;
+      } catch (error) {
+        setIsMessageLoading(false);
+        throw new Error("Upload Failed");
+      }
     }
   };
 
-  console.log(uploadedPicture);
+  const handleMessageSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsMessageLoading(true);
 
-  // console.log("upload_preset:", `"${cloud_name}"`);
+    const responseData = await handleMessageUpload();
+
+    await Promise.resolve();
+
+    if (!responseData) {
+      setIsMessageLoading(false);
+      const newMessage = dispatch(
+        createMessage({
+          chat: _id,
+          content,
+        })
+      );
+
+      const setNewMessage = (await newMessage).payload;
+      setMessagesArray(() => [...messagesArray, setNewMessage]);
+      // setmes(messagesArray.push(setNewMessage));
+    }
+
+    // console.log("responseData");
+    if (responseData && !isMessageLoading && !content) {
+      setIsMessageLoading(false);
+      setUploadedPicture(responseData.url.toString());
+      setPreview("");
+      const newMessage = dispatch(
+        createMessage({
+          chat: _id,
+          contentImage: responseData.url.toString(),
+        })
+      );
+    }
+
+    if (responseData && !isMessageLoading && content) {
+      setIsMessageLoading(false);
+      setUploadedPicture(responseData.url.toString());
+      setPreview("");
+      dispatch(
+        createMessage({
+          chat: _id,
+          content,
+          contentImage: responseData.url.toString(),
+        })
+      );
+    }
+    setContent("");
+    setFile(null);
+    dispatch(resetMessage());
+  };
 
   return (
     <div {...getRootProps()} className="my-dropzone">
       <input {...getInputProps()} />
 
-      <>
-        <div>
-          <div className="flex-1 ">
-            <div className="flex flex-col h-[calc(73vh)] divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
-              {/* Chat Messages------------------------------------------ */}
-              {!preview && <div className="flex-1  pl-7 pr-7 ">Messages</div>}
+      <div>
+        <div className="flex-1 ">
+          <div className="flex flex-col h-[calc(73vh)] divide-y-[1px] divideSecondaryColorLight dark:divideWhiteColorLight">
+            {/* Chat Messages------------------------------------------ */}
+            {!preview && (
+              <div className="flex-1  pl-7 pr-7">
+                {messagesArray?.map((message, index: number) => (
+                  <MessageComponent message={message} key={index} />
+                ))}
+              </div>
+            )}
+
+            <div
+              className="bg-transparent w-full mt-3"
+              ref={chatBoxScrollRef}
+            ></div>
+
+            <form onSubmit={handleMessageSubmit}>
               {preview && (
                 <div className="flex flex-col justify-between relative flex-1  pl-7 pr-7 items-center  ">
                   <img src={preview} alt="preview" className="mt-2" />
                   <div className="flex gap-4 mt-3 mb-3">
                     <div
                       className=" flex items-center   gap-2 bg-onlineGreen/[95%] p-2 rounded-full cursor-pointer text-white"
-                      onClick={handleSubmit}
+                      // onClick={handleMessageSubmit}
                     >
-                      <small className="text-[12px]">Send file to Member</small>
+                      <button type="submit" className="text-[12px]">
+                        Send file to Member
+                      </button>
                       <AiOutlineArrowUp />
                     </div>
                     <div
@@ -164,7 +292,7 @@ const MyDropzone = ({}) => {
               )}
 
               {/* Chat Form------------------------------------------ */}
-              <div className="flex items-center pl-7 pr-7 pt-3 pb-3 gap-4">
+              <div className="flex items-center pl-7 pr-7 pt-3 pb-3 gap-4 ">
                 <div className="">
                   {preview && (
                     <div className="relative w-8 h-8 bg-red-700">
@@ -203,21 +331,20 @@ const MyDropzone = ({}) => {
                         />
                       </div>
 
-                      <div>
+                      <button type="submit">
                         <BiPaperPlane
                           size={18}
                           className="cursor-pointer text-secondaryColor dark:text-whiteColorcursor-pointer  dark:text-whiteColor"
-                          onClick={handleSubmit}
                         />
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
-      </>
+      </div>
     </div>
   );
 };

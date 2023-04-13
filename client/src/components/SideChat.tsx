@@ -59,7 +59,10 @@ const SideChat = () => {
         <SingleUserChatComponent
           chat={chat}
           key={index}
-          onClick={() => handleChatClick(chat._id)}
+          onClick={() => {
+            handleChatClick(chat._id);
+            navigate("/chats");
+          }}
         />
       ))}
     </div>

@@ -3,18 +3,6 @@ import chatService from "./chatService";
 
 export type Chat = {
   _id: string;
-  sender: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    profilePic: string;
-  };
-  receiver: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    profilePic: string;
-  };
 
   users: {
     _id: string;
@@ -22,7 +10,7 @@ export type Chat = {
     lastName: string;
     profilePic: string;
   }[];
-  latestMessage: string | undefined;
+  latestMessage: string;
   createdAt: string;
   updatedAt: string;
 };

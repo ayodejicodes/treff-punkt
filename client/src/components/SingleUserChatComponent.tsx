@@ -2,6 +2,8 @@ import { MdVerified } from "react-icons/md";
 import useOnlineStatus from "../hooks/useOnlineStatus";
 import NotificationIcon from "./Notifications/NotificationIcon";
 import { Chat } from "../features/chats/chatSlice";
+import { RootState } from "../app/store";
+import { useSelector } from "react-redux";
 
 interface ChatCard {
   chat: Chat;
@@ -11,8 +13,14 @@ interface ChatCard {
 const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
   const online = useOnlineStatus();
 
-  const { _id, sender, receiver, users, latestMessage, createdAt, updatedAt } =
-    chat;
+  const { user, isSuccess, isError, message } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const { _id, users, latestMessage, createdAt, updatedAt } = chat;
+
+  const sender = users.find((u) => u?._id === user?._id);
+  const receiver = users.find((u) => u?._id !== user?._id);
 
   return (
     <div>
@@ -26,9 +34,9 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
           <div>
             <div className="relative w-10 h-10">
               <img
-                src="../src/assets/ayo.jpg"
+                src={receiver?.profilePic}
                 alt=""
-                className=" rounded-full "
+                className=" rounded-full w-full h-full object-cover"
               />
               {online ? (
                 <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
@@ -43,7 +51,7 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1 ">
                 <small className="text-secondaryColor dark:text-whiteColor text-[12px] font-semibold ">
-                  {`${receiver.firstName} ${receiver.lastName}`}
+                  {`${receiver?.firstName} ${receiver?.lastName}`}
                 </small>
                 <span>
                   <MdVerified

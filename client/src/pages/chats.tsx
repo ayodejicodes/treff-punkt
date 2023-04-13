@@ -10,7 +10,7 @@ const Chats = () => {
   return (
     <div className=" pageViewportHeight mt-2 mb-4 ">
       <div className="container containerPadding gap-6  flex justify-center ">
-        {selectedChatId && <ChatsPage chatID={selectedChatId} />}
+        {selectedChatId && <ChatsPage />}
       </div>
     </div>
   );

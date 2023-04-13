@@ -14,8 +14,7 @@ const getChatsController = asyncHandler(async (req, res) => {
         $in: [req.user._id],
       },
     })
-      .populate("sender", "firstName lastName profilePic")
-      .populate("receiver", "firstName lastName profilePic")
+      .populate("users", "firstName lastName profilePic")
       .populate("latestMessage");
 
     // Validation check
@@ -45,6 +44,10 @@ const createChatController = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("No UserID");
   }
+  if (req.user._id === userID) {
+    res.status(400);
+    throw new Error("You cant create Chat with yourself");
+  }
 
   const chatExists = await Chat.findOne({
     $and: [
@@ -52,12 +55,8 @@ const createChatController = asyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: userID } } },
       { users: { $size: 2 } },
     ],
-  })
-    .populate("sender", "firstName lastName profilePic")
-    .populate("receiver", "firstName lastName profilePic")
-    .populate("latestMessage");
+  }).populate("latestMessage");
 
-  const receiver = await User.findById(userID);
   // Validation check
   if (chatExists) {
     res.status(200).json(chatExists);
@@ -65,8 +64,6 @@ const createChatController = asyncHandler(async (req, res) => {
     try {
       // create new Chat
       const newChat = await Chat.create({
-        sender: req.user._id,
-        receiver: receiver._id,
         users: [userID, req.user._id],
       });
 

@@ -8,7 +8,13 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    content: { type: String, required: true, trim: true },
+    content: {
+      type: String,
+
+      // required: true,
+
+      trim: true,
+    },
     contentImage: {
       type: String,
       // required: true,
