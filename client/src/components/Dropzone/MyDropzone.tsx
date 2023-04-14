@@ -16,6 +16,12 @@ import { AppDispatch, RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { Chat } from "../../features/chats/chatSlice";
 import MessageComponent from "../MessageComponent";
+import { io } from "socket.io-client";
+
+const URLSOCKET = "http://localhost:1024";
+let socket = io(URLSOCKET, {
+  transports: ["websocket"],
+});
 
 const MyDropzone = () => {
   const [acceptedFile, setAcceptedFile] = useState<File[] | undefined>();
@@ -28,6 +34,7 @@ const MyDropzone = () => {
   const [content, setContent] = useState<string | undefined>();
   const [isMessageLoading, setIsMessageLoading] = useState<Boolean>(false);
 
+  const { user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -41,6 +48,13 @@ const MyDropzone = () => {
   const [messagesArray, setMessagesArray] = useState<Message[]>([]);
 
   const chatBoxScrollRef = useRef<HTMLDivElement | null>(null);
+
+  // ----------Socket io-------------------------------------------------------
+
+  socket.emit("setup", user);
+  socket.emit("chat", chat);
+
+  // --------------------------------------------------------------------------
 
   useEffect(() => {
     chatBoxScrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -211,7 +225,7 @@ const MyDropzone = () => {
       );
 
       const setNewMessage = (await newMessage).payload;
-      setMessagesArray(() => [...messagesArray, setNewMessage]);
+      setMessagesArray((prev) => [...prev, setNewMessage]);
       // setmes(messagesArray.push(setNewMessage));
     }
 

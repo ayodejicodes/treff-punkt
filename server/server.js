@@ -5,6 +5,8 @@ const errorHandlerMiddleware = require("./middlewares/errorHandlerMiddleware");
 const connectDB = require("./config/db");
 require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -16,7 +18,14 @@ cloudinary.config({
 connectDB();
 
 const app = express();
-const port = process.env.PORT || 8000;
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:5173",
+  },
+});
+// const port = process.env.PORT || 8000;
+const port = 1024;
 
 // Handles JSON data
 app.use(express.json());
@@ -36,5 +45,24 @@ app.use("/api/messages", require("./routes/messageRoutes"));
 // Error Handling..
 app.use(errorHandlerMiddleware);
 
+io.on("connection", (socket) => {
+  console.log("Connected to Socket.io");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+  });
+
+  socket.on("chat", (chat) => {
+    socket.join(chat._id);
+    // console.log(chat._id);
+  });
+
+  // socket.on("disconnect", () => {
+  //   console.log("user disconnected");
+  // });
+});
+
 // Listen to predefined port
-app.listen(port, () => console.log(`Server running on port: ${port}`.blue));
+httpServer.listen(port, () =>
+  console.log(`Server running on port: ${port}`.blue)
+);
