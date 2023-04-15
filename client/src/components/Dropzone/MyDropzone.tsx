@@ -99,8 +99,16 @@ const MyDropzone = () => {
     socket.on("private_message", (message) => {
       setMessagesArray((prev) => [...prev, message]);
     });
-    socket.on("typing", () => setIsTyping(true));
-    socket.on("stop typing", () => setIsTyping(false));
+    socket.on("typing", (data) => {
+      console.log("data", data);
+      setIsTyping(true);
+      setTypingUser(data?.firstName);
+    });
+    socket.on("stop typing", (data) => {
+      console.log("data", data);
+      setIsTyping(false);
+      setTypingUser(undefined);
+    });
 
     return () => {
       socket.off("private_message");
@@ -113,7 +121,7 @@ const MyDropzone = () => {
     if (!isTyping) {
       setIsTyping(true);
       // setTypingUser(sender?._id);
-      socket.emit("typing", selectedChatId);
+      socket.emit("typing", sender);
     }
 
     const lastTypingTime = new Date().getTime();
@@ -124,15 +132,15 @@ const MyDropzone = () => {
       const difference = currentTime - lastTypingTime;
 
       if (difference > timerLength && isTyping) {
-        socket.emit("stop typing", selectedChatId);
+        socket.emit("stop typing", sender);
         setIsTyping(false);
       }
     }, timerLength);
   };
 
-  console.log("isSocketConnected", isSocketConnected);
-  console.log("isTyping", isTyping);
-  console.log("typingUser", typingUser);
+  // console.log("isSocketConnected", isSocketConnected);
+  // console.log("isTyping", isTyping);
+  // console.log("typingUser", typingUser);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -341,10 +349,10 @@ const MyDropzone = () => {
                     key={index}
                   />
                 ))}
-                {isTyping && (
+                {isTyping && typingUser && (
                   <div className="flex items-center justify-start max-w-[25%]  bg-primaryColor rounded-lg pl-2 pr-2 pt-1 pb-1 mt-2 ">
                     <small className="break-all text-secondaryColor ">
-                      typing...
+                      {`${typingUser} is typing...`}
                     </small>
                   </div>
                 )}
