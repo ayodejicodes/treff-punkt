@@ -22,7 +22,7 @@ const URLSOCKET = "http://localhost:1024";
 let socket = io(URLSOCKET, {
   transports: ["websocket"],
 });
-
+let selectedChatCompare: string | null;
 const MyDropzone = () => {
   const [acceptedFile, setAcceptedFile] = useState<File[] | undefined>();
   const [rejectedFile, setRejectedFile] = useState<
@@ -33,6 +33,9 @@ const MyDropzone = () => {
   const [file, setFile] = useState<string | undefined | null>(null);
   const [content, setContent] = useState<string | undefined>();
   const [isMessageLoading, setIsMessageLoading] = useState<Boolean>(false);
+  const [isSocketConnected, setIsSocketConnected] = useState<Boolean>(false);
+  const [isTyping, setIsTyping] = useState<Boolean>(false);
+  const [typingUser, setTypingUser] = useState<string | undefined>();
 
   const { user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
@@ -46,13 +49,12 @@ const MyDropzone = () => {
   const { _id, users, latestMessage, createdAt, updatedAt } = chat as Chat;
 
   const [messagesArray, setMessagesArray] = useState<Message[]>([]);
+  const [notificationArray, setNotificationArray] = useState<Message[]>([]);
 
   const chatBoxScrollRef = useRef<HTMLDivElement | null>(null);
 
-  // ----------Socket io-------------------------------------------------------
-
-  socket.emit("setup", user);
-  socket.emit("chat", chat);
+  const sender = users.find((u) => u?._id === user?._id);
+  const receiver = users.find((u) => u?._id !== user?._id);
 
   // --------------------------------------------------------------------------
 
@@ -68,25 +70,69 @@ const MyDropzone = () => {
   useEffect(() => {
     const fetchedMessages = async () => {
       const response = await fetchMessages();
-      await Promise.resolve();
       setMessagesArray(response.payload);
     };
     fetchedMessages();
   }, [messagesArray?.length]);
 
-  const fetchNewMessages = async () => {
-    const res = await fetchMessages();
-    return res;
-  };
+  useEffect(() => {
+    const fetchMessagesAndUpdateState = async () => {
+      try {
+        // Fetch messages
+        const response = await fetchMessages();
+        const newMessagesArray = response.payload;
+
+        // Update state with new messages
+        setMessagesArray(newMessagesArray);
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+
+    // Fetch messages when component mounts or selectedChatId changes
+    fetchMessagesAndUpdateState();
+  }, [selectedChatId]);
 
   useEffect(() => {
-    const messages = async () => {
-      const res = await fetchNewMessages();
-      await Promise.resolve();
-      setMessagesArray(res.payload);
+    socket.emit("setup", user);
+    socket.on("connected", () => setIsSocketConnected(true));
+    socket.on("private_message", (message) => {
+      setMessagesArray((prev) => [...prev, message]);
+    });
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+
+    return () => {
+      socket.off("private_message");
     };
-    messages();
-  }, [selectedChatId]);
+  }, []);
+
+  const handleIsTyping = () => {
+    if (!isSocketConnected) return;
+
+    if (!isTyping) {
+      setIsTyping(true);
+      // setTypingUser(sender?._id);
+      socket.emit("typing", selectedChatId);
+    }
+
+    const lastTypingTime = new Date().getTime();
+    const timerLength = 3000;
+
+    setTimeout(() => {
+      const currentTime = new Date().getTime();
+      const difference = currentTime - lastTypingTime;
+
+      if (difference > timerLength && isTyping) {
+        socket.emit("stop typing", selectedChatId);
+        setIsTyping(false);
+      }
+    }, timerLength);
+  };
+
+  console.log("isSocketConnected", isSocketConnected);
+  console.log("isTyping", isTyping);
+  console.log("typingUser", typingUser);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -198,7 +244,7 @@ const MyDropzone = () => {
           }
         );
         const responseData = await response.json();
-        console.log("uploaded", responseData);
+
         return responseData;
       } catch (error) {
         setIsMessageLoading(false);
@@ -225,11 +271,14 @@ const MyDropzone = () => {
       );
 
       const setNewMessage = (await newMessage).payload;
+      socket.emit("sendMessage", {
+        receiverId: receiver?._id,
+        senderId: sender?._id,
+        setNewMessage,
+      });
       setMessagesArray((prev) => [...prev, setNewMessage]);
-      // setmes(messagesArray.push(setNewMessage));
     }
 
-    // console.log("responseData");
     if (responseData && !isMessageLoading && !content) {
       setIsMessageLoading(false);
       setUploadedPicture(responseData.url.toString());
@@ -240,22 +289,38 @@ const MyDropzone = () => {
           contentImage: responseData.url.toString(),
         })
       );
+
+      const setNewMessage = (await newMessage).payload;
+      socket.emit("sendMessage", {
+        receiverId: receiver?._id,
+        senderId: sender?._id,
+        setNewMessage,
+      });
+      setMessagesArray((prev) => [...prev, setNewMessage]);
     }
 
     if (responseData && !isMessageLoading && content) {
       setIsMessageLoading(false);
       setUploadedPicture(responseData.url.toString());
       setPreview("");
-      dispatch(
+      const newMessage = dispatch(
         createMessage({
           chat: _id,
           content,
           contentImage: responseData.url.toString(),
         })
       );
+      const setNewMessage = (await newMessage).payload;
+      socket.emit("sendMessage", {
+        receiverId: receiver?._id,
+        senderId: sender?._id,
+        setNewMessage,
+      });
+      setMessagesArray((prev) => [...prev, setNewMessage]);
     }
     setContent("");
     setFile(null);
+    socket.emit("stop typing", selectedChatId);
     dispatch(resetMessage());
   };
 
@@ -270,8 +335,19 @@ const MyDropzone = () => {
             {!preview && (
               <div className="flex-1  pl-7 pr-7">
                 {messagesArray?.map((message, index: number) => (
-                  <MessageComponent message={message} key={index} />
+                  <MessageComponent
+                    message={message}
+                    isTyping={isTyping}
+                    key={index}
+                  />
                 ))}
+                {isTyping && (
+                  <div className="flex items-center justify-start max-w-[25%]  bg-primaryColor rounded-lg pl-2 pr-2 pt-1 pb-1 mt-2 ">
+                    <small className="break-all text-secondaryColor ">
+                      typing...
+                    </small>
+                  </div>
+                )}
               </div>
             )}
 
@@ -333,9 +409,11 @@ const MyDropzone = () => {
                       placeholder="Start a Conversation"
                       className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
                       value={content}
-                      onChange={(e) => setContent(e.target.value)}
+                      onChange={(e) => {
+                        setContent(e.target.value);
+                        handleIsTyping();
+                      }}
                     />
-
                     <div className="flex gap-1.5 items-center justify-center pl-3 pr-3">
                       <div>
                         <AiOutlinePaperClip

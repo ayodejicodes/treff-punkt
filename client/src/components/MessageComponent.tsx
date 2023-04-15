@@ -4,15 +4,18 @@ import { Message } from "../features/messages/messageSlice";
 
 export type Messageinterface = {
   message: Message;
+  isTyping: Boolean;
 };
 
-const MessageComponent = ({ message }: Messageinterface) => {
+const MessageComponent = ({ message, isTyping }: Messageinterface) => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   const { _id, sender, content, contentImage, createdAt, updatedAt } =
     message as Message;
 
   const isSenderTheAuth = sender === user?._id;
+
+  // console.log("isTyping", isTyping);
 
   return (
     <div

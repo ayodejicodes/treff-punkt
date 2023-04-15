@@ -46,20 +46,21 @@ app.use("/api/messages", require("./routes/messageRoutes"));
 app.use(errorHandlerMiddleware);
 
 io.on("connection", (socket) => {
-  console.log("Connected to Socket.io");
-
   socket.on("setup", (userData) => {
     socket.join(userData._id);
+    socket.emit("connected");
   });
 
-  socket.on("chat", (chat) => {
-    socket.join(chat._id);
-    // console.log(chat._id);
+  socket.on("sendMessage", ({ receiverId, senderId, message }) => {
+    io.to(receiverId).emit("private_message", { senderId, message });
   });
 
-  // socket.on("disconnect", () => {
-  //   console.log("user disconnected");
-  // });
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
 });
 
 // Listen to predefined port
