@@ -40,6 +40,8 @@ interface LoginUser {
 
 export interface AuthState {
   user: User | null;
+  // followedUsers: string[];
+  // unfollowedUsers: string[];
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -48,6 +50,8 @@ export interface AuthState {
 
 const initialState: AuthState = {
   user: user ? user : null,
+  // followedUsers: [],
+  // unfollowedUsers: [],
   isLoading: false,
   isSuccess: false,
   isError: false,
@@ -97,6 +101,69 @@ export const login = createAsyncThunk(
   }
 );
 
+// export const followUser = createAsyncThunk(
+//   "users/follow",
+//   async ({ id }: { id: string }, thunkAPI) => {
+//     try {
+//       const token = (
+//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
+//       ).auth.user?.token;
+
+//       return authService.followUser(id, token as string);
+//     } catch (error: any) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
+
+export const followUser = createAsyncThunk(
+  "users/follow",
+  async (id: { id: string }, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
+
+      return authService.followUser(id, token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const unfollowUser = createAsyncThunk(
+  "users/unfollow",
+  async (id: { id: string }, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
+
+      return authService.unfollowUser(id, token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -107,6 +174,9 @@ const authSlice = createSlice({
       state.isError = false;
       state.message = "";
     },
+    // followUser: (state, action) => {
+    //   state.followedUsers.push(action.payload.id);
+    // }
   },
   extraReducers: (builder) => {
     builder
@@ -141,6 +211,33 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
       });
+
+    // .addCase(followUser.pending, (state) => {
+    //   state.isLoading = true;
+    // })
+    // .addCase(followUser.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isSuccess = true;
+    //   state.followedUsers.push(action.payload.id);
+    // })
+    // .addCase(followUser.rejected, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isError = true;
+    //   state.message = action.payload as string;
+    // })
+    // .addCase(unfollowUser.pending, (state) => {
+    //   state.isLoading = true;
+    // })
+    // .addCase(unfollowUser.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isSuccess = true;
+    //   state.unfollowedUsers.push(action.payload.id);
+    // })
+    // .addCase(unfollowUser.rejected, (state, action) => {
+    //   state.isLoading = false;
+    //   state.isError = true;
+    //   state.message = action.payload as string;
+    // });
   },
 });
 

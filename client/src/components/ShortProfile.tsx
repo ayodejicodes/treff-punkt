@@ -23,6 +23,7 @@ const ShortProfile = () => {
   // const handleGetUserProfile = () => {
   // dispatch(setSelectedProfileId("sss"));
   // };
+  // console.log(user?.followers);
 
   return (
     <div>

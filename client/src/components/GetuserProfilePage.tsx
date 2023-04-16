@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../app/store";
-import { User } from "../features/auth/authSlice";
+import { User, followUser, unfollowUser } from "../features/auth/authSlice";
 import axios from "axios";
 import NotFound from "../pages/NotFound";
 import { MdVerified } from "react-icons/md";
@@ -28,6 +28,8 @@ const GetUserProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
+  const [isFollowed, setIsFollowed] = useState<Boolean | undefined>();
+
   useEffect(() => {
     const config = {
       headers: {
@@ -50,12 +52,33 @@ const GetUserProfile = () => {
     };
 
     getSingleUser();
-  }, [id]);
+  }, [id, isFollowed]);
+
+  useEffect(() => {
+    setIsFollowed(userProfile?.followers.includes(user?._id as string));
+  }, [userProfile]);
 
   if (error) {
     return <NotFound />;
   }
-  const handleFollow = () => {};
+  const handleFollow = async (id: string) => {
+    try {
+      await dispatch(followUser({ id }));
+      setIsFollowed(true);
+    } catch (error) {
+      setIsFollowed(false);
+      throw new Error("Could not Follow");
+    }
+  };
+  const handleUnfollow = async (id: string) => {
+    try {
+      await dispatch(unfollowUser({ id }));
+      setIsFollowed(false);
+    } catch (error) {
+      // setIsUnfollowed(false);
+      throw new Error("Could not Unfollow");
+    }
+  };
 
   const handleChatClick = async (id: any) => {
     try {
@@ -117,14 +140,26 @@ const GetUserProfile = () => {
               {/* Edit/Message/Follow */}
               <div>
                 <div className="flex gap-3 mt-1">
-                  <button className="btnPrimary text-[12px] flex items-center">
-                    Follow
-                    <BiPlusMedical
-                      size={12}
-                      className="text-secondaryColor dark:text-whiteColor cursor-pointer ml-2"
-                      onClick={handleFollow}
-                    />
-                  </button>
+                  {!isFollowed && (
+                    <button
+                      className="btnPrimary text-[12px] flex items-center"
+                      onClick={() => handleFollow(id as string)}
+                    >
+                      Follow
+                      <BiPlusMedical
+                        size={12}
+                        className="text-secondaryColor dark:text-whiteColor cursor-pointer ml-2"
+                      />
+                    </button>
+                  )}
+                  {isFollowed && (
+                    <button
+                      className="btnPrimary text-[12px] flex items-center"
+                      onClick={() => handleUnfollow(id as string)}
+                    >
+                      Unfollow
+                    </button>
+                  )}
                   <button
                     className="btnPrimary text-[12px]"
                     onClick={() => {

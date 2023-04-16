@@ -16,8 +16,8 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/:id", protect, getUserProfile);
-router.post("/:id/follow", protect, followController);
-router.post("/:id/unfollow", protect, unfollowController);
+router.put("/:id/follow", protect, followController);
+router.put("/:id/unfollow", protect, unfollowController);
 // router.delete("/delete/:id", protect, deleteUserController);
 
 module.exports = router;

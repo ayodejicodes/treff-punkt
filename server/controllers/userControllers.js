@@ -162,7 +162,7 @@ const generateToken = (id) => {
 // @Route       POST (/api/users/:id/follow)
 // @Access      Private
 const followController = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
 
   // Check if User exists
   const foundUser = await User.findById(id);
@@ -198,7 +198,7 @@ const followController = asyncHandler(async (req, res) => {
 // @Route       POST (/api/users/:id/unfollow)
 // @Access      Private
 const unfollowController = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
 
   // Check if User exists
   const foundUser = await User.findById(id);
