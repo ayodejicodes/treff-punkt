@@ -3,27 +3,27 @@ import { MdVerified } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../app/store";
 import ProfilePicture from "./ProfilePicture/ProfilePicture";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ShortProfile = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, followingsCount } = useSelector(
+    (state: RootState) => state.auth
+  );
   const [followings, setFollowings] = useState<string[]>(
     user?.followings || []
   );
-  const [followers, setFollowers] = useState<string[]>(user?.followers || []);
+  const [followers, setFollowers] = useState<number>(
+    user?.followers?.length || 0
+  );
 
-  // console.log(followers);
-
-  // const online = useOnlineStatus();
+  // useEffect(() => {
+  //   setFollowers((prev) => prev + followingsCount);
+  //   // console.log("followers", followers);
+  // }, [followingsCount]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  // const handleGetUserProfile = () => {
-  // dispatch(setSelectedProfileId("sss"));
-  // };
-  // console.log(user?.followers);
 
   return (
     <div>
@@ -37,7 +37,7 @@ const ShortProfile = () => {
             {/* {online ? (
               <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
             ) : (
-              <div className="absolute border-4 border-whiteColor bg-offlineGray w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
+              <di v className="absolute border-4 border-whiteColor bg-offlineGray w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
             )} */}
           </div>
 
@@ -70,7 +70,7 @@ const ShortProfile = () => {
               <div className="flex justify-between gap-1.5">
                 <div className="flex gap-1 items-center">
                   <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
-                    {followings?.length}
+                    {followingsCount}
                   </small>
                   <small className="text-secondaryColor dark:text-whiteColor ">
                     Following
@@ -87,10 +87,10 @@ const ShortProfile = () => {
 
                 <div className="flex gap-1 items-center">
                   <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
-                    {followers?.length}
+                    {user?.followers?.length}
                   </small>
                   <small className="text-secondaryColor dark:text-whiteColor  ">
-                    {followers?.length > 1 ? "Followers" : "Follower"}
+                    {followers > 1 ? "Followers" : "Follower"}
                   </small>
                 </div>
               </div>

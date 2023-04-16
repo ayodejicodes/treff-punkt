@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../app/store";
-import { User, followUser, unfollowUser } from "../features/auth/authSlice";
+import {
+  User,
+  followUser,
+  setFollowingsCountDecrement,
+  setFollowingsCountIncrement,
+  unfollowUser,
+} from "../features/auth/authSlice";
 import axios from "axios";
 import NotFound from "../pages/NotFound";
 import { MdVerified } from "react-icons/md";
@@ -17,7 +23,9 @@ import {
 import Spinner from "./Spinner";
 
 const GetUserProfile = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, followingsCount } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.chats
   );
@@ -29,6 +37,7 @@ const GetUserProfile = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isFollowed, setIsFollowed] = useState<Boolean | undefined>();
+  // const [followingsCount, setFollowingsCount] = useState();
 
   useEffect(() => {
     const config = {
@@ -65,6 +74,7 @@ const GetUserProfile = () => {
     try {
       await dispatch(followUser({ id }));
       setIsFollowed(true);
+      dispatch(setFollowingsCountIncrement());
     } catch (error) {
       setIsFollowed(false);
       throw new Error("Could not Follow");
@@ -74,8 +84,8 @@ const GetUserProfile = () => {
     try {
       await dispatch(unfollowUser({ id }));
       setIsFollowed(false);
+      dispatch(setFollowingsCountDecrement());
     } catch (error) {
-      // setIsUnfollowed(false);
       throw new Error("Could not Unfollow");
     }
   };
@@ -90,6 +100,8 @@ const GetUserProfile = () => {
     }
     navigate("/chats");
   };
+
+  console.log("followingsCount", followingsCount);
 
   return (
     <>
