@@ -4,6 +4,8 @@ const {
   login,
   getUserProfile,
   deleteUserController,
+  followController,
+  unfollowController,
 } = require("../controllers/userControllers");
 const protect = require("../middlewares/authMiddleware");
 // const specificAuth = require("../middlewares/specificAuthMiddleware");
@@ -14,6 +16,8 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/:id", protect, getUserProfile);
+router.post("/:id/follow", protect, followController);
+router.post("/:id/unfollow", protect, unfollowController);
 // router.delete("/delete/:id", protect, deleteUserController);
 
 module.exports = router;

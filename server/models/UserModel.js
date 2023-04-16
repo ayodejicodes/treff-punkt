@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema(
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     role: { type: String, enum: ["user", "admin"], default: "user" },
     bio: { type: String, maxlength: 500 },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     stories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Story" }],
     bookmarkedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     blocked: { type: Boolean, default: false }, // added blocked field

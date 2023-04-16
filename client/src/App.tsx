@@ -14,6 +14,7 @@ import Login from "./pages/login";
 
 import PrivateRoutes from "../utils/PrivateRoutes";
 import NotFound from "./pages/NotFound";
+import GetUserProfile from "./pages/getUserProfile";
 
 function App() {
   const location = useLocation();
@@ -21,8 +22,10 @@ function App() {
   const showNavBar = ["/register", "/login"].includes(location.pathname);
 
   const pages = ["/", "/profile", "/friends", "/chats"];
-  const showleftSideBar = pages.includes(location.pathname);
-  const showrightSideBar = pages.includes(location.pathname);
+  const showleftSideBar =
+    location.pathname.startsWith("/users") || pages.includes(location.pathname);
+  const showrightSideBar =
+    location.pathname.startsWith("/users") || pages.includes(location.pathname);
 
   return (
     <div className=" dark:bg-secondaryColor z-0">
@@ -49,6 +52,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/chats" element={<Chats />} />
+            <Route path="/users/:id" element={<GetUserProfile />} />
           </Route>
         </Routes>
 

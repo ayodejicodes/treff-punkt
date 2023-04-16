@@ -7,7 +7,8 @@ import MyDropzone from "../Dropzone/MyDropzone";
 import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
 import { Chat } from "../../features/chats/chatSlice";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { format, parseISO } from "date-fns";
 
 const ChatsPage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -51,7 +52,17 @@ const ChatsPage = () => {
           </div>
         </div>
         <small className="text-secondaryColor dark:text-whiteColor text-[12px] mt-[-2px]">
-          Last Seen 30 mins ago
+          {/* {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`} */}
+
+          {latestMessage
+            ? `Last Seen ${format(
+                parseISO(latestMessage?.createdAt),
+                "dd MMM yyyy HH:mm a"
+              )}`
+            : `Last Seen ${format(
+                parseISO(user?.createdAt as string),
+                "dd MMM yyyy HH:mm a"
+              )}`}
         </small>
       </div>
 

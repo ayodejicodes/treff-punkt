@@ -55,11 +55,6 @@ io.on("connection", (socket) => {
     io.to(receiverId).emit("private_message", { senderId, message });
   });
 
-  socket.on("typing", (data) => socket.broadcast.emit("typing", data));
-  socket.on("stop typing", (data) =>
-    socket.broadcast.emit("stop typing", data)
-  );
-
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });

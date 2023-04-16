@@ -1,5 +1,5 @@
 import { MdVerified } from "react-icons/md";
-import useOnlineStatus from "../hooks/useOnlineStatus";
+// import useOnlineStatus from "../hooks/useOnlineStatus";
 import NotificationIcon from "./Notifications/NotificationIcon";
 import { Chat } from "../features/chats/chatSlice";
 import { RootState } from "../app/store";
@@ -11,7 +11,7 @@ interface ChatCard {
 }
 
 const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
-  const online = useOnlineStatus();
+  // const online = useOnlineStatus();
 
   const { user, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.auth
@@ -38,11 +38,11 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
                 alt=""
                 className=" rounded-full w-full h-full object-cover"
               />
-              {online ? (
+              {/* {online ? (
                 <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
               ) : (
                 <div className="absolute border-4 border-whiteColor bg-offlineGray w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -61,9 +61,9 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
                 </span>
               </div>
 
-              <small className="text-secondaryColor dark:text-whiteColor text-[10px] italic ">
+              {/* <small className="text-secondaryColor dark:text-whiteColor text-[10px] italic ">
                 {online ? "Online" : "Offline"}
-              </small>
+              </small> */}
             </div>
             <div className="flex gap-3 justify-between items-center">
               <small className="text-secondaryColor dark:text-whiteColor text-[12px] overflow-hidden whitespace-nowrap overflow-ellipsis w-4 grow">

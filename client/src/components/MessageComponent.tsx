@@ -1,21 +1,19 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { Message } from "../features/messages/messageSlice";
+import { format, parseISO } from "date-fns";
 
 export type Messageinterface = {
   message: Message;
-  isTyping: Boolean;
 };
 
-const MessageComponent = ({ message, isTyping }: Messageinterface) => {
+const MessageComponent = ({ message }: Messageinterface) => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   const { _id, sender, content, contentImage, createdAt, updatedAt } =
     message as Message;
 
   const isSenderTheAuth = sender === user?._id;
-
-  // console.log("isTyping", isTyping);
 
   return (
     <div
@@ -33,11 +31,11 @@ const MessageComponent = ({ message, isTyping }: Messageinterface) => {
         </div>
       )}
       {content && (
-        <div className="flex items-center justify-end max-w-[48%]  bg-primaryColor rounded-lg pl-2 pr-2 pt-1 pb-1 mt-2 ">
+        <div className="flex items-center justify-end max-w-[48%]  bg-primaryColor rounded-lg pl-2 pr-2 pt-1 pb-1 mt-3 ">
           <small className="break-all text-secondaryColor ">{content}</small>
         </div>
       )}
-      {isSenderTheAuth && (
+      {/* {isSenderTheAuth && (
         <div className=" w-3 h-3 mt-1 mr-1 ">
           <img
             src="../../src//assets/ayo.jpg"
@@ -45,7 +43,11 @@ const MessageComponent = ({ message, isTyping }: Messageinterface) => {
             className="rounded-full w-full h-full object-cover"
           />
         </div>
-      )}
+      )} */}
+
+      {/* <small className="text-secondaryColor dark:text-whiteColor text-[10px] mt-1">
+        {message && `${format(parseISO(createdAt), " HH:mm a")}`}
+      </small> */}
     </div>
   );
 };

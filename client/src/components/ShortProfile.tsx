@@ -1,13 +1,29 @@
 import { MdVerified } from "react-icons/md";
-import useOnlineStatus from "../hooks/useOnlineStatus";
-import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
+// import useOnlineStatus from "../hooks/useOnlineStatus";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../app/store";
 import ProfilePicture from "./ProfilePicture/ProfilePicture";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ShortProfile = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const [followings, setFollowings] = useState<string[]>(
+    user?.followings || []
+  );
+  const [followers, setFollowers] = useState<string[]>(user?.followers || []);
 
-  const online = useOnlineStatus();
+  // console.log(followers);
+
+  // const online = useOnlineStatus();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  // const handleGetUserProfile = () => {
+  // dispatch(setSelectedProfileId("sss"));
+  // };
+
   return (
     <div>
       <div className="flex justify-center w-full">
@@ -17,17 +33,20 @@ const ShortProfile = () => {
           <div className="relative w-10 h-10">
             <ProfilePicture />
 
-            {online ? (
+            {/* {online ? (
               <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
             ) : (
               <div className="absolute border-4 border-whiteColor bg-offlineGray w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
-            )}
+            )} */}
           </div>
 
           {/* Details */}
           <div className="flex flex-col ">
             <div className="flex flex-col">
-              <div className="flex items-center gap-1 ">
+              <div
+                className="flex items-center gap-1 cursor-pointer "
+                // onClick={handleGetUserProfile}
+              >
                 <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold">
                   {`${user?.firstName} ${user?.lastName}`}
                 </small>
@@ -50,7 +69,7 @@ const ShortProfile = () => {
               <div className="flex justify-between gap-1.5">
                 <div className="flex gap-1 items-center">
                   <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
-                    987
+                    {followings?.length}
                   </small>
                   <small className="text-secondaryColor dark:text-whiteColor ">
                     Following
@@ -67,10 +86,10 @@ const ShortProfile = () => {
 
                 <div className="flex gap-1 items-center">
                   <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
-                    800
+                    {followers?.length}
                   </small>
                   <small className="text-secondaryColor dark:text-whiteColor  ">
-                    Followers
+                    {followers?.length > 1 ? "Followers" : "Follower"}
                   </small>
                 </div>
               </div>

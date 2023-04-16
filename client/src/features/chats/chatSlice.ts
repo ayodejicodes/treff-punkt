@@ -10,8 +10,8 @@ export type Chat = {
     lastName: string;
     profilePic: string;
   }[];
-  latestMessage: string;
-  createdAt: string;
+  latestMessage: any;
+  createdAt: string | undefined;
   updatedAt: string;
 };
 
@@ -101,7 +101,7 @@ const chatsSlice = createSlice({
       .addCase(createChat.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.chats = action.payload;
+        state.chats.push(action.payload);
       })
       .addCase(createChat.rejected, (state, action) => {
         state.isLoading = false;

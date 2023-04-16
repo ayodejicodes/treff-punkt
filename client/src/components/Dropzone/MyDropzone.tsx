@@ -34,8 +34,6 @@ const MyDropzone = () => {
   const [content, setContent] = useState<string | undefined>();
   const [isMessageLoading, setIsMessageLoading] = useState<Boolean>(false);
   const [isSocketConnected, setIsSocketConnected] = useState<Boolean>(false);
-  const [isTyping, setIsTyping] = useState<Boolean>(false);
-  const [typingUser, setTypingUser] = useState<string | undefined>();
 
   const { user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
@@ -99,48 +97,11 @@ const MyDropzone = () => {
     socket.on("private_message", (message) => {
       setMessagesArray((prev) => [...prev, message]);
     });
-    socket.on("typing", (data) => {
-      console.log("data", data);
-      setIsTyping(true);
-      setTypingUser(data?.firstName);
-    });
-    socket.on("stop typing", (data) => {
-      console.log("data", data);
-      setIsTyping(false);
-      setTypingUser(undefined);
-    });
 
     return () => {
       socket.off("private_message");
     };
   }, []);
-
-  const handleIsTyping = () => {
-    if (!isSocketConnected) return;
-
-    if (!isTyping) {
-      setIsTyping(true);
-      // setTypingUser(sender?._id);
-      socket.emit("typing", sender);
-    }
-
-    const lastTypingTime = new Date().getTime();
-    const timerLength = 3000;
-
-    setTimeout(() => {
-      const currentTime = new Date().getTime();
-      const difference = currentTime - lastTypingTime;
-
-      if (difference > timerLength && isTyping) {
-        socket.emit("stop typing", sender);
-        setIsTyping(false);
-      }
-    }, timerLength);
-  };
-
-  // console.log("isSocketConnected", isSocketConnected);
-  // console.log("isTyping", isTyping);
-  // console.log("typingUser", typingUser);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -343,19 +304,8 @@ const MyDropzone = () => {
             {!preview && (
               <div className="flex-1  pl-7 pr-7">
                 {messagesArray?.map((message, index: number) => (
-                  <MessageComponent
-                    message={message}
-                    isTyping={isTyping}
-                    key={index}
-                  />
+                  <MessageComponent message={message} key={index} />
                 ))}
-                {isTyping && typingUser && (
-                  <div className="flex items-center justify-start max-w-[25%]  bg-primaryColor rounded-lg pl-2 pr-2 pt-1 pb-1 mt-2 ">
-                    <small className="break-all text-secondaryColor ">
-                      {`${typingUser} is typing...`}
-                    </small>
-                  </div>
-                )}
               </div>
             )}
 
@@ -417,10 +367,7 @@ const MyDropzone = () => {
                       placeholder="Start a Conversation"
                       className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
                       value={content}
-                      onChange={(e) => {
-                        setContent(e.target.value);
-                        handleIsTyping();
-                      }}
+                      onChange={(e) => setContent(e.target.value)}
                     />
                     <div className="flex gap-1.5 items-center justify-center pl-3 pr-3">
                       <div>

@@ -90,7 +90,7 @@ const login = asyncHandler(async (req, res) => {
     followers,
     role,
     bio,
-    posts,
+    // posts,
     stories,
     bookmarkedPosts,
     blocked,
@@ -112,7 +112,7 @@ const login = asyncHandler(async (req, res) => {
       followers,
       role,
       bio,
-      posts,
+      // posts,
       stories,
       bookmarkedPosts,
       blocked,
@@ -132,7 +132,18 @@ const login = asyncHandler(async (req, res) => {
 // @Route       GET (/api/users/:id)
 // @Access      Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.json({ msg: "Single User" });
+  const { id } = req.params;
+
+  // Check if User exists
+  const foundUser = await User.findById(id);
+
+  if (!foundUser) {
+    res.status(400);
+    throw new Error("Unable to find User with that ID");
+  }
+  if (foundUser) {
+    res.status(200).json(foundUser);
+  }
 });
 
 // -----------------------------------------------------------------------
@@ -144,4 +155,83 @@ const generateToken = (id) => {
   });
   return token;
 };
-module.exports = { register, login, getUserProfile };
+
+// ------------------------Follow User------------------------
+
+// @desc        Follow User
+// @Route       POST (/api/users/:id/follow)
+// @Access      Private
+const followController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if User exists
+  const foundUser = await User.findById(id);
+
+  if (!foundUser) {
+    res.status(400);
+    throw new Error("Unable to find User with that ID");
+  }
+
+  // Logic
+  if (foundUser.followers.includes(req.user._id.toString())) {
+    res.status(200).json(foundUser);
+  } else {
+    // Add User if not included
+    const addedUser = await User.findByIdAndUpdate(
+      id,
+      { $push: { followers: req.user._id } },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { followings: id } },
+      { new: true }
+    );
+
+    res.status(200).json(addedUser);
+  }
+});
+
+// ------------------------Unfollow User------------------------
+
+// @desc        Unfollow User
+// @Route       POST (/api/users/:id/unfollow)
+// @Access      Private
+const unfollowController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Check if User exists
+  const foundUser = await User.findById(id);
+
+  if (!foundUser) {
+    res.status(400);
+    throw new Error("Unable to find User with that ID");
+  }
+
+  // Logic
+  if (!foundUser.followers.includes(req.user._id.toString())) {
+    res.status(200).json(foundUser);
+  } else {
+    // Add User if not included
+    const removedUser = await User.findByIdAndUpdate(
+      id,
+      { $pull: { followers: req.user._id } },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { followings: id } },
+      { new: true }
+    );
+
+    res.status(200).json(removedUser);
+  }
+});
+
+module.exports = {
+  register,
+  login,
+  getUserProfile,
+  followController,
+  unfollowController,
+};

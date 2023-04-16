@@ -10,14 +10,51 @@ import { reset } from "../features/auth/authSlice";
 import moment from "moment";
 
 import { format, parse, addDays } from "date-fns";
+import PostCard from "./PostCard";
+import axios from "axios";
+import { Post } from "../features/posts/postSlice";
+
+import { BiPlusMedical } from "react-icons/bi";
 
 const ProfilePage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const createdAt = moment(user?.createdAt).format("MMMM DD YYYY");
-  // const createdAt = moment(user?.createdAt).format("MMMM Do YYYY, h:mm:ss a");
+
+  // const createdAt = moment(user?.createdAt).format("MMMM DD YYYY");
+
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [isDeleteBoxOpen, setIsDeleteBoxOpen] = useState(false);
+
+  // const [posts, setPosts] = useState<Post[]>();
+  // const [error, setError] = useState(false);
+  // const filteredPosts = posts?.filter((post) => post.author._id === user?._id);
+  // const token = user?.token;
+
+  // useEffect(() => {
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   };
+
+  //   const getAllPosts = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://localhost:1024/api/posts",
+  //         config
+  //       );
+  //       const res = await response.data;
+  //       setPosts(res);
+  //       setError(false);
+  //     } catch (error) {
+  //       setError(true);
+  //     }
+  //   };
+
+  //   getAllPosts();
+  // }, []);
+
+  // console.log("filteredPosts", filteredPosts);
 
   // Handles Outside box Click---------------------------------------
   const deleteBoxRef = useRef<HTMLDivElement>(null);
@@ -69,7 +106,7 @@ const ProfilePage = () => {
       <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-7 pr-7">
         {/* Details-------------------------------------*/}
         <div className="text-center">
-          <div className="flex items-center gap-1  ">
+          <div className="flex items-center justify-center gap-1  ">
             <small className="text-secondaryColor dark:text-whiteColor text-[16px] font-semibold text-center">
               {`${user?.firstName} ${user?.lastName}`}
             </small>
@@ -85,18 +122,25 @@ const ProfilePage = () => {
               {`@${user?.userName}`}
             </small>
             <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-1.5 ">
-              {/* {`Joined ${format(
+              {`Joined ${format(
                 new Date(user?.createdAt as string),
                 "  dd MMM yyyy"
-              )}`} */}
+              )}`}
             </small>
           </div>
           {/* Edit/Message/Follow */}
           <div>
             {/* <div className="flex gap-3 mt-3">
-            <button className="btnPrimary text-[12px]">Message</button>
-            <button className="btnPrimary text-[12px]">Follow</button>
-          </div> */}
+              <button className="btnPrimary text-[12px] flex items-center">
+                Follow
+                <BiPlusMedical
+                  size={12}
+                  className="text-secondaryColor dark:text-whiteColor cursor-pointer ml-2"
+                  onClick={handleFollow}
+                />
+              </button>
+              <button className="btnPrimary text-[12px]">Message</button>
+            </div> */}
             <div className="text-center gap-3 mt-1">
               <button className="btnPrimary text-[12px]">Edit Profile</button>
             </div>
@@ -104,7 +148,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Delete -------------------------------------------*/}
-        <div className="relative flex justify-end w-full ">
+        {/* <div className="relative flex justify-end w-full ">
           <div className="p-1 rounded-sm bg-secondaryColor text-red-500 dark:text-secondaryColor dark:bg-red-500 cursor-pointer ">
             <BsFillTrashFill
               size={18}
@@ -136,7 +180,7 @@ const ProfilePage = () => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

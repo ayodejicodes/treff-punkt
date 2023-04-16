@@ -3,7 +3,7 @@ import authService from "./authService";
 
 const user = JSON.parse(localStorage.getItem("user") || "null");
 
-interface User {
+export interface User {
   _id: string;
   firstName: string;
   lastName: string;

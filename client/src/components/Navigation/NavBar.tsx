@@ -93,12 +93,13 @@ const NavBar = () => {
               <BsChatDots
                 size={22}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+                onClick={() => navigate("/chats")}
               />
-              <div className="absolute right-[-5px] top-[-2px]">
+              {/* <div className="absolute right-[-5px] top-[-2px]">
                 <NotificationIcon />
-              </div>
+              </div> */}
             </div>
-            <div className="relative flex items-center justify-center">
+            {/* <div className="relative flex items-center justify-center">
               <BsBell
                 size={22}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
@@ -106,7 +107,7 @@ const NavBar = () => {
               <div className="absolute right-[-2px] top-[-2px]">
                 <NotificationIcon />
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div

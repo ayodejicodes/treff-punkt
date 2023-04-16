@@ -8,7 +8,7 @@ import { Chat, getChats, setSelectedChatId } from "../features/chats/chatSlice";
 
 const SideChat = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { chats, isSuccess, isError, message } = useSelector(
+  const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.chats
   );
 
@@ -44,7 +44,7 @@ const SideChat = () => {
       setChatArray(res.payload);
     };
     homeFeedChats();
-  }, []);
+  }, [selectedChatId]);
 
   // console.log("chatArray", chatArray);
   // console.log("selectedChatId", selectedChatId);

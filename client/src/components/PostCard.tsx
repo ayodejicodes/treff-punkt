@@ -351,6 +351,14 @@ const PostCard = ({ post }: PostCard) => {
     setCommentCaption("");
   };
 
+  const handleGetUserProfile = () => {
+    if (user?._id === author._id) {
+      navigate("/profile");
+    } else {
+      navigate(`/users/${author._id}`);
+    }
+  };
+
   // ------------------------------------------------------------------------------
   return (
     <div className="flex flex-col  bg-whiteColor dark:bg-secondaryColor  rounded-xl p-10 gap-4 w-full  ">
@@ -359,7 +367,10 @@ const PostCard = ({ post }: PostCard) => {
       <div className="flex justify-between">
         {/* left */}
         <div>
-          <div className="flex flex-row items-center gap-4">
+          <div
+            className="flex flex-row items-center gap-4"
+            onClick={handleGetUserProfile}
+          >
             <div className="  w-12 h-12">
               <img
                 src={author.profilePic}
@@ -385,7 +396,7 @@ const PostCard = ({ post }: PostCard) => {
                   {/* 17 March at 08:25 PM */}
                   {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
                 </small>
-                {isPostEditedClient && (
+                {/* {isPostEditedClient && (
                   <div className="flex items-center ml-3 gap-1">
                     <MdModeEdit
                       size={13}
@@ -395,7 +406,7 @@ const PostCard = ({ post }: PostCard) => {
                       Updated
                     </small>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
