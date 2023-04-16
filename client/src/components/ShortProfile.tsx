@@ -1,26 +1,46 @@
 import { MdVerified } from "react-icons/md";
-// import useOnlineStatus from "../hooks/useOnlineStatus";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../app/store";
 import ProfilePicture from "./ProfilePicture/ProfilePicture";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ShortProfile = () => {
-  const { user, followingsCount } = useSelector(
+  const { user, followingsCount, followersCount } = useSelector(
     (state: RootState) => state.auth
   );
-  const [followings, setFollowings] = useState<string[]>(
-    user?.followings || []
-  );
-  const [followers, setFollowers] = useState<number>(
-    user?.followers?.length || 0
-  );
+  const [followings, setFollowings] = useState<number>();
+  const [followers, setFollowers] = useState<number>();
 
-  // useEffect(() => {
-  //   setFollowers((prev) => prev + followingsCount);
-  //   // console.log("followers", followers);
-  // }, [followingsCount]);
+  const token = user?.token;
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const getAuthUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:1024/api/users/${user?._id}`,
+          config
+        );
+        const res = await response.data;
+
+        setFollowings(res.followings.length);
+        setFollowers(res.followers.length);
+        setError(false);
+      } catch (error) {
+        setError(true);
+      }
+    };
+
+    getAuthUser();
+  }, [followingsCount]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -70,7 +90,7 @@ const ShortProfile = () => {
               <div className="flex justify-between gap-1.5">
                 <div className="flex gap-1 items-center">
                   <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
-                    {followingsCount}
+                    {followings}
                   </small>
                   <small className="text-secondaryColor dark:text-whiteColor ">
                     Following
@@ -87,10 +107,10 @@ const ShortProfile = () => {
 
                 <div className="flex gap-1 items-center">
                   <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
-                    {user?.followers?.length}
+                    {followers}
                   </small>
                   <small className="text-secondaryColor dark:text-whiteColor  ">
-                    {followers > 1 ? "Followers" : "Follower"}
+                    {followers && followers > 1 ? "Followers" : "Follower"}
                   </small>
                 </div>
               </div>

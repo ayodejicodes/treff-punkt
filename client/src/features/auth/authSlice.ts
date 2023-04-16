@@ -41,6 +41,9 @@ interface LoginUser {
 export interface AuthState {
   user: User | null;
   followingsCount: number;
+  followersCount: number;
+  keyword: string | null;
+
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -49,7 +52,10 @@ export interface AuthState {
 
 const initialState: AuthState = {
   user: user ? user : null,
-  followingsCount: user?.followings?.length,
+  followingsCount: user?.followings?.length || 0,
+  followersCount: user?.followers?.length || 0,
+  keyword: null,
+
   isLoading: false,
   isSuccess: false,
   isError: false,
@@ -140,6 +146,26 @@ export const unfollowUser = createAsyncThunk(
     }
   }
 );
+// export const searchUser = createAsyncThunk(
+//   "users/searchUser",
+//   async (keyword: { keyword: string }, thunkAPI) => {
+//     try {
+//       const token = (
+//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
+//       ).auth.user?.token;
+
+//       return authService.searchUser(keyword, token as string);
+//     } catch (error: any) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 
 const authSlice = createSlice({
   name: "auth",
@@ -153,10 +179,13 @@ const authSlice = createSlice({
     },
 
     setFollowingsCountIncrement: (state) => {
-      state.followingsCount += 1;
+      state.followingsCount++;
     },
     setFollowingsCountDecrement: (state) => {
-      state.followingsCount !== 0 && (state.followingsCount -= 1);
+      state.followingsCount !== 0 && state.followingsCount--;
+    },
+    setKeyword: (state, action) => {
+      state.keyword = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -192,33 +221,6 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
       });
-
-    // .addCase(followUser.pending, (state) => {
-    //   state.isLoading = true;
-    // })
-    // .addCase(followUser.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isSuccess = true;
-    //   state.followedUsers.push(action.payload.id);
-    // })
-    // .addCase(followUser.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isError = true;
-    //   state.message = action.payload as string;
-    // })
-    // .addCase(unfollowUser.pending, (state) => {
-    //   state.isLoading = true;
-    // })
-    // .addCase(unfollowUser.fulfilled, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isSuccess = true;
-    //   state.unfollowedUsers.push(action.payload.id);
-    // })
-    // .addCase(unfollowUser.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.isError = true;
-    //   state.message = action.payload as string;
-    // });
   },
 });
 
@@ -226,5 +228,6 @@ export const {
   reset,
   setFollowingsCountIncrement,
   setFollowingsCountDecrement,
+  setKeyword,
 } = authSlice.actions;
 export default authSlice.reducer;

@@ -44,18 +44,6 @@ const login = async (userData: any) => {
   }
 };
 
-// const followUser = async (id: string, token: string) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-
-//   const response = await axios.post(`${API_URL}${id}/follow`, { id }, config);
-
-//   return response.data;
-// };
-
 const followUser = async ({ id }: { id: string }, token: string) => {
   const config = {
     headers: {
@@ -87,12 +75,31 @@ const unfollowUser = async ({ id }: { id: string }, token: string) => {
   }
 };
 
+// const searchUser = async ({ keyword }: { keyword: string }, token: string) => {
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+//   try {
+//     const response = await axios.get(
+//       `${API_URL}`,
+//       { keyword },
+//       config
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Could not Follow");
+//   }
+// };
+
 const authService = {
   register,
   logout,
   login,
   followUser,
   unfollowUser,
+  // searchUser
 };
 
 export default authService;

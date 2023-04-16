@@ -228,10 +228,32 @@ const unfollowController = asyncHandler(async (req, res) => {
   }
 });
 
+// ------------------------Search Users------------------------
+
+// @Desc        Search User
+// @Route       GET (/api/users?search=)
+// @Access      Private
+const searchUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { firstName: { $regex: req.query.search, $options: "i" } },
+          { lastName: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await User.find({ ...keyword, _id: { $ne: req.user._id } });
+
+  res.status(200).json(users);
+});
+
 module.exports = {
   register,
   login,
   getUserProfile,
   followController,
   unfollowController,
+  searchUsers,
 };

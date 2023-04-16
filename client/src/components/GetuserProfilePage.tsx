@@ -101,8 +101,6 @@ const GetUserProfile = () => {
     navigate("/chats");
   };
 
-  console.log("followingsCount", followingsCount);
-
   return (
     <>
       {userProfile ? (

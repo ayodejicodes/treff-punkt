@@ -4,23 +4,27 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
 import InputText from "../InputText";
 import NotificationIcon from "../Notifications/NotificationIcon";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { AppDispatch } from "../../app/store";
-import { logout, reset } from "../../features/auth/authSlice";
+import { User, logout, reset, setKeyword } from "../../features/auth/authSlice";
 import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
 import { toast } from "react-toastify";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
+import axios from "axios";
 
 const NavBar = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, keyword } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
+
+  const [searchInputParams, setSearchInputParams] = useSearchParams();
+  // const keyword = searchInputParams?.get("search");
 
   // Handles Outside box Click---------------------------------------
 
@@ -40,7 +44,12 @@ const NavBar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropDownRef]);
-  // -----------------------------------------------------------------------
+
+  // ----------------------------------------------------------------------
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchInputParams({ search: e.target.value });
+    dispatch(setKeyword(searchInputParams?.get("search")));
+  };
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -51,6 +60,7 @@ const NavBar = () => {
 
     toast.success("Logged Out");
   };
+  // console.log("keyword", keyword);
 
   return (
     <div>
@@ -70,11 +80,23 @@ const NavBar = () => {
         </div>
 
         {/* Search Field */}
-        <div className="hidden md:block grow-[3.5] w-full ">
-          <InputText
+        <div className="relative hidden md:block grow-[3.5] w-full ">
+          {/* <InputText
             placeholder="Search for friends..."
-            icon={<RxMagnifyingGlass size={20} className="inputIconStyle" />}
-          />
+            icon={<RxMagnifyingGlass size={20} className="inputIconStyle" />} 
+          /> */}
+
+          <div className="flex items-center bgSecondaryColorLight dark:bgWhiteColorLight gap-1 rounded-full ">
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="Search for friends..."
+              className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
+              onChange={handleChange}
+            />
+            <RxMagnifyingGlass size={20} className="inputIconStyle" />
+          </div>
         </div>
 
         {/* Right */}
