@@ -14,7 +14,7 @@ const SearchUserComponent = ({ searchResult }: SearchResults) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   return (
-    <div className="flex justify-center ">
+    <div className="hidden lg:flex justify-center z-50">
       <div
         className="w-[80%] flex justify-between   dark:bg-secondaryColor text-secondaryColor dark:text-whiteColor bg-white pl-6 pr-6 rounded-lg  mb-6 cursor-pointer"
         onClick={() => {

@@ -125,35 +125,37 @@ const CommentCard = ({ comment }: CommentCardProps) => {
         {/* ------------------------------------------------------------------------- */}
         <div className="flex flex-col gap-[0.5]  border-t-2 pt-3 pb-3 mt-2 dark:borderWhiteColorLight w-full">
           <div className="relative flex items-start  gap-3 ">
-            <div className="  w-10 h-10 pt-2">
+            <div className="  w-8 h-8">
               <img
-                src="../src/assets/ayo.jpg"
+                src={author?.profilePic}
                 alt=""
-                className=" rounded-full"
+                className="object-cover w-full h-full rounded-full cursor-pointer"
               />
             </div>
-            <div className="flex  w-full">
-              <div className="w-full ">
-                <small className="text-secondaryColor dark:text-whiteColor text-[13px] font-semibold break-words">
-                  {`${author.firstName} ${author.lastName}:`}
-                </small>
-                <span> </span>
-                <small
-                  className="text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] break-words "
-                  style={{ hyphens: "auto" }}
-                >
-                  {caption}
-                </small>
-              </div>
+            <div className="flex-1">
+              <div className="flex  w-full justify-between ">
+                <div className="  ">
+                  <small className="text-secondaryColor dark:text-whiteColor text-[13px] font-semibold break-all">
+                    {`${author.firstName} ${author.lastName}: `}
+                  </small>
+                  <span> </span>
+                  <small
+                    className="text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] break-all"
+                    style={{ hyphens: "auto" }}
+                  >
+                    {caption}
+                  </small>
+                </div>
 
-              <div className="pt-1">
-                <BiDotsVerticalRounded
-                  size={20}
-                  className="  text-secondaryColor dark:text-whiteColor cursor-pointer "
-                  onClick={() =>
-                    setUpdateDeleteCommentOpen(!updateDeleteCommentOpen)
-                  }
-                />
+                <div className="pt-1 ">
+                  <BiDotsVerticalRounded
+                    size={20}
+                    className="  text-secondaryColor dark:text-whiteColor cursor-pointer "
+                    onClick={() =>
+                      setUpdateDeleteCommentOpen(!updateDeleteCommentOpen)
+                    }
+                  />
+                </div>
               </div>
             </div>
 

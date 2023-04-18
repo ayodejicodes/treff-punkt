@@ -17,7 +17,10 @@ import axios from "axios";
 
 const NavBar = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [mobileprofileDropdownOpen, setMobileProfileDropdownOpen] =
+    useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
+  const dropDownRefMobile = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
   const { user, keyword } = useSelector((state: RootState) => state.auth);
@@ -37,13 +40,24 @@ const NavBar = () => {
     }
   };
 
+  const handleClickOutsideMobile = (e: MouseEvent) => {
+    if (
+      dropDownRefMobile.current &&
+      !dropDownRefMobile.current.contains(e.target as Node)
+    ) {
+      setMobileProfileDropdownOpen(false);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutsideMobile);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutsideMobile);
     };
-  }, [dropDownRef]);
+  }, [dropDownRef, dropDownRefMobile]);
 
   // ----------------------------------------------------------------------
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +78,7 @@ const NavBar = () => {
 
   return (
     <div>
-      <div className="container containerPadding gap-36 flex justify-between h-[10vh]  items-center bg-white  dark:bg-secondaryColor sticky top-0  overflow-hidden ">
+      <div className="container containerPadding  md:gap-36 flex justify-between h-[10vh]  items-center bg-white  dark:bg-secondaryColor sticky top-0  overflow-hidden ">
         {/* Left */}
 
         <div
@@ -80,7 +94,7 @@ const NavBar = () => {
         </div>
 
         {/* Search Field */}
-        <div className="relative hidden md:block grow-[3.5] w-full ">
+        <div className="relative hidden lg:block grow-[3.5] w-full ">
           {/* <InputText
             placeholder="Search for friends..."
             icon={<RxMagnifyingGlass size={20} className="inputIconStyle" />} 
@@ -101,7 +115,7 @@ const NavBar = () => {
 
         {/* Right */}
 
-        <div className=" flex gap-5 grow-[1] items-center justify-end m-3">
+        <div className=" flex gap-5 grow-[1] items-center justify-end">
           <div className="flex gap-5 ">
             {/* ---------Light/Dark --------------------------------------------*/}
 
@@ -114,7 +128,7 @@ const NavBar = () => {
             <div className="relative flex items-center justify-center">
               <BsChatDots
                 size={22}
-                className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+                className=" text-secondaryColor dark:text-whiteColor cursor-pointer "
                 onClick={() => navigate("/chats")}
               />
               {/* <div className="absolute right-[-5px] top-[-2px]">
@@ -133,7 +147,7 @@ const NavBar = () => {
           </div>
 
           <div
-            className=" md:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer  "
+            className="hidden lg:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer"
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
           >
             <div className=" relative w-7 h-7">
@@ -146,15 +160,18 @@ const NavBar = () => {
           </div>
 
           {/* Mobile Hamburger ------------------------*/}
-          <div className=" md:hidden flex items-end">
+          <div
+            className=" lg:hidden flex items-end"
+            onClick={() =>
+              setMobileProfileDropdownOpen(!mobileprofileDropdownOpen)
+            }
+          >
             <div>
               <GiHamburgerMenu
                 size={23}
-                className="cursor-pointer text-secondaryColor dark:text-whiteColor md:hidden"
+                className="cursor-pointer text-secondaryColor dark:text-whiteColor "
               />
             </div>
-
-            {/* -------------------------- */}
           </div>
         </div>
       </div>
@@ -180,6 +197,53 @@ const NavBar = () => {
           </div>
         </div>
       ) : null}
+
+      {/* --------Mobile dropdown------------------ */}
+      {mobileprofileDropdownOpen && (
+        <div
+          className="absolute lg:hidden top-[10vh] right-0 w-[60%] md:w-[50%]  mr-4 p-4 flex flex-col gap-3 rounded lg items-center bg-secondaryColor text-whiteColor dark:bg-white z-50 "
+          ref={dropDownRefMobile}
+        >
+          <div className="  w-7 h-7">
+            <ProfilePicture />
+          </div>
+          <small className="text-sm dark:text-secondaryColor text-whiteColor">
+            Welcome, <span className="font-semibold">{user?.firstName}</span>
+          </small>
+          <Link
+            to="/"
+            className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer text-sm "
+            onClick={() => setMobileProfileDropdownOpen(false)}
+          >
+            <small className="text-sm ">Home</small>
+          </Link>
+          <Link
+            to="/profile"
+            className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer text-sm "
+            onClick={() => setMobileProfileDropdownOpen(false)}
+          >
+            <small className="text-sm ">Profile</small>
+          </Link>
+          <Link
+            to="/chats"
+            className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer text-sm "
+            onClick={() => setMobileProfileDropdownOpen(false)}
+          >
+            <small className="text-sm">Chats</small>
+          </Link>
+          <Link to="/profile">
+            <button className="btnPrimary text-[12px]" onClick={handleLogout}>
+              Log Out
+            </button>
+          </Link>
+        </div>
+      )}
+
+      {/* <div className="md:hidden">Hey sm</div>
+      <div className="lg:hidden">Hey md</div>
+      <div className="xl:hidden">Hey lg</div>
+      <div className="2xl:hidden"> Hey xl</div> */}
+      {/* <div>Hey 2xl</div> */}
     </div>
   );
 };

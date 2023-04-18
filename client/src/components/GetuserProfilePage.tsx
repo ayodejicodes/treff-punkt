@@ -39,6 +39,9 @@ const GetUserProfile = () => {
   const [isFollowed, setIsFollowed] = useState<Boolean | undefined>();
   // const [followingsCount, setFollowingsCount] = useState();
 
+  const [followings, setFollowings] = useState<number>();
+  const [followers, setFollowers] = useState<number>();
+
   useEffect(() => {
     const config = {
       headers: {
@@ -55,13 +58,15 @@ const GetUserProfile = () => {
         const res = await response.data;
         setUserProfile(res);
         setError(false);
+        setFollowings(res.followings.length);
+        setFollowers(res.followers.length);
       } catch (error) {
         setError(true);
       }
     };
 
     getSingleUser();
-  }, [id, isFollowed]);
+  }, [id, isFollowed, followingsCount]);
 
   useEffect(() => {
     setIsFollowed(userProfile?.followers.includes(user?._id as string));
@@ -104,8 +109,9 @@ const GetUserProfile = () => {
   return (
     <>
       {userProfile ? (
-        <div className="md:w-[50%] flex flex-col gap-5  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark">
+        <div className=" w-full lg:w-[50%] lg:flex flex-col gap-5  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark z-10">
           {/* Cover and Profile Picture */}
+
           <div className="relative ">
             {!userProfile?.coverPic && (
               <img
@@ -131,7 +137,7 @@ const GetUserProfile = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-20 pr-20">
+          <div className="mt-5 lg:mt-2 flex flex-col items-center justify-between h-full pt-12 pb-7 pl-20 pr-20">
             {/* Details-------------------------------------*/}
             <div className="text-center">
               <div className="flex items-center justify-center gap-1  ">
@@ -190,12 +196,42 @@ const GetUserProfile = () => {
                 </div>
               </div>
               <div>
+                {/* Followers/Following */}
+                <div className="flex flex-row justify-center mt-8 mb-10">
+                  <div className="flex justify-between gap-1.5">
+                    <div className="flex gap-1 items-center">
+                      <small className="text-secondaryColor dark:text-whiteColor text-[14px] font-bold ">
+                        {followings}
+                      </small>
+                      <small className="text-secondaryColor dark:text-whiteColor text-[14px] ">
+                        Following
+                      </small>
+                    </div>
+
+                    {/* Line Break */}
+                    <div>
+                      <small className=" textSecondaryColorLight  dark:textWhiteColorLight ">
+                        |
+                      </small>
+                    </div>
+                    {/* --------- */}
+
+                    <div className="flex gap-1 items-center">
+                      <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
+                        {followers}
+                      </small>
+                      <small className="text-secondaryColor dark:text-whiteColor  text-[14px]  ">
+                        {followers && followers > 1 ? "Followers" : "Follower"}
+                      </small>
+                    </div>
+                  </div>
+                </div>
                 {userProfile?.bio && (
                   <>
                     <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
                       Bio
                     </h1>
-                    <p className="text-center text-secondaryColor dark:text-whiteColor italic">
+                    <p className="text-center text-secondaryColor dark:text-whiteColor italic text-sm">
                       {userProfile.bio}
                     </p>
                   </>
@@ -205,11 +241,11 @@ const GetUserProfile = () => {
                     <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
                       Bio
                     </h1>
-                    <p className="text-center text-secondaryColor dark:text-whiteColor italic">
+                    <p className="text-center text-secondaryColor dark:text-whiteColor italic text-sm">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Ab vitae sit neque quibusdam voluptatibus veniam laborum
-                      non iure eligendi unde assumenda eveniet sint, sequi
-                      blanditiis consequatur consectetur eius velit sunt?
+                      Voluptatem itaque dolor voluptates veniam explicabo!
+                      Cumque illo dolore dicta aliquam ullam, asperiores
+                      deserunt sint reprehenderit aspernatur!
                     </p>
                   </>
                 )}

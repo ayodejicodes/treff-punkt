@@ -34,6 +34,7 @@ import {
   createComment,
   getComments,
 } from "../features/comments/commentSlice";
+import ProfilePicture from "./ProfilePicture/ProfilePicture";
 
 interface PostCard {
   post: Post;
@@ -505,7 +506,7 @@ const PostCard = ({ post }: PostCard) => {
       )}
       {/* Post Picture */}
       {postImage && !isUpdateFieldOpen && (
-        <div className="relative flex justify-center items-center w-full h-[540px]  rounded-lg">
+        <div className="relative flex justify-center items-center  aspect-square  rounded-lg">
           <img
             src={postImage}
             alt={postImage}
@@ -595,7 +596,6 @@ const PostCard = ({ post }: PostCard) => {
       {!isUpdateFieldOpen && (
         <div className="flex justify-between">
           {/* Left */}
-
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               {toggleLike ? (
@@ -620,44 +620,40 @@ const PostCard = ({ post }: PostCard) => {
                   : `${likeCount} Like${likeCount > 1 ? "s" : ""}`}
               </small>
             </div>
-
-            <div
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={() => {
-                // setCommentOpen(!commentOpen);
-                setIsCommentControlOpen(!isCommentControlOpen);
-                setAllCommentsOpen(!allCommentsOpen);
-                setIsViewMoreOpen(false);
-              }}
-            >
-              <BiCommentDots
-                size={20}
-                className="text-secondaryColor dark:text-whiteColor"
-              />
-              <small className="text-secondaryColor dark:text-whiteColor text-sm">
-                {/* 250 Comments */}
-                {comments.length === 0
-                  ? `No Comment`
-                  : `${comments.length} Comment${
-                      comments.length > 1 ? "s" : ""
-                    }`}
-              </small>
-            </div>
           </div>
-
-          {/* Right */}
-          <div className="flex items-center gap-2 cursor-pointer">
-            <RiShareForwardLine
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              // setCommentOpen(!commentOpen);
+              setIsCommentControlOpen(!isCommentControlOpen);
+              setAllCommentsOpen(!allCommentsOpen);
+              setIsViewMoreOpen(false);
+            }}
+          >
+            <BiCommentDots
               size={20}
               className="text-secondaryColor dark:text-whiteColor"
             />
             <small className="text-secondaryColor dark:text-whiteColor text-sm">
-              {/* 80 Shares */}
-              {shares.length === 0
-                ? `No Share`
-                : `${shares.length} Share${shares.length > 1 ? "s" : ""}`}
+              {/* 250 Comments */}
+              {comments.length === 0
+                ? `No Comment`
+                : `${comments.length} Comment${comments.length > 1 ? "s" : ""}`}
             </small>
           </div>
+          {/* Right */}
+          {/* <div className="flex items-center gap-2 cursor-pointer">
+            <RiShareForwardLine
+              size={20}
+              className="text-secondaryColor dark:text-whiteColor"
+            /> */}
+          {/* <small className="text-secondaryColor dark:text-whiteColor text-sm"> */}
+          {/* 80 Shares */}
+          {/* {shares.length === 0
+                ? `No Share`
+                : `${shares.length} Share${shares.length > 1 ? "s" : ""}`}
+            </small> */}
+          {/* </div> */}
         </div>
       )}
 
@@ -666,22 +662,20 @@ const PostCard = ({ post }: PostCard) => {
           {/* Comment Box */}
           <div className="relative flex items-center gap-4 ">
             <div className="  w-8 h-8">
-              <img
-                src="../src/assets/ayo.jpg"
-                alt=""
-                className=" rounded-full"
-              />
+              <ProfilePicture />
             </div>
-            <textarea
-              placeholder={
-                comments.length === 0
-                  ? `Be the first to comment on ${author?.firstName}'s post`
-                  : `Comment on ${author?.firstName}'s post`
-              }
-              value={commentCaption}
-              onChange={(e) => setCommentCaption(e.target.value)}
-              className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
-            ></textarea>
+            <div className="flex-1">
+              <textarea
+                placeholder={
+                  comments.length === 0
+                    ? `Be the first to comment on ${author?.firstName}'s post`
+                    : `Comment on ${author?.firstName}'s post`
+                }
+                value={commentCaption}
+                onChange={(e) => setCommentCaption(e.target.value)}
+                className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
+              ></textarea>
+            </div>
             <div className="flex items-center gap-4 absolute right-0 mr-6">
               {/* <VscSmiley
                 size={20}

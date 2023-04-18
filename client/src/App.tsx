@@ -88,7 +88,7 @@ function App() {
   // ------------------------------------------------------------------------------------
 
   return (
-    <div className="relative dark:bg-secondaryColor z-0">
+    <div className="relative dark:bg-secondaryColor">
       <div className="container flex flex-col relative w-full">
         {/* ---------NavBar------------------- */}
         {!showNavBar && <NavBar />}
@@ -125,8 +125,8 @@ function App() {
                 ? "top-24"
                 : searchResults.length == 1
                 ? "top-36"
-                : "top-48"
-            } rounded-lg left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[36%] items-center  bg-secondaryColor text-whiteColor dark:bg-white dark:text-secondaryColor`}
+                : "top-48 xl:top-52 "
+            } hidden lg:block rounded-lg left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[36%] items-center  bg-secondaryColor text-whiteColor dark:bg-white dark:text-secondaryColor z-50`}
           >
             <p className="text-center mt-2 mb-2">{`Search Result${
               searchResults.length > 1 ? "s" : ""

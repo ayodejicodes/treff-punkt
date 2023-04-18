@@ -27,10 +27,10 @@ const ChatsPage = () => {
   const receiver = users.find((u) => u?._id !== user?._id);
 
   return (
-    <div className=" md:w-[50%] flex flex-col bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
+    <div className=" w-full lg:w-[50%] lg:flex flex-col bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
       {/* Chat Header-------------------------------------------- */}
       <div
-        className=" flex flex-col items-center pl-7 pr-7 pt-4 pb-2 sticky top-0 bg-[#f0f3f4] dark:bg-[#164055] border-b-2 dark:border-[#f0f3f4]/[0.15]  border-[#164055]/[0.15] cursor-pointer "
+        className=" flex flex-col items-center pl-7 pr-7 pt-4 pb-2 sticky z-20 top-[-8px] bg-[#f0f3f4] dark:bg-[#164055] border-b-2 dark:border-[#f0f3f4]/[0.15]  border-[#164055]/[0.15] cursor-pointer "
         onClick={() => navigate(`/users/${receiver?._id}`)}
       >
         {/* Image */}

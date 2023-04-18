@@ -50,7 +50,7 @@ const LeftSideBar = () => {
 
   // --------------------------------------------------------------------------------------
   return (
-    <div className="hidden  md:flex flex-col gap-5 p-7  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl  overflow-y-scroll  pageViewportHeight scrollbar dark:scrollbarDark absolute left-0 w-[24%] top-[10vh] mt-2">
+    <div className="hidden  lg:flex flex-col gap-5 p-7  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl  overflow-y-scroll  pageViewportHeight scrollbar dark:scrollbarDark absolute left-0 w-[24%] top-[10vh] mt-2">
       {/* Short-Profile */}
       <div className=" flex flex-col bg-whiteColor dark:bg-secondaryColor gap-3 rounded-xl p-4">
         <h3 className="font-semibold text-secondaryColor dark:text-whiteColor text-[16px] ">

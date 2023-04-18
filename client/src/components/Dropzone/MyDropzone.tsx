@@ -316,11 +316,11 @@ const MyDropzone = () => {
 
             <form onSubmit={handleMessageSubmit}>
               {preview && (
-                <div className="flex flex-col justify-between relative flex-1  pl-7 pr-7 items-center  ">
+                <div className="flex flex-col justify-between relative flex-1  pl-7 pr-7 items-center z-10 border-none">
                   <img src={preview} alt="preview" className="mt-2" />
                   <div className="flex gap-4 mt-3 mb-3">
                     <div
-                      className=" flex items-center   gap-2 bg-onlineGreen/[95%] p-2 rounded-full cursor-pointer text-white"
+                      className=" flex items-center   lg:gap-2 bg-onlineGreen/[95%] pt-1 pb-1 pl-2 pr-2 lg:p-2 rounded-full cursor-pointer text-white"
                       // onClick={handleMessageSubmit}
                     >
                       {isMessageLoading ? (
@@ -329,11 +329,14 @@ const MyDropzone = () => {
                         </button>
                       ) : (
                         <>
-                          <button type="submit" className="text-[12px]">
+                          <button
+                            type="submit"
+                            className=" text-[9px] lg:text-[12px]"
+                          >
                             {` Send file to ${receiver?.firstName}`}
                           </button>
 
-                          <AiOutlineArrowUp />
+                          <AiOutlineArrowUp size={12} />
                         </>
                       )}
                     </div>
@@ -341,8 +344,10 @@ const MyDropzone = () => {
                       className=" flex items-center gap-2  bg-red-700/[95%] p-2 rounded-full cursor-pointer text-white"
                       onClick={handleRemove}
                     >
-                      <small className="text-[12px]">Remove Attachment</small>
-                      <RxCross2 />
+                      <small className=" text-[9px] lg:text-[12px]">
+                        Remove Attachment
+                      </small>
+                      <RxCross2 size={12} />
                     </div>
                   </div>
                 </div>
@@ -374,7 +379,7 @@ const MyDropzone = () => {
                       name=""
                       id=""
                       placeholder="Start a Conversation or drag an Image into the Chat zone"
-                      className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
+                      className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor text-sm p-2"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
                     />

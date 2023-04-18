@@ -17,13 +17,47 @@ import { Post } from "../features/posts/postSlice";
 import { BiPlusMedical } from "react-icons/bi";
 
 const ProfilePage = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, followingsCount } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   // const createdAt = moment(user?.createdAt).format("MMMM DD YYYY");
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [isDeleteBoxOpen, setIsDeleteBoxOpen] = useState(false);
+
+  const [followings, setFollowings] = useState<number>();
+  const [followers, setFollowers] = useState<number>();
+
+  const token = user?.token;
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const getAuthUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:1024/api/users/${user?._id}`,
+          config
+        );
+        const res = await response.data;
+
+        setFollowings(res.followings.length);
+        setFollowers(res.followers.length);
+        setError(false);
+      } catch (error) {
+        setError(true);
+      }
+    };
+
+    getAuthUser();
+  }, [followingsCount]);
 
   // const [posts, setPosts] = useState<Post[]>();
   // const [error, setError] = useState(false);
@@ -89,81 +123,112 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="md:w-[50%] flex flex-col gap-5  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark">
-      {/* Cover and Profile Picture */}
-      <div className="relative ">
-        {!user?.coverPic && (
-          <img
-            src="../../src/assets/cover-pic.jpg"
-            alt="cover-pic"
-            className="object-cover w-full h-48"
-          />
-        )}
-        {user?.coverPic && (
-          <img
-            src={user?.coverPic}
-            alt="cover-pic"
-            className="object-cover w-full h-48"
-          />
-        )}
+    <>
+      <div className=" w-full lg:w-[50%] lg:flex flex-col gap-5  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark z-10">
+        {/* Cover and Profile Picture */}
+        <div className="relative ">
+          {!user?.coverPic && (
+            <img
+              src="../../src/assets/cover-pic.jpg"
+              alt="cover-pic"
+              className="object-cover w-full h-48"
+            />
+          )}
+          {user?.coverPic && (
+            <img
+              src={user?.coverPic}
+              alt="cover-pic"
+              className="object-cover w-full h-48"
+            />
+          )}
 
-        <div className=" absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center w-28 h-28 ">
-          <ProfilePicture />
+          <div className=" absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center w-28 h-28 ">
+            <ProfilePicture />
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-20 pr-20">
-        {/* Details-------------------------------------*/}
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1  ">
-            <small className="text-secondaryColor dark:text-whiteColor text-[16px] font-semibold text-center">
-              {`${user?.firstName} ${user?.lastName}`}
-            </small>
-            <span>
-              <MdVerified
-                size={12}
-                className=" text-secondaryColor dark:text-whiteColor"
-              />
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <small className="text-secondaryColor dark:text-whiteColor ">
-              {`@${user?.userName}`}
-            </small>
-            <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-16 ">
-              {`Joined ${format(
-                new Date(user?.createdAt as string),
-                "  dd MMM yyyy"
-              )}`}
-            </small>
-            {user?.bio && (
-              <>
-                <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
-                  Bio
-                </h1>
-                <p className="text-center text-secondaryColor dark:text-whiteColor italic">
-                  {user.bio}
-                </p>
-              </>
-            )}
-            {!user?.bio && (
-              <>
-                <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
-                  Bio
-                </h1>
-                <p className="text-center text-secondaryColor dark:text-whiteColor italic">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab
-                  vitae sit neque quibusdam voluptatibus veniam laborum non iure
-                  eligendi unde assumenda eveniet sint, sequi blanditiis
-                  consequatur consectetur eius velit sunt?
-                </p>
-              </>
-            )}
-          </div>
+        <div className="mt-5 lg:mt-2 flex flex-col items-center justify-between h-full pt-12 pb-7 pl-20 pr-20">
+          {/* Details-------------------------------------*/}
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1  ">
+              <small className="text-secondaryColor dark:text-whiteColor text-[16px] font-semibold text-center">
+                {`${user?.firstName} ${user?.lastName}`}
+              </small>
+              <span>
+                <MdVerified
+                  size={12}
+                  className=" text-secondaryColor dark:text-whiteColor"
+                />
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <small className="text-secondaryColor dark:text-whiteColor ">
+                {`@${user?.userName}`}
+              </small>
+              <small className="text-secondaryColor dark:text-whiteColor mt-1.5  ">
+                {`Joined ${format(
+                  new Date(user?.createdAt as string),
+                  "  dd MMM yyyy"
+                )}`}
+              </small>
+              {/* Followers/Following */}
+              <div className="flex flex-row justify-center mt-8 mb-10">
+                <div className="flex justify-between gap-1.5">
+                  <div className="flex gap-1 items-center">
+                    <small className="text-secondaryColor dark:text-whiteColor text-[14px] font-bold ">
+                      {followings}
+                    </small>
+                    <small className="text-secondaryColor dark:text-whiteColor text-[14px] ">
+                      Following
+                    </small>
+                  </div>
 
-          {/* Edit/Message/Follow */}
-          <div>
-            {/* <div className="flex gap-3 mt-3">
+                  {/* Line Break */}
+                  <div>
+                    <small className=" textSecondaryColorLight  dark:textWhiteColorLight ">
+                      |
+                    </small>
+                  </div>
+                  {/* --------- */}
+
+                  <div className="flex gap-1 items-center">
+                    <small className="text-secondaryColor dark:text-whiteColor text-sm font-bold ">
+                      {followers}
+                    </small>
+                    <small className="text-secondaryColor dark:text-whiteColor  text-[14px]  ">
+                      {followers && followers > 1 ? "Followers" : "Follower"}
+                    </small>
+                  </div>
+                </div>
+              </div>
+              {user?.bio && (
+                <>
+                  <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
+                    Bio
+                  </h1>
+                  <p className="text-center text-secondaryColor dark:text-whiteColor italic text-sm">
+                    {user.bio}
+                  </p>
+                </>
+              )}
+              {!user?.bio && (
+                <>
+                  <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
+                    Bio
+                  </h1>
+                  <p className="text-center text-secondaryColor dark:text-whiteColor italic text-sm">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    Voluptatem itaque dolor voluptates veniam explicabo! Cumque
+                    illo dolore dicta aliquam ullam, asperiores deserunt sint
+                    reprehenderit aspernatur!
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Edit/Message/Follow */}
+            <div>
+              {/* <div className="flex gap-3 mt-3">
               <button className="btnPrimary text-[12px] flex items-center">
                 Follow
                 <BiPlusMedical
@@ -174,14 +239,14 @@ const ProfilePage = () => {
               </button>
               <button className="btnPrimary text-[12px]">Message</button>
             </div> */}
-            {/* <div className="text-center gap-3 mt-1">
+              {/* <div className="text-center gap-3 mt-1">
               <button className="btnPrimary text-[12px]">Edit Profile</button>
             </div> */}
+            </div>
           </div>
-        </div>
 
-        {/* Delete -------------------------------------------*/}
-        {/* <div className="relative flex justify-end w-full ">
+          {/* Delete -------------------------------------------*/}
+          {/* <div className="relative flex justify-end w-full ">
           <div className="p-1 rounded-sm bg-secondaryColor text-red-500 dark:text-secondaryColor dark:bg-red-500 cursor-pointer ">
             <BsFillTrashFill
               size={18}
@@ -214,8 +279,9 @@ const ProfilePage = () => {
             </div>
           )}
         </div> */}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 export default ProfilePage;

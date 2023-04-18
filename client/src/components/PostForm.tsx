@@ -186,7 +186,7 @@ const PostForm = () => {
                   />
                   <label
                     htmlFor="file"
-                    className="hover:underline text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] cursor-pointer"
+                    className=" hover:underline text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] cursor-pointer"
                   >
                     Click to upload Photo
                   </label>
@@ -229,7 +229,7 @@ const PostForm = () => {
               </button>
             ) : (
               <button
-                className={`text-secondaryColor ${
+                className={`mt-4 text-secondaryColor ${
                   !caption && !base64
                     ? "cursor-not-allowed btnPrimary bg-primaryColor/[60%] "
                     : "cursor-pointer btnPrimary"

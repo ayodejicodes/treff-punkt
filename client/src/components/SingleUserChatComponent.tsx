@@ -25,9 +25,9 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
   return (
     <div>
       {/* Image and Details */}
-      <div className="border-t-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight cursor-pointer">
+      <div className="border-b-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight cursor-pointer">
         <div
-          className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mt-2.5 "
+          className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl mb-2.5 "
           onClick={onClick}
         >
           {/* Image */}

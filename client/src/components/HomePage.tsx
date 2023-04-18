@@ -52,7 +52,7 @@ const HomePage = () => {
   // -------------------------------------------------------------------------
 
   return (
-    <div className=" md:w-[50%] flex flex-col gap-5 p-7 bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark">
+    <div className=" md:w-full lg:w-[50%] flex flex-col gap-5 p-7 bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark">
       {/* <Stories /> */}
 
       <PostForm />
