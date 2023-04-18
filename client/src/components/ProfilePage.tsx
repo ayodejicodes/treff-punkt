@@ -92,18 +92,27 @@ const ProfilePage = () => {
     <div className="md:w-[50%] flex flex-col gap-5  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark">
       {/* Cover and Profile Picture */}
       <div className="relative ">
-        <img
-          src="../../src/assets/cover-pic.jpg"
-          alt="cover-pic"
-          className="object-cover w-full h-48"
-        />
+        {!user?.coverPic && (
+          <img
+            src="../../src/assets/cover-pic.jpg"
+            alt="cover-pic"
+            className="object-cover w-full h-48"
+          />
+        )}
+        {user?.coverPic && (
+          <img
+            src={user?.coverPic}
+            alt="cover-pic"
+            className="object-cover w-full h-48"
+          />
+        )}
 
         <div className=" absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center w-28 h-28 ">
           <ProfilePicture />
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-7 pr-7">
+      <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-20 pr-20">
         {/* Details-------------------------------------*/}
         <div className="text-center">
           <div className="flex items-center justify-center gap-1  ">
@@ -121,13 +130,37 @@ const ProfilePage = () => {
             <small className="text-secondaryColor dark:text-whiteColor ">
               {`@${user?.userName}`}
             </small>
-            <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-1.5 ">
+            <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-16 ">
               {`Joined ${format(
                 new Date(user?.createdAt as string),
                 "  dd MMM yyyy"
               )}`}
             </small>
+            {user?.bio && (
+              <>
+                <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
+                  Bio
+                </h1>
+                <p className="text-center text-secondaryColor dark:text-whiteColor italic">
+                  {user.bio}
+                </p>
+              </>
+            )}
+            {!user?.bio && (
+              <>
+                <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
+                  Bio
+                </h1>
+                <p className="text-center text-secondaryColor dark:text-whiteColor italic">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab
+                  vitae sit neque quibusdam voluptatibus veniam laborum non iure
+                  eligendi unde assumenda eveniet sint, sequi blanditiis
+                  consequatur consectetur eius velit sunt?
+                </p>
+              </>
+            )}
           </div>
+
           {/* Edit/Message/Follow */}
           <div>
             {/* <div className="flex gap-3 mt-3">
@@ -141,9 +174,9 @@ const ProfilePage = () => {
               </button>
               <button className="btnPrimary text-[12px]">Message</button>
             </div> */}
-            <div className="text-center gap-3 mt-1">
+            {/* <div className="text-center gap-3 mt-1">
               <button className="btnPrimary text-[12px]">Edit Profile</button>
-            </div>
+            </div> */}
           </div>
         </div>
 

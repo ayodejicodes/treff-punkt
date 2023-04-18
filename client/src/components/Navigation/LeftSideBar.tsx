@@ -1,13 +1,17 @@
 import { AiOutlineHome, AiTwotoneHome } from "react-icons/ai";
 import { BsChatLeftText, BsChatLeftTextFill } from "react-icons/bs";
-import { FaRegUser, FaUser } from "react-icons/fa";
-import { HiOutlineUsers, HiUsers } from "react-icons/hi";
+import {
+  FaGithubSquare,
+  FaLinkedin,
+  FaRegUser,
+  FaTwitterSquare,
+  FaUser,
+} from "react-icons/fa";
 import MenuComponent from "../MenuComponent";
 import ShortProfile from "../ShortProfile";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../app/store";
-import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 // Menu Links
 
@@ -26,12 +30,12 @@ const navLinks = [
     activeIcon: <FaUser size={18} className={NavIconStyle} />,
     InactiveIcon: <FaRegUser size={18} className={NavIconStyle} />,
   },
-  {
-    to: "/friends",
-    menuText: "Friends",
-    activeIcon: <HiUsers size={18} className={NavIconStyle} />,
-    InactiveIcon: <HiOutlineUsers size={18} className={NavIconStyle} />,
-  },
+  // {
+  //   to: "/friends",
+  //   menuText: "Friends",
+  //   activeIcon: <HiUsers size={18} className={NavIconStyle} />,
+  //   InactiveIcon: <HiOutlineUsers size={18} className={NavIconStyle} />,
+  // },
   {
     to: "/chats",
     menuText: "Chats",
@@ -42,6 +46,7 @@ const navLinks = [
 
 const LeftSideBar = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
   // --------------------------------------------------------------------------------------
   return (
@@ -73,12 +78,39 @@ const LeftSideBar = () => {
       </div>
 
       {/* Copyright */}
-      <div className="mt-4">
+      <div className=" mt-4">
         <small className="text-secondaryColor dark:text-whiteColor text-[11px] flex flex-col text-center opacity-75">
           &copy;
           {` ${new Date().getFullYear()}`} | Designed and Developed by
           <span className="font-semibold"> Ayodeji Fabusiwa</span>
         </small>
+        <div className="flex justify-center gap-2 mt-4">
+          <Link to="https://github.com/ayodejicodes" target="_blank">
+            <FaGithubSquare
+              size={19}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+            />
+          </Link>
+
+          <Link
+            to="https://www.linkedin.com/in/ayodeji-fabusiwa/"
+            target="_blank"
+          >
+            <FaLinkedin
+              size={19}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </Link>
+
+          <Link to="https://twitter.com/ayodejicodes" target="_blank">
+            <FaTwitterSquare
+              size={19}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import ProfilePicture from "./ProfilePicture/ProfilePicture";
+import axios from "axios";
 
 const PostForm = () => {
   const [caption, setCaption] = useState<string | undefined>();
@@ -51,6 +52,7 @@ const PostForm = () => {
       setCaption("");
       setBase64(undefined);
       setIsBase64Open(false);
+
       // navigate("/");
     }
     dispatch(resetPost());
@@ -102,6 +104,7 @@ const PostForm = () => {
 
     if (!responseData) {
       setIsPostLoading(false);
+
       dispatch(
         createPost({
           caption,
@@ -110,7 +113,6 @@ const PostForm = () => {
     }
 
     if (responseData && !isPostLoading && !caption) {
-      // setPostURL(responseData.url.toString());
       setIsPostLoading(false);
 
       dispatch(
@@ -140,18 +142,20 @@ const PostForm = () => {
 
       <form onSubmit={handlePostSubmit}>
         <div className="flex gap-4">
-          <div className="  w-12 h-12 bg-red-500">
+          <div className="w-12 h-12 ">
             <ProfilePicture />
           </div>
 
-          <textarea
-            placeholder="Start typing...What would you like to share?"
-            name="caption"
-            value={caption}
-            onChange={() => setCaption(textAreaRef?.current?.value)}
-            className="  resize-none inputStyle bgSecondaryColorLight dark:bgWhiteColorLight w-full focus:outline-none text-secondaryColor dark:text-whiteColor rounded-lg p-3 h-14"
-            ref={textAreaRef}
-          ></textarea>
+          <div className="flex-1 ">
+            <textarea
+              placeholder="Start typing...What would you like to share?"
+              name="caption"
+              value={caption}
+              onChange={() => setCaption(textAreaRef?.current?.value)}
+              className="  resize-none inputStyle bgSecondaryColorLight dark:bgWhiteColorLight w-full  focus:outline-none text-secondaryColor dark:text-whiteColor rounded-lg p-3 h-14"
+              ref={textAreaRef}
+            ></textarea>
+          </div>
         </div>
 
         {/* Line Break */}
@@ -184,7 +188,7 @@ const PostForm = () => {
                     htmlFor="file"
                     className="hover:underline text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] cursor-pointer"
                   >
-                    Click to upload Photo / Video
+                    Click to upload Photo
                   </label>
                 </div>
                 {isBase64Open && (
@@ -213,7 +217,16 @@ const PostForm = () => {
 
           <div className="flex justify-end ">
             {isPostLoading ? (
-              <Spinner />
+              <button
+                className={`text-secondaryColor ${
+                  !caption && !base64
+                    ? "cursor-not-allowed btnPrimary bg-primaryColor/[60%] "
+                    : "cursor-pointer btnPrimary"
+                }`}
+                disabled
+              >
+                Posting...
+              </button>
             ) : (
               <button
                 className={`text-secondaryColor ${

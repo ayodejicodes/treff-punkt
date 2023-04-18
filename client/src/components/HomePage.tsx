@@ -5,7 +5,7 @@ import PostCard from "./PostCard";
 import { AppDispatch, RootState } from "../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Post, getPosts } from "../features/posts/postSlice";
+import { Post, getPosts, resetPost } from "../features/posts/postSlice";
 
 const HomePage = () => {
   // ---Redux Tool kit--------------------------------------------------------------
@@ -33,7 +33,7 @@ const HomePage = () => {
       setPostArray(response.payload);
     };
     fetchedPost();
-  }, []);
+  }, [dispatch, posts, comments]);
 
   const fetchNewPost = async () => {
     const res = await fetchPost();

@@ -323,10 +323,19 @@ const MyDropzone = () => {
                       className=" flex items-center   gap-2 bg-onlineGreen/[95%] p-2 rounded-full cursor-pointer text-white"
                       // onClick={handleMessageSubmit}
                     >
-                      <button type="submit" className="text-[12px]">
-                        Send file to Member
-                      </button>
-                      <AiOutlineArrowUp />
+                      {isMessageLoading ? (
+                        <button className="text-[12px]" disabled>
+                          Uploading...
+                        </button>
+                      ) : (
+                        <>
+                          <button type="submit" className="text-[12px]">
+                            {` Send file to ${receiver?.firstName}`}
+                          </button>
+
+                          <AiOutlineArrowUp />
+                        </>
+                      )}
                     </div>
                     <div
                       className=" flex items-center gap-2  bg-red-700/[95%] p-2 rounded-full cursor-pointer text-white"
@@ -364,7 +373,7 @@ const MyDropzone = () => {
                       type="text"
                       name=""
                       id=""
-                      placeholder="Start a Conversation"
+                      placeholder="Start a Conversation or drag an Image into the Chat zone"
                       className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}

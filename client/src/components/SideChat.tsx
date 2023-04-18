@@ -11,6 +11,7 @@ const SideChat = () => {
   const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.chats
   );
+  const { messages } = useSelector((state: RootState) => state.messages);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -44,7 +45,7 @@ const SideChat = () => {
       setChatArray(res.payload);
     };
     homeFeedChats();
-  }, [selectedChatId]);
+  }, [selectedChatId, messages]);
 
   // console.log("chatArray", chatArray);
   // console.log("selectedChatId", selectedChatId);

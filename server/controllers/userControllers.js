@@ -88,12 +88,12 @@ const login = asyncHandler(async (req, res) => {
     coverPic,
     followings,
     followers,
-    role,
+    // role,
     bio,
     // posts,
-    stories,
-    bookmarkedPosts,
-    blocked,
+    // stories,
+    // bookmarkedPosts,
+    // blocked,
     createdAt,
     updatedAt,
   } = userExists;
@@ -110,12 +110,12 @@ const login = asyncHandler(async (req, res) => {
       coverPic,
       followings,
       followers,
-      role,
+      // role,
       bio,
       // posts,
-      stories,
-      bookmarkedPosts,
-      blocked,
+      // stories,
+      // bookmarkedPosts,
+      // blocked,
       createdAt,
       updatedAt,
       token: generateToken(userExists._id),
@@ -142,7 +142,9 @@ const getUserProfile = asyncHandler(async (req, res) => {
     throw new Error("Unable to find User with that ID");
   }
   if (foundUser) {
-    res.status(200).json(foundUser);
+    // format response for frontend
+    const { password, ...others } = foundUser._doc;
+    res.status(200).json(others);
   }
 });
 
@@ -151,7 +153,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // Generates Token
 const generateToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "2d",
   });
   return token;
 };
@@ -174,7 +176,9 @@ const followController = asyncHandler(async (req, res) => {
 
   // Logic
   if (foundUser.followers.includes(req.user._id.toString())) {
-    res.status(200).json(foundUser);
+    // format response for frontend
+    const { password, ...others } = foundUser._doc;
+    res.status(200).json(others);
   } else {
     // Add User if not included
     const addedUser = await User.findByIdAndUpdate(
@@ -188,7 +192,9 @@ const followController = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json(addedUser);
+    // format response for frontend
+    const { password, ...others } = addedUser._doc;
+    res.status(200).json(others);
   }
 });
 
@@ -210,7 +216,9 @@ const unfollowController = asyncHandler(async (req, res) => {
 
   // Logic
   if (!foundUser.followers.includes(req.user._id.toString())) {
-    res.status(200).json(foundUser);
+    // format response for frontend
+    const { password, ...others } = foundUser._doc;
+    res.status(200).json(others);
   } else {
     // Add User if not included
     const removedUser = await User.findByIdAndUpdate(
@@ -224,7 +232,8 @@ const unfollowController = asyncHandler(async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json(removedUser);
+    const { password, ...others } = removedUser._doc;
+    res.status(200).json(others);
   }
 });
 
@@ -244,9 +253,14 @@ const searchUsers = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const users = await User.find({ ...keyword, _id: { $ne: req.user._id } });
+  let users = await User.find({ ...keyword, _id: { $ne: req.user._id } });
 
-  res.status(200).json(users);
+  const filteredUsers = users.map((user) => {
+    const { password, ...others } = user._doc;
+    return others;
+  });
+
+  res.status(200).json(filteredUsers);
 });
 
 module.exports = {

@@ -67,9 +67,13 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
             </div>
             <div className="flex gap-3 justify-between items-center">
               <small className="text-secondaryColor dark:text-whiteColor text-[12px] overflow-hidden whitespace-nowrap overflow-ellipsis w-4 grow">
-                What are your plans for tomorrow eveing
+                {latestMessage?.content
+                  ? latestMessage?.content
+                  : !latestMessage?.content && latestMessage?.contentImage
+                  ? "An image was sent..."
+                  : ""}
               </small>
-              <NotificationIcon />
+              {/* <NotificationIcon /> */}
             </div>
           </div>
         </div>

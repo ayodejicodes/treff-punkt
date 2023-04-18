@@ -146,26 +146,6 @@ export const unfollowUser = createAsyncThunk(
     }
   }
 );
-// export const searchUser = createAsyncThunk(
-//   "users/searchUser",
-//   async (keyword: { keyword: string }, thunkAPI) => {
-//     try {
-//       const token = (
-//         thunkAPI.getState() as { auth: { user?: { token?: string } } }
-//       ).auth.user?.token;
-
-//       return authService.searchUser(keyword, token as string);
-//     } catch (error: any) {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString();
-//       return thunkAPI.rejectWithValue(message);
-//     }
-//   }
-// );
 
 const authSlice = createSlice({
   name: "auth",

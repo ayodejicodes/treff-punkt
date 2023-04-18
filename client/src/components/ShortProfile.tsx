@@ -47,7 +47,10 @@ const ShortProfile = () => {
 
   return (
     <div>
-      <div className="flex justify-center w-full">
+      <div
+        className="flex justify-center w-full cursor-pointer"
+        onClick={() => navigate("/profile")}
+      >
         <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl overf ">
           {/* Image */}
 
@@ -68,7 +71,7 @@ const ShortProfile = () => {
                 className="flex items-center gap-1 cursor-pointer "
                 // onClick={handleGetUserProfile}
               >
-                <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold">
+                <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold ">
                   {`${user?.firstName} ${user?.lastName}`}
                 </small>
                 <span>

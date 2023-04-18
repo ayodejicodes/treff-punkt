@@ -107,11 +107,20 @@ const GetUserProfile = () => {
         <div className="md:w-[50%] flex flex-col gap-5  bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark">
           {/* Cover and Profile Picture */}
           <div className="relative ">
-            <img
-              src="../../src/assets/cover-pic.jpg"
-              alt="cover-pic"
-              className="object-cover w-full h-48"
-            />
+            {!userProfile?.coverPic && (
+              <img
+                src="../../src/assets/cover-pic.jpg"
+                alt="cover-pic"
+                className="object-cover w-full h-48"
+              />
+            )}
+            {userProfile?.coverPic && (
+              <img
+                src={userProfile?.coverPic}
+                alt="cover-pic"
+                className="object-cover w-full h-48"
+              />
+            )}
 
             <div className=" absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center w-28 h-28 ">
               <img
@@ -122,7 +131,7 @@ const GetUserProfile = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-7 pr-7">
+          <div className="flex flex-col items-center justify-between h-full pt-12 pb-7 pl-20 pr-20">
             {/* Details-------------------------------------*/}
             <div className="text-center">
               <div className="flex items-center justify-center gap-1  ">
@@ -148,7 +157,7 @@ const GetUserProfile = () => {
                 </small>
               </div>
               {/* Edit/Message/Follow */}
-              <div>
+              <div className="flex justify-center mb-10">
                 <div className="flex gap-3 mt-1">
                   {!isFollowed && (
                     <button
@@ -167,7 +176,7 @@ const GetUserProfile = () => {
                       className="btnPrimary text-[12px] flex items-center"
                       onClick={() => handleUnfollow(id as string)}
                     >
-                      Unfollow
+                      Unfollow?
                     </button>
                   )}
                   <button
@@ -179,6 +188,31 @@ const GetUserProfile = () => {
                     Message
                   </button>
                 </div>
+              </div>
+              <div>
+                {userProfile?.bio && (
+                  <>
+                    <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
+                      Bio
+                    </h1>
+                    <p className="text-center text-secondaryColor dark:text-whiteColor italic">
+                      {userProfile.bio}
+                    </p>
+                  </>
+                )}
+                {!userProfile?.bio && (
+                  <>
+                    <h1 className="text-secondaryColor dark:text-whiteColor font-semibold">
+                      Bio
+                    </h1>
+                    <p className="text-center text-secondaryColor dark:text-whiteColor italic">
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Ab vitae sit neque quibusdam voluptatibus veniam laborum
+                      non iure eligendi unde assumenda eveniet sint, sequi
+                      blanditiis consequatur consectetur eius velit sunt?
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>

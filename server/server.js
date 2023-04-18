@@ -8,6 +8,8 @@ const cloudinary = require("cloudinary").v2;
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
+const { Configuration, OpenAIApi } = require("openai");
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -44,6 +46,37 @@ app.use("/api/messages", require("./routes/messageRoutes"));
 
 // Error Handling..
 app.use(errorHandlerMiddleware);
+
+// Open Ai---------------------------------------------
+// app.post("/api/chatsai", async (req, res) => {
+//   const { prompt } = req.body;
+
+//   if (!prompt) {
+//     res.status(400).send("Enter a Prompt");
+//     return;
+//   }
+
+//   try {
+//     const config = new Configuration({
+//       apiKey: process.env.OPEN_AI_KEY,
+//     });
+
+//     const openai = new OpenAIApi(config);
+
+//     const completion = await openai.createCompletion({
+//       model: "text-davinci-003",
+//       max_tokens: 512,
+//       temperature: 0,
+//       prompt: prompt,
+//     });
+
+//     res.send(completion.data.choices[0].text);
+//   } catch (error) {
+//     res.status(400).send("Could not create Completion");
+//   }
+// });
+
+// ---------------------------------------------------
 
 io.on("connection", (socket) => {
   socket.on("setup", (userData) => {

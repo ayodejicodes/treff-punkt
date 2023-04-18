@@ -73,6 +73,7 @@ const PostCard = ({ post }: PostCard) => {
   const [toggleLike, setToggleLike] = useState<Boolean>(
     likes.includes(user?._id as string)
   );
+
   const [toggleBookmark, setToggleBookmark] = useState<Boolean>(
     bookmarkedPostsUsers.includes(user?._id as string)
   );
@@ -158,6 +159,7 @@ const PostCard = ({ post }: PostCard) => {
   }, [updateDeleteOpenRef]);
 
   const handleLikeDislike = async () => {
+    dispatch(resetPost());
     await dispatch(likeDislikePost({ id: _id, userID: user?._id as string }));
     await Promise.resolve();
 
@@ -168,7 +170,10 @@ const PostCard = ({ post }: PostCard) => {
     } else {
       setLikeCount(likeCount + 1);
     }
+    dispatch(resetPost());
   };
+
+  // console.log("isLiked", isLiked);
 
   const handleBookmark = async () => {
     await dispatch(bookmarkPost({ id: _id, userID: user?._id as string }));
@@ -458,7 +463,7 @@ const PostCard = ({ post }: PostCard) => {
             >
               <div className="absolute top-[-3px] right-[6px] w-2.5 h-2.5 gap-3 rounded-sm bg-secondaryColor text-whiteColor dark:bg-white rotate-45"></div>
               <div className="flex flex-col p-4 gap-3 rounded-lg bg-secondaryColor text-whiteColor dark:bg-white">
-                <small
+                {/* <small
                   className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
                   onClick={() => {
                     setIsUpdateFieldOpen(true);
@@ -466,7 +471,7 @@ const PostCard = ({ post }: PostCard) => {
                   }}
                 >
                   Edit
-                </small>
+                </small> */}
                 <small
                   className=" dark:text-secondaryColor text-whiteColor hoverWhiteColorLight dark:hoverSecondaryColorLight pl-2 pr-2 cursor-pointer"
                   onClick={() => {
@@ -482,7 +487,7 @@ const PostCard = ({ post }: PostCard) => {
         </div>
       </div>
       {/* Post Text */}
-      {!isUpdateFieldOpen && (
+      {!isUpdateFieldOpen && caption && (
         <p className=" text-secondaryColor dark:text-whiteColor">
           {`${caption}`}
         </p>
@@ -500,7 +505,7 @@ const PostCard = ({ post }: PostCard) => {
       )}
       {/* Post Picture */}
       {postImage && !isUpdateFieldOpen && (
-        <div className="relative flex justify-center items-center w-full h-[540px] bg-red-500 rounded-lg">
+        <div className="relative flex justify-center items-center w-full h-[540px]  rounded-lg">
           <img
             src={postImage}
             alt={postImage}
@@ -678,10 +683,10 @@ const PostCard = ({ post }: PostCard) => {
               className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
             ></textarea>
             <div className="flex items-center gap-4 absolute right-0 mr-6">
-              <VscSmiley
+              {/* <VscSmiley
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
-              />
+              /> */}
               <FiSend
                 size={20}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"

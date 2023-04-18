@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import { Chat } from "../../features/chats/chatSlice";
 import { useEffect, useRef, useState } from "react";
 import { format, parseISO } from "date-fns";
+import ChatEmpty from "../ChatEmpty";
+import { useNavigate } from "react-router-dom";
 
 const ChatsPage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -16,6 +18,7 @@ const ChatsPage = () => {
   const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
     (state: RootState) => state.chats
   );
+  const navigate = useNavigate();
 
   const chat = chats.find((chat) => chat._id === selectedChatId);
   const { _id, users, latestMessage, createdAt, updatedAt } = chat as Chat;
@@ -26,7 +29,10 @@ const ChatsPage = () => {
   return (
     <div className=" md:w-[50%] flex flex-col bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
       {/* Chat Header-------------------------------------------- */}
-      <div className=" flex flex-col items-center pl-7 pr-7 pt-4 pb-2 sticky top-0 bg-[#f0f3f4] dark:bg-[#164055] border-b-2 dark:border-[#f0f3f4]/[0.15]  border-[#164055]/[0.15] ">
+      <div
+        className=" flex flex-col items-center pl-7 pr-7 pt-4 pb-2 sticky top-0 bg-[#f0f3f4] dark:bg-[#164055] border-b-2 dark:border-[#f0f3f4]/[0.15]  border-[#164055]/[0.15] cursor-pointer "
+        onClick={() => navigate(`/users/${receiver?._id}`)}
+      >
         {/* Image */}
         <div className="  w-8 h-8 mb-1">
           <img

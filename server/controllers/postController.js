@@ -57,11 +57,6 @@ const createPostController = asyncHandler(async (req, res) => {
     throw new Error("Can not push Post to an invalid user ID");
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
-    { _id: req.user._id },
-    { $push: { posts: newPost._id } },
-    { new: true }
-  );
   res.status(200).json(newPost);
 });
 
