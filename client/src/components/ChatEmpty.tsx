@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getChats } from "../features/chats/chatSlice";
 import { setSelectedChatId } from "../features/chats/chatSlice";
 import SingleUserChatComponent from "./SingleUserChatComponent";
+import AiSideChat from "./AiSideChat";
 
 const ChatEmpty = () => {
   const { chats, selectedChatId, isSuccess, isError, message } = useSelector(
@@ -68,9 +69,17 @@ const ChatEmpty = () => {
       </div>
 
       <div className="lg:hidden w-full md:w-full lg:w-[50%] flex flex-col gap-5 p-7 bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark justify-center">
+        <div className="bg-whiteColor dark:bg-secondaryColor rounded-xl  ">
+          <h3 className="font-semibold text-secondaryColor dark:text-whiteColor text-[15px] p-3">
+            Chat With Ai
+          </h3>
+          <div className="border-b-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight"></div>
+
+          <AiSideChat />
+        </div>
         <div className="bg-whiteColor dark:bg-secondaryColor rounded-xl h-full ">
           <h3 className="font-semibold text-secondaryColor dark:text-whiteColor text-[15px] p-3">
-            Chats
+            Chat with Friends
           </h3>
           <div className="border-b-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight"></div>
           {chatArray?.map((chat: Chat, index: number) => (

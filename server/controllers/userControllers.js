@@ -263,6 +263,43 @@ const searchUsers = asyncHandler(async (req, res) => {
   res.status(200).json(filteredUsers);
 });
 
+// ------------------------Update Existing User------------------------
+
+// @desc        Updates User
+// @Route       PUT (/api/users/:id)
+// @Access      Private
+const updateUserController = asyncHandler(async (req, res) => {
+  const updatedProfile = req.body;
+  const updateObj = { $set: { ...updatedProfile } };
+
+  // Validation check
+  if (!updatedProfile) {
+    res.status(400);
+    throw new Error("You did not Update any Data");
+  }
+
+  // Check if User exists
+  const foundUser = await User.findById(req.user._id);
+
+  if (!foundUser) {
+    res.status(400);
+    throw new Error("Unable to find User with that ID");
+  }
+
+  // Authorization check
+  if (req.user._id.toString() === foundUser._id.toString()) {
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, updateObj, {
+      new: true,
+    });
+
+    const { password, ...others } = updatedUser._doc;
+    res.status(200).json(others);
+  } else {
+    res.status(403);
+    throw new Error("Update User failed, Unauthorized User");
+  }
+});
+
 module.exports = {
   register,
   login,
@@ -270,4 +307,5 @@ module.exports = {
   followController,
   unfollowController,
   searchUsers,
+  updateUserController,
 };

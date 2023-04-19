@@ -28,7 +28,7 @@ const RightSideBar = () => {
       {/* Chats */}
       <div className=" flex flex-col bg-whiteColor dark:bg-secondaryColor border border-secondaryColor/[10%] dark:border-blackColor/[10%] gap-3 rounded-xl p-4 ">
         <h3 className="font-semibold text-secondaryColor dark:text-whiteColor text-[15px] ">
-          Chats with Friends
+          Chat with Friends
         </h3>
         <div className="border-b-2  w-full borderSecondaryColorLight dark:borderWhiteColorLight"></div>
 

@@ -64,7 +64,7 @@ app.post("/api/chatsai", protect, async (req, res) => {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       max_tokens: 200,
-      temperature: 0.7,
+      temperature: 0.5,
       prompt: prompt,
       top_p: 1,
       frequency_penalty: 0.5,

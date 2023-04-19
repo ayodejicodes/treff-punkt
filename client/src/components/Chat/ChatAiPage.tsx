@@ -67,9 +67,11 @@ const ChatAiPage = () => {
 
         const res = await response.data;
 
-        setAiResponse(res);
-        setIsResponseLoading(false);
-        dispatch(setAiChatArray(res));
+        if (res) {
+          setAiResponse(res);
+          setIsResponseLoading(false);
+          dispatch(setAiChatArray(res));
+        }
 
         setError(false);
       } catch (error) {

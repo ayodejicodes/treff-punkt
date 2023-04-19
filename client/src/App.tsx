@@ -20,12 +20,20 @@ import { AppDispatch, RootState } from "./app/store";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import ChatAi from "./pages/chatai";
+import EditProfile from "./pages/editProfile";
 
 function App() {
   const location = useLocation();
 
   const showNavBar = ["/register", "/login"].includes(location.pathname);
-  const pages = ["/", "/profile", "/friends", "/chats", "/chatsai"];
+  const pages = [
+    "/",
+    "/profile",
+    "/edit-profile",
+    "/friends",
+    "/chats",
+    "/chatsai",
+  ];
   const showleftSideBar =
     location.pathname.startsWith("/users") || pages.includes(location.pathname);
   const showrightSideBar =
@@ -111,6 +119,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} index />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/chats" element={<Chats />} />
             <Route path="/chatsai" element={<ChatAi />} />

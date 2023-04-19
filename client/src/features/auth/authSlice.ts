@@ -147,6 +147,27 @@ export const unfollowUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "users/edit-profile",
+  async (updateUserData: any, thunkAPI) => {
+    try {
+      const token = (
+        thunkAPI.getState() as { auth: { user?: { token?: string } } }
+      ).auth.user?.token;
+
+      return authService.updateUser(updateUserData, token as string);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -198,7 +219,18 @@ const authSlice = createSlice({
         state.message = action.payload as string;
         state.user = null;
       })
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        const updatedUser = { ...state.user, ...action.payload };
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
         state.user = null;
       });
   },

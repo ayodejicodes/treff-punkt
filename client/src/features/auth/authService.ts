@@ -75,23 +75,19 @@ const unfollowUser = async ({ id }: { id: string }, token: string) => {
   }
 };
 
-// const searchUser = async ({ keyword }: { keyword: string }, token: string) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-//   try {
-//     const response = await axios.get(
-//       `${API_URL}`,
-//       { keyword },
-//       config
-//     );
-//     return response.data;
-//   } catch (error) {
-//     throw new Error("Could not Follow");
-//   }
-// };
+const updateUser = async (updateUserData: any, token: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.put(`${API_URL}`, updateUserData, config);
+    return response.data;
+  } catch (error) {
+    throw new Error("Could not Update");
+  }
+};
 
 const authService = {
   register,
@@ -99,7 +95,7 @@ const authService = {
   login,
   followUser,
   unfollowUser,
-  // searchUser
+  updateUser,
 };
 
 export default authService;

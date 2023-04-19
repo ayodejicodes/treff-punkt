@@ -378,7 +378,11 @@ const MyDropzone = () => {
                       type="text"
                       name=""
                       id=""
-                      placeholder="Start a Conversation or drag an Image into the Chat zone"
+                      placeholder={
+                        messagesArray.length === 0
+                          ? `Start a Conversation or drag an Image into the Chat zone`
+                          : `Continue your conversation with ${receiver?.firstName}`
+                      }
                       className=" md:inputStyle bg-transparent w-full focus:outline-none text-secondaryColor dark:text-whiteColor text-sm p-2"
                       value={content}
                       onChange={(e) => setContent(e.target.value)}

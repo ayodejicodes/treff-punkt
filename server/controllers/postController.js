@@ -64,7 +64,7 @@ const createPostController = asyncHandler(async (req, res) => {
 
 // @desc        Updates Post
 // @Route       PUT (/api/posts/:id)
-// @Access      Public
+// @Access      Private
 const updatePostController = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { caption, postImage } = req.body;

@@ -171,6 +171,30 @@ const ProfilePage = () => {
                   "  dd MMM yyyy"
                 )}`}
               </small>
+
+              {/* Edit/Message/Follow */}
+              <div className="mt-2">
+                {/* <div className="flex gap-3 mt-3">
+              <button className="btnPrimary text-[12px] flex items-center">
+                Follow
+                <BiPlusMedical
+                  size={12}
+                  className="text-secondaryColor dark:text-whiteColor cursor-pointer ml-2"
+                  onClick={handleFollow}
+                />
+              </button>
+              <button className="btnPrimary text-[12px]">Message</button>
+            </div> */}
+                <div className="text-center gap-3 mt-1">
+                  <button
+                    className="btnPrimary text-[12px]"
+                    onClick={() => navigate("/edit-profile")}
+                  >
+                    Edit Profile
+                  </button>
+                </div>
+              </div>
+
               {/* Followers/Following */}
               <div className="flex flex-row justify-center mt-8 mb-10">
                 <div className="flex justify-between gap-1.5">
@@ -224,24 +248,6 @@ const ProfilePage = () => {
                   </p>
                 </>
               )}
-            </div>
-
-            {/* Edit/Message/Follow */}
-            <div>
-              {/* <div className="flex gap-3 mt-3">
-              <button className="btnPrimary text-[12px] flex items-center">
-                Follow
-                <BiPlusMedical
-                  size={12}
-                  className="text-secondaryColor dark:text-whiteColor cursor-pointer ml-2"
-                  onClick={handleFollow}
-                />
-              </button>
-              <button className="btnPrimary text-[12px]">Message</button>
-            </div> */}
-              {/* <div className="text-center gap-3 mt-1">
-              <button className="btnPrimary text-[12px]">Edit Profile</button>
-            </div> */}
             </div>
           </div>
 
