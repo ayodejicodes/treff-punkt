@@ -387,7 +387,7 @@ const PostCard = ({ post }: PostCard) => {
 
             <div>
               <div className="flex items-center gap-1 ">
-                <h3 className="font-bold text-secondaryColor dark:text-whiteColor cursor-pointer">
+                <h3 className="text-sm lg:text-[15px] font-bold text-secondaryColor dark:text-whiteColor cursor-pointer">
                   {`${author.firstName} ${author.lastName}`}
                 </h3>
                 <span>
@@ -398,7 +398,7 @@ const PostCard = ({ post }: PostCard) => {
                 </span>
               </div>
               <div className="flex items-center">
-                <small className=" text-secondaryColor dark:text-whiteColor">
+                <small className="text-[11px] md:text-[12px] text-secondaryColor dark:text-whiteColor">
                   {/* 17 March at 08:25 PM */}
                   {`${format(parseISO(createdAt), "dd MMM yyyy HH:mm a")}`}
                 </small>
@@ -419,7 +419,7 @@ const PostCard = ({ post }: PostCard) => {
         </div>
 
         {/* right */}
-        <div className="flex relative gap-3">
+        <div className="flex relative gap-1 lg:gap-3">
           {toggleBookmark ? (
             <div className="flex flex-col items-center ">
               <FaBookmark
@@ -489,7 +489,7 @@ const PostCard = ({ post }: PostCard) => {
       </div>
       {/* Post Text */}
       {!isUpdateFieldOpen && caption && (
-        <p className=" text-secondaryColor dark:text-whiteColor">
+        <p className="text-[14px] md:text-[16px] text-secondaryColor dark:text-whiteColor">
           {`${caption}`}
         </p>
       )}
@@ -612,11 +612,11 @@ const PostCard = ({ post }: PostCard) => {
                 />
               )}
 
-              <small className="text-secondaryColor dark:text-whiteColor text-sm cursor-pointer">
+              <small className="text-[13px] md:text-[15px] text-secondaryColor dark:text-whiteColor  cursor-pointer">
                 {/* 2.3k Likes */}
 
                 {likeCount === 0
-                  ? "Be the first to like"
+                  ? "No likes"
                   : `${likeCount} Like${likeCount > 1 ? "s" : ""}`}
               </small>
             </div>
@@ -631,13 +631,13 @@ const PostCard = ({ post }: PostCard) => {
             }}
           >
             <BiCommentDots
-              size={20}
+              size={19}
               className="text-secondaryColor dark:text-whiteColor"
             />
-            <small className="text-secondaryColor dark:text-whiteColor text-sm">
+            <small className=" text-[13px] md:text-[15px] text-secondaryColor dark:text-whiteColor ">
               {/* 250 Comments */}
               {comments.length === 0
-                ? `No Comment`
+                ? `No Comments`
                 : `${comments.length} Comment${comments.length > 1 ? "s" : ""}`}
             </small>
           </div>
@@ -673,7 +673,7 @@ const PostCard = ({ post }: PostCard) => {
                 }
                 value={commentCaption}
                 onChange={(e) => setCommentCaption(e.target.value)}
-                className="  resize-none text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
+                className="  resize-none text-[11px] md:text-sm bg-transparent pr-20 pl-4 pt-1.5 pb-1.5 w-full border border-secondaryColor/[20%] dark:borderWhiteColorLight focus:outline-none h-12  text-secondaryColor dark:text-whiteColor"
               ></textarea>
             </div>
             <div className="flex items-center gap-4 absolute right-0 mr-6">
@@ -682,7 +682,7 @@ const PostCard = ({ post }: PostCard) => {
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
               /> */}
               <FiSend
-                size={20}
+                size={16}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
                 onClick={handlecreateComment}
               />
@@ -698,10 +698,10 @@ const PostCard = ({ post }: PostCard) => {
                 setAllCommentsOpen(!allCommentsOpen);
               }}
             >
-              <small className="text-secondaryColor dark:text-whiteColor text-sm">
+              <small className=" text-[13px] md:text-[15px] text-secondaryColor dark:text-whiteColor ">
                 All comments
               </small>
-              <small className="text-secondaryColor dark:text-whiteColor text-sm">
+              <small className="text-[13px] md:text-[15px] text-secondaryColor dark:text-whiteColor">
                 {/* (10) */}
                 {`(${comments.length})`}
               </small>
@@ -750,7 +750,7 @@ const PostCard = ({ post }: PostCard) => {
               className="text-center mt-1 pt-2 border-t-2  dark:borderWhiteColorLight w-full"
               onClick={() => setIsViewMoreOpen(true)}
             >
-              <small className="text-secondaryColor text-center dark:text-whiteColor text-[12px] cursor-pointer p-2 hoverSecondaryColorLight dark:hoverWhiteColorLight rounded-lg">
+              <small className="text-secondaryColor text-center dark:text-whiteColor text-[11px] md:text-[12px] cursor-pointer p-2 hoverSecondaryColorLight dark:hoverWhiteColorLight rounded-lg">
                 View more comments
               </small>
             </div>

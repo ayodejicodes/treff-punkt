@@ -19,12 +19,13 @@ import { User, setKeyword } from "./features/auth/authSlice";
 import { AppDispatch, RootState } from "./app/store";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import ChatAi from "./pages/chatai";
 
 function App() {
   const location = useLocation();
 
   const showNavBar = ["/register", "/login"].includes(location.pathname);
-  const pages = ["/", "/profile", "/friends", "/chats"];
+  const pages = ["/", "/profile", "/friends", "/chats", "/chatsai"];
   const showleftSideBar =
     location.pathname.startsWith("/users") || pages.includes(location.pathname);
   const showrightSideBar =
@@ -112,6 +113,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/chats" element={<Chats />} />
+            <Route path="/chatsai" element={<ChatAi />} />
             <Route path="/users/:id" element={<GetUserProfile />} />
           </Route>
         </Routes>

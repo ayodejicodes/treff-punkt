@@ -135,12 +135,12 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             <div className="flex-1">
               <div className="flex  w-full justify-between ">
                 <div className="  ">
-                  <small className="text-secondaryColor dark:text-whiteColor text-[13px] font-semibold break-all">
+                  <small className="text-secondaryColor dark:text-whiteColor text-[12px] md:text-[13px]  font-semibold break-all">
                     {`${author.firstName} ${author.lastName}: `}
                   </small>
                   <span> </span>
                   <small
-                    className="text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[13px] break-all"
+                    className="text-secondaryColor borderSecondaryColorLight dark:text-whiteColor text-[12px] md:text-[13px] break-all"
                     style={{ hyphens: "auto" }}
                   >
                     {caption}
@@ -215,7 +215,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
                 className={
                   toggleUpvote
                     ? " text-onlineGreen text-[12px]"
-                    : "text-secondaryColor dark:text-whiteColor text-[12px]"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px] md:text-[13px]"
                 }
               >
                 Upvote
@@ -224,8 +224,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               <small
                 className={
                   toggleUpvote
-                    ? " text-onlineGreen text-[12px] font-semibold"
-                    : "text-secondaryColor dark:text-whiteColor text-[12px] font-semibold"
+                    ? " text-onlineGreen text-[12px] md:text-[13px] font-semibold"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px] md:text-[13px] font-semibold"
                 }
               >
                 {/* 20k */}
@@ -233,7 +233,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               </small>
             </div>
 
-            <small className="text-secondaryColor dark:text-whiteColor text-[12px]  ml-2">
+            <small className="text-secondaryColor dark:text-whiteColor text-[12px] md:text-[13px]  ml-2">
               |
             </small>
 
@@ -248,8 +248,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               <small
                 className={
                   toggleDownvote
-                    ? " text-red-500 text-[12px]"
-                    : "text-secondaryColor dark:text-whiteColor text-[12px]"
+                    ? " text-red-500 text-[12px] md:text-[13px]"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px] md:text-[13px]"
                 }
               >
                 Downvote
@@ -258,8 +258,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               <small
                 className={
                   toggleDownvote
-                    ? " text-red-500 text-[12px] font-semibold"
-                    : "text-secondaryColor dark:text-whiteColor text-[12px] font-semibold"
+                    ? " text-red-500 text-[12px] md:text-[13px] font-semibold"
+                    : "text-secondaryColor dark:text-whiteColor text-[12px] md:text-[13px] font-semibold"
                 }
               >
                 {/* 1k */}

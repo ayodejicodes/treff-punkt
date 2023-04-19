@@ -17,6 +17,7 @@ export type Chat = {
 
 export type ChatsState = {
   chats: Chat[];
+  aiChatArray: Chat[];
   selectedChatId: string | null;
   isLoading: boolean;
   isSuccess: boolean;
@@ -26,6 +27,7 @@ export type ChatsState = {
 
 const initialState: ChatsState = {
   chats: [],
+  aiChatArray: [],
   selectedChatId: null,
   isLoading: false,
   isSuccess: false,
@@ -79,6 +81,7 @@ const chatsSlice = createSlice({
   name: "chats",
   initialState: {
     chats: [],
+    aiChatArray: [],
     selectedChatId: null,
     isLoading: false,
     isSuccess: false,
@@ -91,6 +94,9 @@ const chatsSlice = createSlice({
     },
     setSelectedChatId: (state, action) => {
       state.selectedChatId = action.payload;
+    },
+    setAiChatArray: (state, action) => {
+      state.aiChatArray.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -125,5 +131,6 @@ const chatsSlice = createSlice({
   },
 });
 
-export const { resetChat, setSelectedChatId } = chatsSlice.actions;
+export const { resetChat, setSelectedChatId, setAiChatArray } =
+  chatsSlice.actions;
 export default chatsSlice.reducer;

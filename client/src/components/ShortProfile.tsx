@@ -43,7 +43,6 @@ const ShortProfile = () => {
   }, [followingsCount]);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <div>
@@ -51,10 +50,10 @@ const ShortProfile = () => {
         className="flex justify-center w-full cursor-pointer"
         onClick={() => navigate("/profile")}
       >
-        <div className="flex gap-3  hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl overf ">
+        <div className="flex gap-4 hoverSecondaryColorLight dark:hoverWhiteColorLight p-3 rounded-xl overf ">
           {/* Image */}
 
-          <div className="relative w-10 h-10">
+          <div className="relative w-9 h-9">
             <ProfilePicture />
 
             {/* {online ? (
@@ -71,7 +70,7 @@ const ShortProfile = () => {
                 className="flex items-center gap-1 cursor-pointer "
                 // onClick={handleGetUserProfile}
               >
-                <small className="text-secondaryColor dark:text-whiteColor text-sm font-semibold ">
+                <small className="text-secondaryColor dark:text-whiteColor text-[14px] font-semibold  ">
                   {`${user?.firstName} ${user?.lastName}`}
                 </small>
                 <span>
