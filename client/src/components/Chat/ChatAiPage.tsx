@@ -22,7 +22,7 @@ const ChatAiPage = () => {
   const token = user?.token;
   const [error, setError] = useState(false);
 
-  const [prompt, setPrompt] = useState<string>();
+  const [prompt, setPrompt] = useState<string>("");
   const [promptDisplay, setPromptDisplay] = useState<string>();
   const [aiResponse, setAiResponse] = useState<string>();
   const [isResponseLoading, setIsResponseLoading] = useState<Boolean>(false);
@@ -44,6 +44,9 @@ const ChatAiPage = () => {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+    if (!prompt) {
+      return;
+    }
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -52,7 +55,7 @@ const ChatAiPage = () => {
 
     setPromptDisplay(prompt);
     dispatch(setAiChatArray(prompt));
-
+    setPrompt("");
     const getAiResponse = async () => {
       setIsResponseLoading(true);
 
@@ -62,8 +65,6 @@ const ChatAiPage = () => {
           { prompt },
           config
         );
-
-        setPrompt("");
 
         const res = await response.data;
 

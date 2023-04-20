@@ -1,7 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import authReducer, {
   AuthState,
-  initialState,
+  initialState as authInitialState,
 } from "../features/auth/authSlice";
 import postsReducer, { PostsState } from "../features/posts/postSlice";
 import commentsReducer, {
@@ -18,21 +20,31 @@ export interface RootState {
   comments: CommentsState;
   chats: ChatsState;
   messages: MessagesState;
-  // Add other slices here
 }
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    posts: postsReducer,
-    comments: commentsReducer,
-    chats: chatsReducer,
-    messages: messagesReducer,
-  },
-  preloadedState: {
-    auth: initialState,
-    // Initialize the other slices' initial states here
-  },
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  posts: postsReducer,
+  comments: commentsReducer,
+  chats: chatsReducer,
+  messages: messagesReducer,
 });
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
+export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;

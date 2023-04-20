@@ -2,13 +2,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { useDispatch, useSelector } from "react-redux";
-import Spinner from "./Spinner";
 import { AppDispatch, RootState } from "../app/store";
-import { logout, reset, updateUser } from "../features/auth/authSlice";
+import { updateUser } from "../features/auth/authSlice";
 
 export type FormData = {
   firstName: string;
@@ -255,7 +253,7 @@ const EditProfilePage = () => {
 
     toast.success("Profile Updated Successfully");
 
-    // navigate("/login");
+    navigate("/profile");
   };
 
   return (
@@ -330,7 +328,7 @@ const EditProfilePage = () => {
         <input
           id="bio"
           type="text"
-          placeholder="Bio"
+          placeholder="Enter Bio"
           {...register("bio")}
           className={inputClassname}
         />

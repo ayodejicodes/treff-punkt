@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema(
 
     profilePic: {
       type: String,
+      default:
+        "https://res.cloudinary.com/dpcdcpyln/image/upload/v1681998837/treffPunkt/pw5bififtkp5osvazki2.png",
       validate: {
         validator: function (url) {
           const urlRegex =

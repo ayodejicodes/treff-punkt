@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser, reset } from "../../features/auth/authSlice";
 import { AppDispatch, RootState } from "../../../src/app/store";
 import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
+import { FaGithubSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
 
 export type FormData = {
   firstName: string;
@@ -121,8 +122,8 @@ const Register = () => {
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
       {/* ---------Light/Dark ----------*/}
-      <div className="absolute top-8 right-12 flex items-center gap-2 ">
-        <small>Switch Theme</small>
+      <div className="absolute top-7 right-12 flex items-center gap-2 ">
+        <small className="hidden md:flex">Switch Theme</small>
 
         <ThemeSwitcherIcon size={20} />
       </div>
@@ -130,7 +131,7 @@ const Register = () => {
 
       {/* Register/ Login Navigation */}
 
-      <div className="flex bg-secondaryColor/[30%] dark:bg-white/[30%] p-2 rounded-full gap-2 mb-6 mt-2">
+      <div className="flex bg-secondaryColor/[30%] dark:bg-white/[30%] p-2 rounded-full gap-2 mb-3 md:mb-4  md:mt-2">
         <NavLink
           to="/register"
           className={({ isActive }) => {
@@ -164,9 +165,9 @@ const Register = () => {
 
       {/* Register */}
       {/* Form */}
-      <div className="flex w-[55em] h-[36em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl ">
+      <div className="flex w-[22em] md:w-[40em] lg:w-[55em] h-[36em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl  ">
         {/* left */}
-        <div className="w-[50%]   rounded-xl ">
+        <div className="hidden lg:flex md:w-[50%] rounded-xl ">
           <img
             src="../src/assets/registerpagepic.jpg"
             alt=""
@@ -175,7 +176,7 @@ const Register = () => {
           />
         </div>
         {/* Right */}
-        <div className="w-[50%] p-8">
+        <div className="w-full  lg:w-[50%] flex flex-col justify-center p-8">
           {/* Form inputs */}
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -340,6 +341,41 @@ const Register = () => {
               </Link>
             </small>
           </form>
+        </div>
+      </div>
+      {/* Copyright */}
+      <div className=" mt-3">
+        <small className="text-secondaryColor dark:text-whiteColor text-[11px] text-center opacity-75">
+          &copy;
+          {` ${new Date().getFullYear()} | Designed and Developed by `}
+          <span className="font-semibold"> Ayodeji Fabusiwa</span>
+        </small>
+        <div className="flex justify-center gap-2 mt-[1px]">
+          <Link to="https://github.com/ayodejicodes" target="_blank">
+            <FaGithubSquare
+              size={17}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+            />
+          </Link>
+
+          <Link
+            to="https://www.linkedin.com/in/ayodeji-fabusiwa/"
+            target="_blank"
+          >
+            <FaLinkedin
+              size={17}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </Link>
+
+          <Link to="https://twitter.com/ayodejicodes" target="_blank">
+            <FaTwitterSquare
+              size={17}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </Link>
         </div>
       </div>
     </div>

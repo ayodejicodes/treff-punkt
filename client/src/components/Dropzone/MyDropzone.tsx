@@ -183,6 +183,7 @@ const MyDropzone = () => {
 
   const handleRemove = () => {
     setPreview("");
+    setFile(null);
     setAcceptedFile(undefined);
   };
 
@@ -229,6 +230,10 @@ const MyDropzone = () => {
     const responseData = await handleMessageUpload();
 
     await Promise.resolve();
+
+    if (!responseData && !isMessageLoading && !content) {
+      return;
+    }
 
     if (!responseData) {
       setIsMessageLoading(false);
@@ -357,7 +362,7 @@ const MyDropzone = () => {
               <div className="flex items-center pl-7 pr-7 pt-3 pb-3 gap-4 ">
                 <div className="">
                   {preview && (
-                    <div className="relative w-8 h-8 bg-red-700">
+                    <div className="relative w-8 h-8 ">
                       <img
                         src={preview}
                         alt=""

@@ -39,7 +39,6 @@ export type Post = {
 
 export type PostsState = {
   posts: Post[];
-
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -59,7 +58,6 @@ export type UpdatePost = {
 
 const initialState: PostsState = {
   posts: [],
-
   isLoading: false,
   isSuccess: false,
   isError: false,
@@ -222,6 +220,8 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.posts = [action.payload];
+
+        console.log(state.posts);
       })
       .addCase(likeDislikePost.rejected, (state, action) => {
         state.isLoading = false;

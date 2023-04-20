@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../../features/auth/authSlice";
 import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
+import { FaGithubSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
 
 const LoginPage = () => {
   // Styling--------------------------------------
@@ -76,8 +77,8 @@ const LoginPage = () => {
   return (
     <div className="relative flex flex-col items-center justify-center h-screen text-secondaryColor dark:text-whiteColor">
       {/* ---------Light/Dark ----------*/}
-      <div className="absolute top-8 right-12 flex items-center gap-2 ">
-        <small>Switch Theme</small>
+      <div className="absolute top-7 right-12 flex items-center gap-2 ">
+        <small className="hidden md:flex">Switch Theme</small>
 
         <ThemeSwitcherIcon size={20} />
       </div>
@@ -85,7 +86,7 @@ const LoginPage = () => {
 
       {/* Regsiter/ Login Navigation */}
 
-      <div className="flex bg-secondaryColor/[30%] dark:bg-white/[30%] p-2 rounded-full gap-2 mb-6 mt-2">
+      <div className="flex bg-secondaryColor/[30%] dark:bg-white/[30%] p-2 rounded-full gap-2 mb-3 md:mb-4  md:mt-2">
         <NavLink
           to="/register"
           className={({ isActive }) => {
@@ -117,11 +118,11 @@ const LoginPage = () => {
         </NavLink>
       </div>
 
-      {/* Register */}
+      {/* Login */}
       {/* Form */}
-      <div className="flex w-[55em] h-[36em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl ">
+      <div className="flex w-[22em] md:w-[40em] lg:w-[55em] h-[36em] bg-secondaryColor/[95%] dark:bg-whiteColor dark:text-secondaryColor text-whiteColor rounded-xl  ">
         {/* left */}
-        <div className="w-[50%] rounded-xl ">
+        <div className="hidden lg:flex md:w-[50%] rounded-xl ">
           <img
             src="../src/assets/loginpic.jpg"
             alt=""
@@ -130,9 +131,11 @@ const LoginPage = () => {
           />
         </div>
         {/* Right */}
-        <div className="w-[50%] flex flex-col justify-center p-8">
+        <div className="w-full  lg:w-[50%] flex flex-col justify-center p-8">
           <div className=" text-center mb-6">
-            <h1 className="text-[20px] font-semibold">Login</h1>
+            <h1 className="text-[18px] md:text-[20px] font-semibold">
+              Login to Treff Punkt
+            </h1>
           </div>
 
           {/* Form inputs */}
@@ -243,6 +246,42 @@ const LoginPage = () => {
               )}
             </div>
           </form>
+        </div>
+      </div>
+
+      {/* Copyright */}
+      <div className=" mt-3">
+        <small className="text-secondaryColor dark:text-whiteColor text-[11px] text-center opacity-75">
+          &copy;
+          {` ${new Date().getFullYear()} | Designed and Developed by `}
+          <span className="font-semibold"> Ayodeji Fabusiwa</span>
+        </small>
+        <div className="flex justify-center gap-2 mt-[1px]">
+          <Link to="https://github.com/ayodejicodes" target="_blank">
+            <FaGithubSquare
+              size={17}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+            />
+          </Link>
+
+          <Link
+            to="https://www.linkedin.com/in/ayodeji-fabusiwa/"
+            target="_blank"
+          >
+            <FaLinkedin
+              size={17}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </Link>
+
+          <Link to="https://twitter.com/ayodejicodes" target="_blank">
+            <FaTwitterSquare
+              size={17}
+              className="text-secondaryColor dark:text-whiteColor cursor-pointer"
+              onClick={() => navigate("/")}
+            />
+          </Link>
         </div>
       </div>
     </div>

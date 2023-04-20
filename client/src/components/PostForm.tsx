@@ -96,6 +96,7 @@ const PostForm = () => {
 
   const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setIsPostLoading(true);
 
     const responseData = await handlePostUpload();
@@ -103,6 +104,7 @@ const PostForm = () => {
     await Promise.resolve();
 
     if (!responseData) {
+      dispatch(resetPost());
       setIsPostLoading(false);
 
       dispatch(
@@ -133,7 +135,7 @@ const PostForm = () => {
       );
     }
 
-    dispatch(resetPost());
+    // dispatch(resetPost());
   };
 
   return (

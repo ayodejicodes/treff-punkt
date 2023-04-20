@@ -20,23 +20,6 @@ export type Comment = {
   updatedAt: Date;
 };
 
-// export type CommentCardInterface = {
-//   _id: string;
-//   author: {
-//     _id: string;
-//     firstName: string;
-//     lastName: string;
-//     userName: string;
-//     profilePic: string;
-//   };
-//   post: string;
-//   caption: string;
-//   upvotes: string[];
-//   downvotes: string[];
-//   createdAt: Date;
-//   updatedAt: Date;
-// };
-
 export type CommentsState = {
   comments: Comment[];
   isLoading: boolean;
@@ -227,8 +210,6 @@ const commentsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.comments.push(action.payload as Comment);
-
-        console.log("pushstate", typeof state.comments);
       })
       .addCase(createComment.rejected, (state, action) => {
         state.isLoading = false;
