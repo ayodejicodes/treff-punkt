@@ -7,7 +7,7 @@ import {
   FaTwitterSquare,
   FaUser,
 } from "react-icons/fa";
-import MenuComponent from "../MenuComponent";
+import MenuComponent from "../Reusables/MenuComponent";
 import ShortProfile from "../Profile/ShortProfile";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";

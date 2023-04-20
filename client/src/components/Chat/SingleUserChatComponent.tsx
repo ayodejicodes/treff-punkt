@@ -22,8 +22,6 @@ const SingleUserChatComponent: React.FC<ChatCard> = ({ chat, onClick }) => {
   const sender = users.find((u) => u?._id === user?._id);
   const receiver = users.find((u) => u?._id !== user?._id);
 
-  // console.log(receiver?.profilePic);
-
   return (
     <div>
       {/* Image and Details */}

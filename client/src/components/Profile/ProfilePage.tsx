@@ -59,37 +59,6 @@ const ProfilePage = () => {
     getAuthUser();
   }, [followingsCount]);
 
-  // const [posts, setPosts] = useState<Post[]>();
-  // const [error, setError] = useState(false);
-  // const filteredPosts = posts?.filter((post) => post.author._id === user?._id);
-  // const token = user?.token;
-
-  // useEffect(() => {
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   };
-
-  //   const getAllPosts = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://localhost:1024/api/posts",
-  //         config
-  //       );
-  //       const res = await response.data;
-  //       setPosts(res);
-  //       setError(false);
-  //     } catch (error) {
-  //       setError(true);
-  //     }
-  //   };
-
-  //   getAllPosts();
-  // }, []);
-
-  // console.log("filteredPosts", filteredPosts);
-
   // Handles Outside box Click---------------------------------------
   const deleteBoxRef = useRef<HTMLDivElement>(null);
 
@@ -114,8 +83,6 @@ const ProfilePage = () => {
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    // dispatch(logout());
-    // dispatch(logout());
     dispatch(reset());
     navigate("/");
 

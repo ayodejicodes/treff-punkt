@@ -51,9 +51,6 @@ const SideChat = () => {
     homeFeedChats();
   }, [selectedChatId, messages]);
 
-  // console.log("chatArray", chatArray);
-  // console.log("selectedChatId", selectedChatId);
-
   const handleChatClick = (chatID: string) => {
     dispatch(setSelectedChatId(chatID));
   };

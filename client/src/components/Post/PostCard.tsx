@@ -62,14 +62,8 @@ const PostCard = ({ post }: PostCard) => {
     updatedAt,
   } = post;
 
-  // console.log("comments", comments);
-  // console.log("post", post);
-
-  // const [commentArr, setCommentArr] = useState<any>(comments);
   const [commentCaption, setCommentCaption] = useState<string | undefined>();
   const [isCommentloading, setIsCommentloading] = useState<Boolean>(false);
-
-  // console.log("commentArr", commentArr);
 
   const [toggleLike, setToggleLike] = useState<Boolean>(
     likes.includes(user?._id as string)
@@ -173,8 +167,6 @@ const PostCard = ({ post }: PostCard) => {
     }
     dispatch(resetPost());
   };
-
-  // console.log("isLiked", isLiked);
 
   const handleBookmark = async () => {
     await dispatch(bookmarkPost({ id: _id, userID: user?._id as string }));
@@ -526,7 +518,6 @@ const PostCard = ({ post }: PostCard) => {
                 setBase64Update(undefined);
                 setUpdateImage(undefined);
                 setIsTheSameImage(false);
-                // console.log(isTheSameImage);
               }}
             />
           )}

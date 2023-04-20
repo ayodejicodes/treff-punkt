@@ -220,8 +220,6 @@ const postsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.posts = [action.payload];
-
-        console.log(state.posts);
       })
       .addCase(likeDislikePost.rejected, (state, action) => {
         state.isLoading = false;

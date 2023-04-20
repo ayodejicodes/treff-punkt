@@ -168,9 +168,6 @@ const MyDropzone = () => {
       } else {
         toast.error(`${filetype} files not supported, Please upload an image.`);
       }
-
-      //   console.log("Rejected:", filetype);
-      //   console.log("Error:", capitalizedErrorType);
     }
   }, [acceptedFile, rejectedFile]);
 
