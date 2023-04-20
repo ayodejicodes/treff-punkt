@@ -16,19 +16,11 @@ const ThemeSwitcherIcon = ({ size }: Theme) => {
       onClick={onSwitchClick}
     >
       <div className="hidden " ref={sunRef}>
-        <BsSunFill
-          size={size}
-          className={` ${
-            isDarkMode && "dark:text-secondaryColor "
-          }cursor-pointer`}
-        />
+        <BsMoonFill size={size} className="text-whiteColor" />
       </div>
 
       <div className="hidden " ref={moonRef}>
-        <BsMoonFill
-          size={size}
-          className={` ${!isDarkMode && "text-whiteColor "}cursor-pointer`}
-        />
+        <BsSunFill size={size} className="text-secondaryColor" />
       </div>
     </div>
   );

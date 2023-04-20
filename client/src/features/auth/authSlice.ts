@@ -31,6 +31,7 @@ interface NewUser {
   userName: string;
   password: string;
   confirmPassword: string;
+  profilePic?: string;
 }
 
 interface LoginUser {
@@ -43,7 +44,7 @@ export interface AuthState {
   followingsCount: number;
   followersCount: number;
   keyword: string | null;
-
+  theme: string | null;
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
@@ -55,7 +56,7 @@ export const initialState: AuthState = {
   followingsCount: user?.followings?.length || 0,
   followersCount: user?.followers?.length || 0,
   keyword: null,
-
+  theme: null,
   isLoading: false,
   isSuccess: false,
   isError: false,

@@ -59,9 +59,6 @@ const EditProfilePage = () => {
 
   // ----------------------------------------------
 
-  const [isRegistrationLoading, setIsRegistrationLoading] =
-    useState<boolean>(false);
-
   const [base64ProfilePic, setBase64ProfilePic] = useState<
     string | undefined
   >();

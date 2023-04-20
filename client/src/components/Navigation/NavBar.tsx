@@ -74,7 +74,6 @@ const NavBar = () => {
 
     toast.success("Logged Out");
   };
-  // console.log("keyword", keyword);
 
   return (
     <div>

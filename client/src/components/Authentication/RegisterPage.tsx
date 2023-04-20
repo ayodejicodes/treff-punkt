@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,7 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser, reset } from "../../features/auth/authSlice";
 import { AppDispatch, RootState } from "../../../src/app/store";
 import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
-import { FaGithubSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
+import {
+  FaCloudUploadAlt,
+  FaGithubSquare,
+  FaLinkedin,
+  FaTwitterSquare,
+  FaUserCircle,
+} from "react-icons/fa";
 
 export type FormData = {
   firstName: string;
@@ -69,6 +75,13 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isRegistrationLoading, setIsRegistrationLoading] =
     useState<boolean>(false);
+  const [base64ProfilePic, setBase64ProfilePic] = useState<
+    string | undefined
+  >();
+  const [profileImage, setProfileImage] = useState<File | undefined>();
+
+  const [isProfilePicLoading, setIsProfilePicLoading] =
+    useState<Boolean>(false);
 
   const registerDataObject = {
     firstName: watch("firstName"),
@@ -91,22 +104,75 @@ const Register = () => {
     (state: RootState) => state.auth
   );
 
+  // useEffect(() => {
+  //   if (isError) {
+  //     toast.error(message);
+  //     setIsRegistrationLoading(false);
+  //   }
+  //   if (isSuccess || user) {
+  //     toast.success("Registration Successful");
+  //     setIsRegistrationLoading(false);
+  //     navigate("/");
+  //   }
+  //   dispatch(reset());
+  // }, [user, isLoading, isError, message, dispatch]);
+
+  // Set Preview------------------------------------------------------------
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-      setIsRegistrationLoading(false);
+    const reader = new FileReader();
+    if (profileImage) {
+      reader.readAsDataURL(profileImage as File);
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        // base64-encoded string
+        setBase64ProfilePic(e.target?.result as string);
+      };
     }
-    if (isSuccess || user) {
-      toast.success("Registration Successful");
-      setIsRegistrationLoading(false);
-      navigate("/");
+  }, [profileImage]);
+
+  // -------------------------------------------------------------------------
+  // Upload to Cloudinary
+  const upload_preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const cloud_name = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+  const handleProfilePictureUpload = async () => {
+    if (!base64ProfilePic) {
+      setBase64ProfilePic(undefined);
+      setIsProfilePicLoading(false);
     }
-    dispatch(reset());
-  }, [user, isLoading, isError, message, dispatch]);
+
+    if (base64ProfilePic) {
+      const data = new FormData();
+      data.append("file", base64ProfilePic as string);
+      data.append("upload_preset", `${upload_preset}`);
+      data.append("cloud_name", `${cloud_name}`);
+
+      try {
+        setIsProfilePicLoading(true);
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/dpcdcpyln/upload",
+          {
+            method: "post",
+            body: data,
+          }
+        );
+        const responseData = await response.json();
+        setIsProfilePicLoading(false);
+        return responseData;
+      } catch (error) {
+        setIsProfilePicLoading(false);
+        throw new Error("Upload Failed");
+      }
+    }
+  };
 
   // -------------------------------------------------------------------------
 
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    setIsRegistrationLoading(true);
+    const responseDataProfilePic = await handleProfilePictureUpload();
+
+    await Promise.resolve();
+
     const userData = {
       firstName,
       lastName,
@@ -116,7 +182,22 @@ const Register = () => {
       confirmPassword,
     };
 
-    dispatch(registerUser(userData));
+    if (!responseDataProfilePic) {
+      await dispatch(registerUser(userData));
+    }
+    if (responseDataProfilePic) {
+      await dispatch(
+        registerUser({
+          ...userData,
+          profilePic: responseDataProfilePic.url.toString(),
+        })
+      );
+    }
+
+    setIsRegistrationLoading(false);
+    toast.success("Registration Successfully");
+
+    navigate("/");
   };
 
   return (
@@ -180,7 +261,7 @@ const Register = () => {
           {/* Form inputs */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-2"
+            className="flex flex-col gap-1.5"
           >
             {/* First Name------------------------------------------------------------------- */}
             {errors.firstName ? (
@@ -323,11 +404,47 @@ const Register = () => {
                 />
               )}
             </div>
-            {/* ---------------------------------------------------------------------------- */}
+            {/* --------------------------Profile Pic upload-------------------------------------------------- */}
+
+            <div className=" flex items-center gap-2.5 mt-[0.5] mb-[0.5]">
+              {/* Preview */}
+              <div className=" flex justify-center items-center w-8 h-8 rounded-full ">
+                {base64ProfilePic ? (
+                  <img
+                    src={base64ProfilePic}
+                    alt=""
+                    className="w-8 h-8 object-cover rounded-full"
+                  />
+                ) : (
+                  <FaUserCircle
+                    size={24}
+                    className="text-whiteColor dark:text-secondaryColor"
+                  />
+                )}
+              </div>
+              <div className=" relative flex gap-3 items-center pt-1 pb-1 pl-2 pr-2 bg-whiteColor rounded-lg hover:bg-offlineGray/[10%]">
+                <div>
+                  <FaCloudUploadAlt size={22} className="text-secondaryColor" />
+                </div>
+                <small className="whitespace-nowrap text-secondaryColor  ">
+                  Upload Profile Picture
+                </small>
+
+                <input
+                  id="profilePic"
+                  type="file"
+                  accept=".jpg,.jpeg, .png"
+                  className="absolute left-0 mt-1 mb-1 w-48 opacity-0"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setProfileImage(e.target?.files?.[0])
+                  }
+                />
+              </div>
+            </div>
 
             {/* ---------------------------------------------------------------------------- */}
 
-            <button className="btnPrimary mt-4" type="submit">
+            <button className="btnPrimary mt-1" type="submit">
               {isRegistrationLoading ? <Spinner /> : "Register"}
             </button>
 
