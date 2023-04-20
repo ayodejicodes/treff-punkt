@@ -150,14 +150,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 // -----------------------------------------------------------------------
 
-// Generates Token
-const generateToken = (id) => {
-  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "2d",
-  });
-  return token;
-};
-
 // ------------------------Follow User------------------------
 
 // @desc        Follow User
@@ -293,12 +285,20 @@ const updateUserController = asyncHandler(async (req, res) => {
     });
 
     const { password, ...others } = updatedUser._doc;
-    res.status(200).json(others);
+    res.status(200).json({ ...others, token: generateToken(req.user._id) });
   } else {
     res.status(403);
     throw new Error("Update User failed, Unauthorized User");
   }
 });
+
+// Generates Token
+const generateToken = (id) => {
+  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "2d",
+  });
+  return token;
+};
 
 module.exports = {
   register,

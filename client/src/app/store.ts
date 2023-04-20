@@ -1,5 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer, { AuthState } from "../features/auth/authSlice";
+import authReducer, {
+  AuthState,
+  initialState,
+} from "../features/auth/authSlice";
 import postsReducer, { PostsState } from "../features/posts/postSlice";
 import commentsReducer, {
   CommentsState,
@@ -25,6 +28,10 @@ export const store = configureStore({
     comments: commentsReducer,
     chats: chatsReducer,
     messages: messagesReducer,
+  },
+  preloadedState: {
+    auth: initialState,
+    // Initialize the other slices' initial states here
   },
 });
 

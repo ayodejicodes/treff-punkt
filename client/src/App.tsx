@@ -41,54 +41,49 @@ function App() {
 
   // --------------------------------------------------------------------------------
 
-  const { user, keyword } = useSelector((state: RootState) => state.auth);
+  // useEffect(() => {
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   };
 
-  const token = user?.token;
-  const [searchResults, setSearchResults] = useState<User[]>([]);
+  //   const searchUser = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:1024/api/users/?search=${keyword}`,
+  //         config
+  //       );
+  //       const res = await response.data;
+  //       setSearchResults([...res]);
+  //     } catch (error) {
+  //       throw new Error("Could not find Search request");
+  //     }
+  //   };
 
-  useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const searchUser = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:1024/api/users/?search=${keyword}`,
-          config
-        );
-        const res = await response.data;
-        setSearchResults([...res]);
-      } catch (error) {
-        throw new Error("Could not find Search request");
-      }
-    };
-
-    searchUser();
-  }, [keyword]);
+  //   searchUser();
+  // }, [keyword]);
 
   // Handles Outside box Click---------------------------------------
-  const searchBoxRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  // const searchBoxRef = useRef<HTMLDivElement>(null);
+  // const dispatch = useDispatch<AppDispatch>();
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      searchBoxRef.current &&
-      !searchBoxRef.current.contains(e.target as Node)
-    ) {
-      dispatch(setKeyword(null));
-    }
-  };
+  // const handleClickOutside = (e: MouseEvent) => {
+  //   if (
+  //     searchBoxRef.current &&
+  //     !searchBoxRef.current.contains(e.target as Node)
+  //   ) {
+  //     dispatch(setKeyword(null));
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [searchBoxRef]);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [searchBoxRef]);
 
   // ----------------------------------------------------------------------
 
@@ -128,7 +123,7 @@ function App() {
         </Routes>
 
         {/* -------------------------------------------------------------------------------------------------------------------------------- */}
-        {keyword && (
+        {/* {keyword && (
           <div
             ref={searchBoxRef}
             className={`absolute ${
@@ -158,7 +153,7 @@ function App() {
                 <SearchUserComponent searchResult={searchResult} key={index} />
               ))}
           </div>
-        )}
+        )} */}
 
         {/* ----------------------------------------------------------------------------------------------------------------------------------- */}
 

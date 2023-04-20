@@ -50,7 +50,7 @@ export interface AuthState {
   message: string;
 }
 
-const initialState: AuthState = {
+export const initialState: AuthState = {
   user: user ? user : null,
   followingsCount: user?.followings?.length || 0,
   followersCount: user?.followers?.length || 0,
@@ -211,7 +211,10 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.user = {
+          ...state.user,
+          ...action.payload,
+        };
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -225,13 +228,28 @@ const authSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        const updatedUser = { ...state.user, ...action.payload };
+        state.user = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
         state.user = null;
+      })
+
+      .addCase(logout.pending, (state) => {
+        state.isLoading = true;
+      })
+
+      .addCase(logout.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
       });
   },
 });

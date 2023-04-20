@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "./Spinner";
 import { AppDispatch, RootState } from "../app/store";
@@ -26,11 +26,8 @@ interface UpdateObject {
 // Form Validation---------------------------------------------------
 const validationSchema = yup.object().shape({
   firstName: yup.string(),
-  //   .required("First name is required")
   lastName: yup.string(),
-  //   .required("Last name is required")
   userName: yup.string(),
-  //   .required("Username is required")
   bio: yup.string(),
 });
 
@@ -94,19 +91,6 @@ const EditProfilePage = () => {
     (state: RootState) => state.auth
   );
 
-  //   useEffect(() => {
-  //     if (isError) {
-  //       toast.error(message);
-  //       setIsRegistrationLoading(false);
-  //     }
-  //     if (isSuccess || user) {
-  //     //   toast.success("Registration Successful");
-  //     //   setIsRegistrationLoading(false);
-  //     //   navigate("/");
-  //     }
-  //     dispatch(reset());
-  //   }, [user, isLoading, isError, message, dispatch]);
-
   // Set Preview------------------------------------------------------------
   useEffect(() => {
     const reader = new FileReader();
@@ -148,6 +132,7 @@ const EditProfilePage = () => {
       data.append("cloud_name", `${cloud_name}`);
 
       try {
+        setIsProfilePicLoading(true);
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/dpcdcpyln/upload",
           {
@@ -156,8 +141,7 @@ const EditProfilePage = () => {
           }
         );
         const responseData = await response.json();
-        console.log("ppic", responseData.url.toString());
-
+        setIsProfilePicLoading(false);
         return responseData;
       } catch (error) {
         setIsProfilePicLoading(false);
@@ -179,6 +163,7 @@ const EditProfilePage = () => {
       data.append("cloud_name", `${cloud_name}`);
 
       try {
+        setIsCoverPicLoading(true);
         const response = await fetch(
           "https://api.cloudinary.com/v1_1/dpcdcpyln/upload",
           {
@@ -187,8 +172,7 @@ const EditProfilePage = () => {
           }
         );
         const responseData = await response.json();
-        console.log("Coverpic", responseData.url.toString());
-
+        setIsCoverPicLoading(false);
         return responseData;
       } catch (error) {
         setIsCoverPicLoading(false);
@@ -197,22 +181,21 @@ const EditProfilePage = () => {
     }
   };
 
-  //   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //     e.preventDefault();
-
-  //     dispatch(logout());
-  //     dispatch(reset());
-  //     navigate("/");
-
-  //     toast.success("Logged Out");
-  //   };
-
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     setIsUpdatUserLoading(true);
 
     const { firstName, lastName, userName, bio } = registerDataObject;
-    if (!firstName && !lastName && !userName && !bio) {
-      console.log("Field Empty");
+
+    if (
+      !firstName &&
+      !lastName &&
+      !userName &&
+      !bio &&
+      !profileImage &&
+      !coverImage
+    ) {
+      toast.warn(`You did not change anything, ${user?.firstName}`);
+      setIsUpdatUserLoading(false);
       return;
     }
 
@@ -234,53 +217,46 @@ const EditProfilePage = () => {
     }
     // filteredUpdateObject;
 
-    if (!responseDataProfilePic && !responseDataCoverPic) {
-      await dispatch(updateUser(filteredUpdateObject));
+    if (!isProfilePicLoading && !isCoverPicLoading) {
+      if (!responseDataProfilePic && !responseDataCoverPic) {
+        await dispatch(updateUser(filteredUpdateObject));
+      }
+
+      if (responseDataProfilePic && !responseDataCoverPic) {
+        await dispatch(
+          updateUser({
+            ...filteredUpdateObject,
+            profilePic: responseDataProfilePic.url.toString(),
+          })
+        );
+      }
+
+      if (!responseDataProfilePic && responseDataCoverPic) {
+        await dispatch(
+          updateUser({
+            ...filteredUpdateObject,
+            coverPic: responseDataCoverPic.url.toString(),
+          })
+        );
+      }
+
+      if (responseDataProfilePic && responseDataCoverPic) {
+        await dispatch(
+          updateUser({
+            ...filteredUpdateObject,
+            profilePic: responseDataProfilePic.url.toString(),
+            coverPic: responseDataCoverPic.url.toString(),
+          })
+        );
+      }
     }
 
-    if (responseDataProfilePic && !responseDataCoverPic) {
-      await dispatch(
-        updateUser({
-          ...filteredUpdateObject,
-          profilePic: responseDataProfilePic.url.toString(),
-        })
-      );
-    }
+    setIsUpdatUserLoading(false);
 
-    if (!responseDataProfilePic && responseDataCoverPic) {
-      await dispatch(
-        updateUser({
-          ...filteredUpdateObject,
-          coverPic: responseDataCoverPic.url.toString(),
-        })
-      );
-    }
-
-    if (responseDataProfilePic && responseDataCoverPic) {
-      await dispatch(
-        updateUser({
-          ...filteredUpdateObject,
-          profilePic: responseDataProfilePic.url.toString(),
-          coverPic: responseDataCoverPic.url.toString(),
-        })
-      );
-    }
+    toast.success("Profile Updated Successfully");
 
     // navigate("/login");
   };
-
-  //   -------------------------------------------------------------------------
-
-  //   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-  //     const userData = {
-  //       firstName,
-  //       lastName,
-  //       userName,
-  //
-  //     };
-
-  //     // dispatch(registerUser(userData));
-  //   };
 
   return (
     <div className=" w-full lg:w-[50%] lg:flex flex-col gap-5 p-7   bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark z-10">
@@ -395,13 +371,10 @@ const EditProfilePage = () => {
         {/* ---------------------------------------------------------------------------- */}
 
         {/* ---------------------------------------------------------------------------- */}
-        <small className="text-center dark:text-whiteColor text-secondaryColor text-[11px] italic mt-2">
-          After Updating your Profile, you'll be logged out. You have to login
-          back for it to take effect.
-        </small>
+
         <div className="flex justify-end gap-4">
           <button className="btnPrimary mt-4" type="submit">
-            {isRegistrationLoading ? <Spinner /> : "Update Profile"}
+            {isUpdatUserLoading ? "Updating..." : "Update Profile"}
           </button>
           <button
             className="btnPrimary mt-4"

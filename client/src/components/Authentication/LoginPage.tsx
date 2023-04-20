@@ -50,7 +50,7 @@ const LoginPage = () => {
     if (isError) {
       toast.error(message);
     }
-    if (isSuccess || user) {
+    if (isSuccess && user) {
       toast.success("Login Successful");
 
       navigate("/");
@@ -69,6 +69,8 @@ const LoginPage = () => {
     };
 
     dispatch(login(userData));
+    // navigate("/");
+    // toast.success("Login Successful");
   };
 
   return (
