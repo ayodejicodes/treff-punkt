@@ -47,6 +47,7 @@ const ChatAiPage = () => {
     if (!prompt) {
       return;
     }
+
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

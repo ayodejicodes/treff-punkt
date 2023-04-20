@@ -24,13 +24,16 @@ const SearchUserComponent = ({ searchResult }: SearchResults) => {
       >
         <div className="flex justify-between items-center w-full h-20">
           <div className="flex items-center gap-6">
-            <div className="  w-12 h-12 ">
-              <img
-                src={searchResult?.profilePic}
-                alt=""
-                className="w-full h-full object-cover rounded-full"
-              />
+            <div>
+              <div className="  w-12 h-12 ">
+                <img
+                  src={searchResult?.profilePic}
+                  alt=""
+                  className="object-cover w-full h-full rounded-full cursor-pointer"
+                />
+              </div>
             </div>
+
             <div>
               <p className="font-semibold break-words">{`${searchResult.firstName} ${searchResult.lastName}`}</p>
             </div>
@@ -38,7 +41,6 @@ const SearchUserComponent = ({ searchResult }: SearchResults) => {
           <div>
             <button className="btnPrimary text-[12px]">Show profile</button>
           </div>
-          <div></div>
         </div>
       </div>
     </div>
