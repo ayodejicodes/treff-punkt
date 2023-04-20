@@ -1,11 +1,11 @@
 import { FaHandPointRight } from "react-icons/fa";
-import { AppDispatch, RootState } from "../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Chat } from "../features/chats/chatSlice";
+import { Chat } from "../../features/chats/chatSlice";
 import { useEffect, useState } from "react";
-import { getChats } from "../features/chats/chatSlice";
-import { setSelectedChatId } from "../features/chats/chatSlice";
+import { getChats } from "../../features/chats/chatSlice";
+import { setSelectedChatId } from "../../features/chats/chatSlice";
 import SingleUserChatComponent from "./SingleUserChatComponent";
 import AiSideChat from "./AiSideChat";
 

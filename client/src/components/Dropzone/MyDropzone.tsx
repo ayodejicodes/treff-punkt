@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { Chat } from "../../features/chats/chatSlice";
-import MessageComponent from "../MessageComponent";
+import MessageComponent from "../Message/MessageComponent";
 import { io } from "socket.io-client";
 
 const URLSOCKET = "http://localhost:1024";

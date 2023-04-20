@@ -1,8 +1,8 @@
 import { MdVerified } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { AiChat } from "./Chat/ChatAiPage";
+import { AiChat } from "./ChatAiPage";
 import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
+import { RootState } from "../../app/store";
 import { useEffect, useState } from "react";
 
 const AiSideChat = () => {

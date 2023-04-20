@@ -1,4 +1,4 @@
-import GetUserProfilePage from "../components/GetuserProfilePage";
+import GetUserProfilePage from "../components/Profile/GetuserProfilePage";
 
 const GetUserProfile = () => {
   return (

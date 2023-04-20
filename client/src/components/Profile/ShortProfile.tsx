@@ -1,7 +1,7 @@
 import { MdVerified } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../app/store";
-import ProfilePicture from "./ProfilePicture/ProfilePicture";
+import { AppDispatch, RootState } from "../../app/store";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

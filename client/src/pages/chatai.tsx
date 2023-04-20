@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import ChatsPage from "../components/Chat/ChatsPage";
-import ChatEmpty from "../components/ChatEmpty";
+import ChatEmpty from "../components/Chat/ChatEmpty";
 import ChatAiPage from "../components/Chat/ChatAiPage";
 
 const ChatAi = () => {

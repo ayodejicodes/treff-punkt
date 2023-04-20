@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { Chat } from "../../features/chats/chatSlice";
 import { useEffect, useRef, useState } from "react";
 import { format, parseISO } from "date-fns";
-import ChatEmpty from "../ChatEmpty";
+import ChatEmpty from "./ChatEmpty";
 import { useNavigate } from "react-router-dom";
 
 const ChatsPage = () => {

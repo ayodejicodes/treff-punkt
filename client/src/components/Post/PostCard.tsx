@@ -12,7 +12,7 @@ import { RiShareForwardLine } from "react-icons/ri";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch, RootState } from "../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import { toast } from "react-toastify";
 import {
   Post,
@@ -22,19 +22,19 @@ import {
   likeDislikePost,
   resetPost,
   updatePost,
-} from "../features/posts/postSlice";
+} from "../../features/posts/postSlice";
 import { format, parseISO } from "date-fns";
 import { RxCross2 } from "react-icons/rx";
-import Spinner from "./Spinner";
-import CommentCard, { CommentCardProps } from "./CommentCard";
+import Spinner from "../Spinner/Spinner";
+import CommentCard, { CommentCardProps } from "../Comment/CommentCard";
 import { FiSend } from "react-icons/fi";
 import { VscSmiley } from "react-icons/vsc";
 import {
   Comment,
   createComment,
   getComments,
-} from "../features/comments/commentSlice";
-import ProfilePicture from "./ProfilePicture/ProfilePicture";
+} from "../../features/comments/commentSlice";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 
 interface PostCard {
   post: Post;

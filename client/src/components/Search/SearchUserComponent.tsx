@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../app/store";
-import { User, setKeyword } from "../features/auth/authSlice";
+import { AppDispatch, RootState } from "../../app/store";
+import { User, setKeyword } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 interface SearchResults {

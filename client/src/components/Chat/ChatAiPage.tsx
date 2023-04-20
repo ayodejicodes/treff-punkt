@@ -7,7 +7,7 @@ import { format, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setAiChatArray } from "../../features/chats/chatSlice";
-import AiChatMessageComponent from "../AiChatMessageComponent";
+import AiChatMessageComponent from "./AiChatMessageComponent";
 
 export interface AiChat {
   firstName: string;

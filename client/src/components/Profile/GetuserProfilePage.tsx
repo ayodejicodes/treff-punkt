@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppDispatch, RootState } from "../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import {
   User,
   followUser,
   setFollowingsCountDecrement,
   setFollowingsCountIncrement,
   unfollowUser,
-} from "../features/auth/authSlice";
+} from "../../features/auth/authSlice";
 import axios from "axios";
-import NotFound from "../pages/NotFound";
+import NotFound from "../../pages/NotFound";
 import { MdVerified } from "react-icons/md";
 import { BiPlusMedical } from "react-icons/bi";
 import { format } from "date-fns";
@@ -19,8 +19,8 @@ import {
   createChat,
   getChats,
   setSelectedChatId,
-} from "../features/chats/chatSlice";
-import Spinner from "./Spinner";
+} from "../../features/chats/chatSlice";
+import Spinner from "../Spinner/Spinner";
 
 const GetUserProfile = () => {
   const { user, followingsCount } = useSelector(

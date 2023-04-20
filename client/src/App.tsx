@@ -18,7 +18,7 @@ import ChatAi from "./pages/chatai";
 import EditProfile from "./pages/editProfile";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
-import SearchParentComponent from "./components/SearchParentComponent";
+import SearchParentComponent from "./components/Search/SearchParentComponent";
 
 function App() {
   const location = useLocation();

@@ -7,7 +7,7 @@ import {
 } from "react-icons/bi";
 import { VscSmiley } from "react-icons/vsc";
 import { FiSend } from "react-icons/fi";
-import { AppDispatch, RootState } from "../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -15,8 +15,8 @@ import {
   deleteComment,
   downvoteComment,
   upvoteComment,
-} from "../features/comments/commentSlice";
-import { Post, getPosts } from "../features/posts/postSlice";
+} from "../../features/comments/commentSlice";
+import { Post, getPosts } from "../../features/posts/postSlice";
 
 export type CommentCardProps = {
   comment: Comment;

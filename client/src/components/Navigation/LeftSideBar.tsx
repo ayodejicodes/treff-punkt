@@ -8,7 +8,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 import MenuComponent from "../MenuComponent";
-import ShortProfile from "../ShortProfile";
+import ShortProfile from "../Profile/ShortProfile";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";

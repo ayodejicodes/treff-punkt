@@ -1,8 +1,8 @@
 import { MdVerified } from "react-icons/md";
 // import useOnlineStatus from "../hooks/useOnlineStatus";
-import NotificationIcon from "./Notifications/NotificationIcon";
-import { Chat } from "../features/chats/chatSlice";
-import { RootState } from "../app/store";
+import NotificationIcon from "../Notifications/NotificationIcon";
+import { Chat } from "../../features/chats/chatSlice";
+import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
 
 interface ChatCard {

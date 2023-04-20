@@ -1,18 +1,18 @@
 import { MdVerified } from "react-icons/md";
-import ProfilePicture from "./ProfilePicture/ProfilePicture";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import { BsFillTrashFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { reset } from "../features/auth/authSlice";
+import { reset } from "../../features/auth/authSlice";
 import moment from "moment";
 
 import { format, parse, addDays } from "date-fns";
-import PostCard from "./PostCard";
+import PostCard from "../Post/PostCard";
 import axios from "axios";
-import { Post } from "../features/posts/postSlice";
+import { Post } from "../../features/posts/postSlice";
 
 import { BiPlusMedical } from "react-icons/bi";
 

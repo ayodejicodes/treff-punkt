@@ -2,7 +2,7 @@ import { BsChatRightQuoteFill, BsChatDots, BsBell } from "react-icons/bs";
 import { BiChevronDown } from "react-icons/bi";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { GiHamburgerMenu } from "react-icons/gi";
-import InputText from "../InputText";
+import InputText from "../Reusables/InputText";
 import NotificationIcon from "../Notifications/NotificationIcon";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useRef, useState } from "react";

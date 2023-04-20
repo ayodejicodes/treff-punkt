@@ -2,12 +2,12 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch, RootState } from "../app/store";
-import { createPost, resetPost } from "../features/posts/postSlice";
+import { AppDispatch, RootState } from "../../app/store";
+import { createPost, resetPost } from "../../features/posts/postSlice";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "react-toastify";
-import Spinner from "./Spinner";
-import ProfilePicture from "./ProfilePicture/ProfilePicture";
+import Spinner from "../Spinner/Spinner";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import axios from "axios";
 
 const PostForm = () => {

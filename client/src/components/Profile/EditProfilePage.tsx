@@ -5,8 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../app/store";
-import { updateUser } from "../features/auth/authSlice";
+import { AppDispatch, RootState } from "../../app/store";
+import { updateUser } from "../../features/auth/authSlice";
 
 export type FormData = {
   firstName: string;

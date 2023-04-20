@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import Spinner from "../Spinner";
+import Spinner from "../Spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser, reset } from "../../features/auth/authSlice";
 import { AppDispatch, RootState } from "../../../src/app/store";

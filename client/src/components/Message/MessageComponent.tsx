@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
-import { Message } from "../features/messages/messageSlice";
+import { RootState } from "../../app/store";
+import { Message } from "../../features/messages/messageSlice";
 import { format, parseISO } from "date-fns";
 
 export type Messageinterface = {

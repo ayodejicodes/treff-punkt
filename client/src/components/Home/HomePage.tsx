@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import Stories from "./Stories";
-import PostForm from "./PostForm";
-import PostCard from "./PostCard";
-import { AppDispatch, RootState } from "../app/store";
+import Stories from "../Stories/Stories";
+import PostForm from "../Post/PostForm";
+import PostCard from "../Post/PostCard";
+import { AppDispatch, RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Post, getPosts, resetPost } from "../features/posts/postSlice";
+import { Post, getPosts, resetPost } from "../../features/posts/postSlice";
 import { FaGithubSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
 
 const HomePage = () => {
