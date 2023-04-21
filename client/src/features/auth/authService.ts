@@ -2,7 +2,7 @@ import axios from "axios";
 
 // axios.defaults.baseURL = "http://localhost:5173";
 
-const API_URL = "/api/users/";
+const API_URL = "https://treff-punkt-socials.onrender.com/api/users/";
 
 const register = async (userData: any) => {
   try {

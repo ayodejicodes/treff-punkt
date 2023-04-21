@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/chats/";
+const API_URL = "https://treff-punkt-socials.onrender.com/api/chats/";
 
 const createChat = async (
   userID: { userID: string | undefined },

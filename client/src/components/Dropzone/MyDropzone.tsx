@@ -18,7 +18,7 @@ import { Chat } from "../../features/chats/chatSlice";
 import MessageComponent from "../Message/MessageComponent";
 import { io } from "socket.io-client";
 
-const URLSOCKET = "http://localhost:1024";
+const URLSOCKET = "https://treff-punkt-socials.onrender.com";
 let socket = io(URLSOCKET, {
   transports: ["websocket"],
 });

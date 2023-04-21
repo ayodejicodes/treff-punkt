@@ -52,7 +52,7 @@ const GetUserProfile = () => {
     const getSingleUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:1024/api/users/${id}`,
+          `https://treff-punkt-socials.onrender.com/api/users/${id}`,
           config
         );
         const res = await response.data;
@@ -115,7 +115,7 @@ const GetUserProfile = () => {
           <div className="relative ">
             {!userProfile?.coverPic && (
               <img
-                src="../../src/assets/cover-pic.jpg"
+                src=""
                 alt="cover-pic"
                 className="object-cover w-full h-48"
               />

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CreateNewMessage } from "./messageSlice";
 
-const API_URL = "/api/messages/";
+const API_URL = "https://treff-punkt-socials.onrender.com/api/messages/";
 
 const createMessage = async (messageData: CreateNewMessage, token: string) => {
   const config = {

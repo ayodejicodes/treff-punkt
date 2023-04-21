@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CreateNewPost, UpdatePost } from "./postSlice";
 
-const API_URL = "/api/posts/";
+const API_URL = "https://treff-punkt-socials.onrender.com/api/posts/";
 
 const createPost = async (postData: CreateNewPost, token: string) => {
   const config = {

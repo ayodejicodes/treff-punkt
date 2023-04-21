@@ -43,7 +43,7 @@ const ProfilePage = () => {
     const getAuthUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:1024/api/users/${user?._id}`,
+          `https://treff-punkt-socials.onrender.com/api/users/${user?._id}`,
           config
         );
         const res = await response.data;
@@ -95,11 +95,7 @@ const ProfilePage = () => {
         {/* Cover and Profile Picture */}
         <div className="relative ">
           {!user?.coverPic && (
-            <img
-              src="../../src/assets/cover-pic.jpg"
-              alt="cover-pic"
-              className="object-cover w-full h-48"
-            />
+            <img src="" alt="cover-pic" className="object-cover w-full h-48" />
           )}
           {user?.coverPic && (
             <img

@@ -9,9 +9,24 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:1024",
+        target: "https://treff-punkt-socials.onrender.com",
         changeOrigin: true,
         secure: false,
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+        },
       },
     },
   },

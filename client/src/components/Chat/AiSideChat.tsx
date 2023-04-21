@@ -4,6 +4,7 @@ import { AiChat } from "./ChatAiPage";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useEffect, useState } from "react";
+import AiProfilePicture from "../ProfilePicture/AiProfilePicture";
 
 const AiSideChat = () => {
   const { aiChatArray } = useSelector((state: RootState) => state.chats);
@@ -30,11 +31,7 @@ const AiSideChat = () => {
             {/* Image */}
             <div>
               <div className="relative w-10 h-10">
-                <img
-                  src="../../src/assets/ai-photo.jpg"
-                  alt=""
-                  className=" rounded-full w-full h-full object-cover"
-                />
+                <AiProfilePicture />
                 {/* {online ? (
                 <div className="absolute border-4 border-whiteColor bg-onlineGreen w-4 h-4 right-0 top-0 rounded-full mt-7"></div>
               ) : (

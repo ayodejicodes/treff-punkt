@@ -23,7 +23,7 @@ const SearchParentComponent = () => {
     const searchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:1024/api/users/?search=${keyword}`,
+          `https://treff-punkt-socials.onrender.com/api/users/?search=${keyword}`,
           config
         );
         const res = await response.data;

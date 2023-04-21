@@ -124,7 +124,7 @@ const LoginPage = () => {
         {/* left */}
         <div className="hidden lg:flex md:w-[50%] rounded-xl ">
           <img
-            src="../src/assets/loginpic.jpg"
+            src="https://res.cloudinary.com/dpcdcpyln/image/upload/v1682115109/treffPunkt/stozyicexypnm77eszju.jpg"
             alt=""
             className="object-cover w-full h-full rounded-xl 
             "

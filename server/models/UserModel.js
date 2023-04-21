@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
     profilePic: {
       type: String,
       default:
-        "https://res.cloudinary.com/dpcdcpyln/image/upload/v1681998837/treffPunkt/pw5bififtkp5osvazki2.png",
+        "https://res.cloudinary.com/dpcdcpyln/image/upload/v1682113172/treffPunkt/mzoj7qv5dwmkrffajejo.png",
       validate: {
         validator: function (url) {
           const urlRegex =
@@ -58,10 +58,12 @@ const userSchema = new mongoose.Schema(
     },
     coverPic: {
       type: String,
+      default:
+        "https://res.cloudinary.com/dpcdcpyln/image/upload/v1682113620/treffPunkt/npkbrojsw8l6bkbrj9lv.jpg",
       validate: {
         validator: function (url) {
           const urlRegex =
-            /^https?:\/\/(?:www\.)?([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}\/?$/;
+            /^https?:\/\/[a-zA-Z0-9-]+\.cloudinary\.com\/[a-zA-Z0-9-]+\/image\/upload\/v\d+\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|gif|bmp)$/i;
           return urlRegex.test(url);
         },
         message: (props) => `${props.value} is not a valid URL!`,

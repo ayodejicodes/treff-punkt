@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CreateNewComment, UpdateComment } from "./commentSlice";
 
-const API_URL = "/api/comments/";
+const API_URL = "https://treff-punkt-socials.onrender.com/api/comments/";
 
 const createComment = async (postData: CreateNewComment, token: string) => {
   const { postID } = postData;

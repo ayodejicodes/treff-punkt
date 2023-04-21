@@ -250,7 +250,7 @@ const Register = () => {
         {/* left */}
         <div className="hidden lg:flex md:w-[50%] rounded-xl ">
           <img
-            src="../src/assets/registerpagepic.jpg"
+            src="https://res.cloudinary.com/dpcdcpyln/image/upload/v1682115114/treffPunkt/jdwzanwhu3nhxop2x1lp.jpg"
             alt=""
             className="object-cover w-full h-full rounded-xl 
             "

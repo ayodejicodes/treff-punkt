@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setAiChatArray } from "../../features/chats/chatSlice";
 import AiChatMessageComponent from "./AiChatMessageComponent";
+import AiProfilePicture from "../ProfilePicture/AiProfilePicture";
 
 export interface AiChat {
   firstName: string;
@@ -62,7 +63,7 @@ const ChatAiPage = () => {
 
       try {
         const response = await axios.post(
-          `http://localhost:1024/api/chatsai`,
+          `https://treff-punkt-socials.onrender.com/api/chatsai`,
           { prompt },
           config
         );
@@ -91,11 +92,7 @@ const ChatAiPage = () => {
       <div className=" flex flex-col items-center pl-7 pr-7 pt-4 pb-2 sticky z-20 top-[-8px] bg-[#f0f3f4] dark:bg-[#164055] border-b-2 dark:border-[#f0f3f4]/[0.15]  border-[#164055]/[0.15]  ">
         {/* Image */}
         <div className="  w-8 h-8 mb-1">
-          <img
-            src="../../src/assets/ai-photo.jpg"
-            alt=""
-            className=" rounded-full cursor-pointer w-full h-full object-cover"
-          />
+          <AiProfilePicture />
         </div>
 
         {/* Name, Last Seen */}
