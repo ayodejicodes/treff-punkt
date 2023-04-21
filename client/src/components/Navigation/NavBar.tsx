@@ -86,7 +86,14 @@ const NavBar = () => {
             user ? navigate("/") : navigate("/login");
           }}
         >
-          <BsChatRightQuoteFill size={28} className="text-primaryColor" />
+          {/* <BsChatRightQuoteFill size={28} className="text-primaryColor" /> */}
+
+          <div className="w-7 h-7">
+            <img
+              src="https://res.cloudinary.com/dpcdcpyln/image/upload/v1682116122/treffPunkt/m050nnak0ahappfndx6r.png"
+              alt=""
+            />
+          </div>
           <h1 className="font-semibold text-lg text-secondaryColor whitespace-nowrap dark:text-whiteColor ">
             Treff Punkt
           </h1>
