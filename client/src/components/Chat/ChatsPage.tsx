@@ -27,8 +27,6 @@ const ChatsPage = () => {
   const sender = users.find((u) => u?._id === user?._id);
   const receiver = users.find((u) => u?._id !== user?._id);
 
-  console.log("selectedChatId", selectedChatId);
-
   return (
     <div className=" w-full lg:w-[50%] lg:flex flex-col bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
       {/* Chat Header-------------------------------------------- */}

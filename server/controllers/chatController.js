@@ -15,7 +15,8 @@ const getChatsController = asyncHandler(async (req, res) => {
       },
     })
       .populate("users", "firstName lastName profilePic")
-      .populate("latestMessage");
+      .populate("latestMessage")
+      .sort({ "latestMessage.createdAt": -1 });
 
     // Validation check
     if (!chats) {
@@ -23,7 +24,11 @@ const getChatsController = asyncHandler(async (req, res) => {
       throw new Error("Chat does not Exist");
     }
 
-    res.status(200).json(chats);
+    const sortedChat = chats.sort(
+      (a, b) => b.latestMessage.createdAt - a.latestMessage.createdAt
+    );
+
+    res.status(200).json(sortedChat);
   } catch (error) {
     res.status(400);
     throw new Error("Could not fetch Chats");

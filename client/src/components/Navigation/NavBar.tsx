@@ -14,6 +14,7 @@ import ThemeSwitcherIcon from "../Theme/ThemeSwitcherIcon";
 import { toast } from "react-toastify";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import axios from "axios";
+import { resetAiChatArray } from "../../features/chats/chatSlice";
 
 const NavBar = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -24,6 +25,7 @@ const NavBar = () => {
 
   const navigate = useNavigate();
   const { user, keyword } = useSelector((state: RootState) => state.auth);
+  const { aiChatArray } = useSelector((state: RootState) => state.chats);
   const dispatch = useDispatch<AppDispatch>();
 
   const [searchInputParams, setSearchInputParams] = useSearchParams();
@@ -68,6 +70,7 @@ const NavBar = () => {
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
+    dispatch(resetAiChatArray());
     dispatch(logout());
     dispatch(reset());
     navigate("/");

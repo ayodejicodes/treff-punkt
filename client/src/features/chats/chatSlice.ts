@@ -98,6 +98,9 @@ const chatsSlice = createSlice({
     setAiChatArray: (state, action) => {
       state.aiChatArray.push(action.payload);
     },
+    resetAiChatArray: (state) => {
+      state.aiChatArray = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -131,6 +134,10 @@ const chatsSlice = createSlice({
   },
 });
 
-export const { resetChat, setSelectedChatId, setAiChatArray } =
-  chatsSlice.actions;
+export const {
+  resetChat,
+  setSelectedChatId,
+  setAiChatArray,
+  resetAiChatArray,
+} = chatsSlice.actions;
 export default chatsSlice.reducer;
