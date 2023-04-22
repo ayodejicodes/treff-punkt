@@ -56,26 +56,22 @@ app.post("/api/chatsai", protect, async (req, res) => {
 
   try {
     const config = new Configuration({
-      organization: process.env.OPEN_AI_ORG_ID,
       apiKey: process.env.OPEN_AI_KEY,
     });
 
     const openai = new OpenAIApi(config);
 
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: `${prompt}` }],
-
-      // ---------------------------
-      // max_tokens: 200,
-      // temperature: 0.5,
-      // prompt: prompt,
-      // top_p: 1,
-      // frequency_penalty: 0.5,
-      // presence_penalty: 0,
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      max_tokens: 200,
+      temperature: 0.5,
+      prompt: prompt,
+      top_p: 1,
+      frequency_penalty: 0.5,
+      presence_penalty: 0,
     });
 
-    res.json({ completion: completion.data.choices[0].message });
+    res.send(completion.data.choices[0].text);
   } catch (error) {
     res.status(400).send("Could not create Completion");
   }
