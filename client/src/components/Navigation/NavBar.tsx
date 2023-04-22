@@ -131,16 +131,24 @@ const NavBar = () => {
 
             {/* ----------------------------------------------------------------------- */}
 
-            <div className="relative flex items-center justify-center">
-              <BsChatDots
-                size={22}
-                className=" text-secondaryColor dark:text-whiteColor cursor-pointer "
-                onClick={() => navigate("/chats")}
-              />
-              {/* <div className="absolute right-[-5px] top-[-2px]">
+            {!user && (
+              <Link to="/login">
+                <button className="btnPrimary mr-3">Login</button>
+              </Link>
+            )}
+
+            {user && (
+              <div className="relative flex items-center justify-center">
+                <BsChatDots
+                  size={22}
+                  className=" text-secondaryColor dark:text-whiteColor cursor-pointer "
+                  onClick={() => navigate("/chats")}
+                />
+                {/* <div className="absolute right-[-5px] top-[-2px]">
                 <NotificationIcon />
               </div> */}
-            </div>
+              </div>
+            )}
             {/* <div className="relative flex items-center justify-center">
               <BsBell
                 size={22}
@@ -152,33 +160,37 @@ const NavBar = () => {
             </div> */}
           </div>
 
-          <div
-            className="hidden lg:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer"
-            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-          >
-            <div className=" relative w-7 h-7">
-              <ProfilePicture />
-            </div>
-            <BiChevronDown
-              size={22}
-              className="text-primaryColor dark:text-whiteColor"
-            />
-          </div>
-
-          {/* Mobile Hamburger ------------------------*/}
-          <div
-            className=" lg:hidden flex items-end"
-            onClick={() =>
-              setMobileProfileDropdownOpen(!mobileprofileDropdownOpen)
-            }
-          >
-            <div>
-              <GiHamburgerMenu
-                size={23}
-                className="cursor-pointer text-secondaryColor dark:text-whiteColor "
+          {user && (
+            <div
+              className="hidden lg:flex bgSecondaryColorLight dark:bgWhiteColorLight rounded-full pt-2 pb-2 pl-3 pr-3 cursor-pointer"
+              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+            >
+              <div className=" relative w-7 h-7">
+                <ProfilePicture />
+              </div>
+              <BiChevronDown
+                size={22}
+                className="text-primaryColor dark:text-whiteColor"
               />
             </div>
-          </div>
+          )}
+
+          {/* Mobile Hamburger ------------------------*/}
+          {user && (
+            <div
+              className=" lg:hidden flex items-end"
+              onClick={() =>
+                setMobileProfileDropdownOpen(!mobileprofileDropdownOpen)
+              }
+            >
+              <div>
+                <GiHamburgerMenu
+                  size={23}
+                  className="cursor-pointer text-secondaryColor dark:text-whiteColor "
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

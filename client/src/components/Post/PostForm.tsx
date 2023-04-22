@@ -12,7 +12,7 @@ import axios from "axios";
 
 const PostForm = () => {
   const [caption, setCaption] = useState<string | undefined>();
-  const [postImage, setPostImage] = useState<File | undefined>();
+  const [postImage, setPostImage] = useState<File | undefined | null>();
   const [base64, setBase64] = useState<string | undefined>();
   const [isBase64Open, setIsBase64Open] = useState<Boolean>(false);
   const [isPostLoading, setIsPostLoading] = useState<Boolean>(false);
@@ -25,9 +25,20 @@ const PostForm = () => {
     if (postImage) {
       reader.readAsDataURL(postImage as File);
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        // base64-encoded string
-        setBase64(e.target?.result as string);
-        setIsBase64Open(true);
+        const fileType = reader.result
+          ?.toString()
+          .split(",")[0]
+          .split(":")[1]
+          .split(";")[0];
+        if (!fileType?.startsWith("image/")) {
+          setPostImage(null);
+          setBase64(undefined);
+          toast.error("Only images are accepted");
+        } else {
+          // base64-encoded string
+          setBase64(e.target?.result as string);
+          setIsBase64Open(true);
+        }
       };
     }
   }, [postImage]);
@@ -114,7 +125,7 @@ const PostForm = () => {
       );
     }
 
-    if (responseData && !isPostLoading && !caption) {
+    if (postImage && responseData && !isPostLoading && !caption) {
       setIsPostLoading(false);
 
       dispatch(
@@ -124,7 +135,7 @@ const PostForm = () => {
       );
     }
 
-    if (responseData && !isPostLoading && caption) {
+    if (postImage && responseData && !isPostLoading && caption) {
       setIsPostLoading(false);
 
       dispatch(
@@ -206,7 +217,7 @@ const PostForm = () => {
                         className="absolute top-0 right-0 text-red-500 cursor-pointer  "
                         onClick={() => {
                           setIsBase64Open(false);
-                          setPostImage(undefined);
+                          setPostImage(null);
                           setBase64(undefined);
                         }}
                       />

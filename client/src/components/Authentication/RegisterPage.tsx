@@ -78,7 +78,7 @@ const Register = () => {
   const [base64ProfilePic, setBase64ProfilePic] = useState<
     string | undefined
   >();
-  const [profileImage, setProfileImage] = useState<File | undefined>();
+  const [profileImage, setProfileImage] = useState<File | undefined | null>();
 
   const [isProfilePicLoading, setIsProfilePicLoading] =
     useState<Boolean>(false);
@@ -123,8 +123,19 @@ const Register = () => {
     if (profileImage) {
       reader.readAsDataURL(profileImage as File);
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        // base64-encoded string
-        setBase64ProfilePic(e.target?.result as string);
+        const fileType = reader.result
+          ?.toString()
+          .split(",")[0]
+          .split(":")[1]
+          .split(";")[0];
+        if (!fileType?.startsWith("image/")) {
+          setProfileImage(null);
+          setBase64ProfilePic(undefined);
+          toast.error("Only images are accepted");
+        } else {
+          // base64-encoded string
+          setBase64ProfilePic(e.target?.result as string);
+        }
       };
     }
   }, [profileImage]);
@@ -185,7 +196,7 @@ const Register = () => {
     if (!responseDataProfilePic) {
       await dispatch(registerUser(userData));
     }
-    if (responseDataProfilePic) {
+    if (profileImage && responseDataProfilePic) {
       await dispatch(
         registerUser({
           ...userData,

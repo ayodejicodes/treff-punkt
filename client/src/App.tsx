@@ -23,7 +23,7 @@ import SearchParentComponent from "./components/Search/SearchParentComponent";
 function App() {
   const location = useLocation();
 
-  const showNavBar = ["/register", "/login"].includes(location.pathname);
+  const showNavBar = ["/register", "/login", "*"].includes(location.pathname);
   const pages = [
     "/",
     "/profile",
@@ -56,7 +56,6 @@ function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
 
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} index />
@@ -67,6 +66,7 @@ function App() {
             <Route path="/chatsai" element={<ChatAi />} />
             <Route path="/users/:id" element={<GetUserProfile />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
         {keyword && <SearchParentComponent />}
         <ToastContainer

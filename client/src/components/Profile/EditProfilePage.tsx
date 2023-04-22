@@ -67,8 +67,8 @@ const EditProfilePage = () => {
     useState<Boolean>(false);
   const [isCoverPicLoading, setIsCoverPicLoading] = useState<Boolean>(false);
   const [isUpdatUserLoading, setIsUpdatUserLoading] = useState<Boolean>(false);
-  const [profileImage, setProfileImage] = useState<File | undefined>();
-  const [coverImage, setCoverImage] = useState<File | undefined>();
+  const [profileImage, setProfileImage] = useState<File | undefined | null>();
+  const [coverImage, setCoverImage] = useState<File | undefined | null>();
 
   const registerDataObject = {
     firstName: watch("firstName"),
@@ -92,8 +92,18 @@ const EditProfilePage = () => {
     if (profileImage) {
       reader.readAsDataURL(profileImage as File);
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        // base64-encoded string
-        setBase64ProfilePic(e.target?.result as string);
+        const fileType = reader.result
+          ?.toString()
+          .split(",")[0]
+          .split(":")[1]
+          .split(";")[0];
+        if (!fileType?.startsWith("image/")) {
+          setProfileImage(null);
+          toast.error("Only images are accepted");
+        } else {
+          // base64-encoded string
+          setBase64ProfilePic(e.target?.result as string);
+        }
       };
     }
   }, [profileImage]);
@@ -103,8 +113,18 @@ const EditProfilePage = () => {
     if (coverImage) {
       reader.readAsDataURL(coverImage as File);
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        // base64-encoded string
-        setBase64CoverPic(e.target?.result as string);
+        const fileType = reader.result
+          ?.toString()
+          .split(",")[0]
+          .split(":")[1]
+          .split(";")[0];
+        if (!fileType?.startsWith("image/")) {
+          setCoverImage(null);
+          toast.error("Only images are accepted");
+        } else {
+          // base64-encoded string
+          setBase64CoverPic(e.target?.result as string);
+        }
       };
     }
   }, [coverImage]);
@@ -206,7 +226,7 @@ const EditProfilePage = () => {
     const filteredUpdateObject: UpdateObject = {};
 
     for (const [key, value] of Object.entries(updateObject)) {
-      if (value !== "" && value !== undefined) {
+      if (value !== "" && value !== undefined && value !== null) {
         filteredUpdateObject[key] = value;
       }
     }
@@ -217,7 +237,7 @@ const EditProfilePage = () => {
         await dispatch(updateUser(filteredUpdateObject));
       }
 
-      if (responseDataProfilePic && !responseDataCoverPic) {
+      if (profileImage && responseDataProfilePic && !responseDataCoverPic) {
         await dispatch(
           updateUser({
             ...filteredUpdateObject,
@@ -226,7 +246,7 @@ const EditProfilePage = () => {
         );
       }
 
-      if (!responseDataProfilePic && responseDataCoverPic) {
+      if (coverImage && !responseDataProfilePic && responseDataCoverPic) {
         await dispatch(
           updateUser({
             ...filteredUpdateObject,
@@ -235,7 +255,12 @@ const EditProfilePage = () => {
         );
       }
 
-      if (responseDataProfilePic && responseDataCoverPic) {
+      if (
+        profileImage &&
+        coverImage &&
+        responseDataProfilePic &&
+        responseDataCoverPic
+      ) {
         await dispatch(
           updateUser({
             ...filteredUpdateObject,
@@ -334,7 +359,7 @@ const EditProfilePage = () => {
         {/* Profile Pic-------------------------------------------------------------------  */}
 
         <label htmlFor="profilePic" className={labelClassName}>
-          Profile Picture
+          Profile Picture ( jpg, jpeg, png )
         </label>
 
         <input
@@ -351,7 +376,7 @@ const EditProfilePage = () => {
         {/* Cover Pic-------------------------------------------------------------------  */}
 
         <label htmlFor="coverPic" className={labelClassName}>
-          Cover Picture
+          Cover Picture ( jpg, jpeg, png )
         </label>
 
         <input
