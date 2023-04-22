@@ -88,7 +88,7 @@ const ChatEmpty = () => {
               key={index}
               onClick={() => {
                 handleChatClick(chat._id);
-                navigate("/chats");
+                navigate("/chat");
               }}
             />
           ))}

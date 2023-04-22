@@ -9,6 +9,7 @@ import axios from "axios";
 import { setAiChatArray } from "../../features/chats/chatSlice";
 import AiChatMessageComponent from "./AiChatMessageComponent";
 import AiProfilePicture from "../ProfilePicture/AiProfilePicture";
+import { FaChevronLeft } from "react-icons/fa";
 
 export interface AiChat {
   firstName: string;
@@ -33,6 +34,7 @@ const ChatAiPage = () => {
   useEffect(() => {
     chatBoxScrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatBoxScrollRef, aiChatArray]);
+  const navigate = useNavigate();
 
   const chat = {
     firstName: "Ai",
@@ -93,6 +95,20 @@ const ChatAiPage = () => {
         {/* Image */}
         <div className="  w-8 h-8 mb-1">
           <AiProfilePicture />
+          <div
+            className="absolute lg:hidden left-4 top-6 flex gap-1 items-center cursor-pointer"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <FaChevronLeft
+              size={14}
+              className="text-secondaryColor dark:text-whiteColor"
+            />
+            <small className="text-secondaryColor dark:text-whiteColor hover:underline">
+              Back
+            </small>
+          </div>
         </div>
 
         {/* Name, Last Seen */}

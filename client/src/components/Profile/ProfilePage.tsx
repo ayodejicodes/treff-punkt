@@ -204,10 +204,9 @@ const ProfilePage = () => {
                     Bio
                   </h1>
                   <p className="text-center text-secondaryColor dark:text-whiteColor italic text-sm">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Voluptatem itaque dolor voluptates veniam explicabo! Cumque
-                    illo dolore dicta aliquam ullam, asperiores deserunt sint
-                    reprehenderit aspernatur!
+                    Share a snapshot of your life - who you are, what you do,
+                    and what matters to you most in just a few sentences. Edit
+                    Profile to change this.
                   </p>
                 </>
               )}

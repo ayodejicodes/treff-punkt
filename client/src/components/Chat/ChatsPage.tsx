@@ -44,6 +44,7 @@ const ChatsPage = () => {
           <div
             className="absolute lg:hidden left-4 top-6 flex gap-1 items-center cursor-pointer"
             onClick={() => {
+              setSelectedChatId(null);
               navigate(-1);
             }}
           >

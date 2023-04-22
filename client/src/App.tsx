@@ -19,6 +19,7 @@ import EditProfile from "./pages/editProfile";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
 import SearchParentComponent from "./components/Search/SearchParentComponent";
+import ChatsNoSelection from "./pages/chatEmpty";
 
 function App() {
   const location = useLocation();
@@ -30,6 +31,7 @@ function App() {
     "/edit-profile",
     "/friends",
     "/chats",
+    "/chat",
     "/chatsai",
   ];
   const showleftSideBar =
@@ -62,7 +64,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/friends" element={<Friends />} />
-            <Route path="/chats" element={<Chats />} />
+            <Route path="/chats" element={<ChatsNoSelection />} />
+            <Route path="/chat" element={<Chats />} />
             <Route path="/chatsai" element={<ChatAi />} />
             <Route path="/users/:id" element={<GetUserProfile />} />
           </Route>
