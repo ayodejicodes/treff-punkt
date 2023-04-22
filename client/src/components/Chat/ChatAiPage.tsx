@@ -20,20 +20,20 @@ export interface AiChat {
 
 const ChatAiPage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  // const { aiChatArray } = useSelector((state: RootState) => state.chats);
+  const { aiChatArray } = useSelector((state: RootState) => state.chats);
   const token = user?.token;
-  // const [error, setError] = useState(false);
+  const [error, setError] = useState(false);
 
   const [prompt, setPrompt] = useState<string>("");
-  // const [promptDisplay, setPromptDisplay] = useState<string>();
+  const [promptDisplay, setPromptDisplay] = useState<string>();
   const [aiResponse, setAiResponse] = useState<string>();
-  // const [isResponseLoading, setIsResponseLoading] = useState<Boolean>(false);
-  // const chatBoxScrollRef = useRef<HTMLDivElement | null>(null);
-  // const dispatch = useDispatch<AppDispatch>();
+  const [isResponseLoading, setIsResponseLoading] = useState<Boolean>(false);
+  const chatBoxScrollRef = useRef<HTMLDivElement | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
-  // useEffect(() => {
-  //   chatBoxScrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [chatBoxScrollRef, aiChatArray]);
+  useEffect(() => {
+    chatBoxScrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatBoxScrollRef, aiChatArray]);
   const navigate = useNavigate();
 
   const chat = {
@@ -57,15 +57,16 @@ const ChatAiPage = () => {
       },
     };
 
-    // setPromptDisplay(prompt);
-    // dispatch(setAiChatArray(prompt));
-    // setPrompt("");
+    setPromptDisplay(prompt);
+    dispatch(setAiChatArray(prompt));
+    setPrompt("");
     const getAiResponse = async () => {
-      // setIsResponseLoading(true);
+      setIsResponseLoading(true);
 
       try {
         const response = await axios.post(
           `https://treff-punkt-socials.onrender.com/api/chatsai`,
+          // `http://localhost:1024/api/chatsai`,
           { prompt },
           config
         );
@@ -73,22 +74,21 @@ const ChatAiPage = () => {
         const res = await response.data;
 
         if (res) {
-          setAiResponse(res);
-          // setIsResponseLoading(false);
-          // dispatch(setAiChatArray(res));
+          setAiResponse(res.completion.content);
+          setIsResponseLoading(false);
+          dispatch(setAiChatArray(res.completion.content));
         }
 
-        // setError(false);
+        setError(false);
       } catch (error) {
-        // setError(true);
-        // setIsResponseLoading(false);
+        setError(true);
+        setIsResponseLoading(false);
       }
     };
 
     getAiResponse();
   };
 
-  console.log("aiResponse", aiResponse);
   return (
     <div className=" w-full lg:w-[50%] lg:flex flex-col bgSecondaryColorLight dark:bgWhiteColorLight rounded-xl overflow-y-scroll pageViewportHeight scrollbar dark:scrollbarDark divide-y-[2px] divideSecondaryColorLight dark:divideWhiteColorLight">
       {/* Chat Header-------------------------------------------- */}
@@ -137,7 +137,7 @@ const ChatAiPage = () => {
           <div className="flex flex-col h-[calc(73vh)] divide-y-[1px] divideSecondaryColorLight dark:divideWhiteColorLight">
             {/* Chat Messages------------------------------------------ */}
 
-            {/* <div className="flex-1  pl-7 pr-7">
+            <div className="flex-1  pl-7 pr-7">
               {aiChatArray.map((aichat: any, index, loading) => (
                 <AiChatMessageComponent
                   content={aichat}
@@ -157,11 +157,11 @@ const ChatAiPage = () => {
                   </div>
                 )}
               </div>
-            </div> */}
+            </div>
 
             <div
               className="bg-transparent w-full mt-3"
-              // ref={chatBoxScrollRef}
+              ref={chatBoxScrollRef}
             ></div>
 
             <form onSubmit={handleAiChatPromptSubmit}>
@@ -179,7 +179,7 @@ const ChatAiPage = () => {
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
                     />
-                    {/* <div className="flex gap-1.5 items-center justify-center pl-3 pr-3">
+                    <div className="flex gap-1.5 items-center justify-center pl-3 pr-3">
                       {prompt !== "" && !isResponseLoading && (
                         <button type="submit">
                           <BiPaperPlane
@@ -188,7 +188,7 @@ const ChatAiPage = () => {
                           />
                         </button>
                       )}
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               </div>
