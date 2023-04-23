@@ -413,9 +413,9 @@ const PostCard = ({ post }: PostCard) => {
         {/* right */}
         <div className="flex relative gap-1 lg:gap-3">
           {toggleBookmark ? (
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center mt-1">
               <FaBookmark
-                size={20}
+                size={17}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
                 onClick={handleBookmark}
               />
@@ -426,9 +426,9 @@ const PostCard = ({ post }: PostCard) => {
               )}
             </div>
           ) : (
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center mt-1">
               <FaRegBookmark
-                size={20}
+                size={17}
                 className="text-secondaryColor dark:text-whiteColor cursor-pointer"
                 onClick={handleBookmark}
               />
