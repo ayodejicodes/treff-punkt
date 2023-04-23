@@ -234,7 +234,7 @@ const LoginPage = () => {
                   <button
                     className="btnPrimary"
                     onClick={() => {
-                      setGuestEmail("guestemail@tref.co");
+                      setGuestEmail("guestemail@treff.co");
                       setGuestPassword("guestpasswordtest123");
                       setIsGuestClicked(true);
                       setIsDisabled(true);
