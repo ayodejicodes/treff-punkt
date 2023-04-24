@@ -12,7 +12,7 @@ const ThemeSwitcherIcon = ({ size }: Theme) => {
     <div
       className={`flex justify-center items-center text-center ${
         isDarkMode ? "bg-whiteColor " : "bg-secondaryColor"
-      } p-[5px] rounded-lg`}
+      } p-[5px] rounded-lg cursor-pointer`}
       onClick={onSwitchClick}
     >
       <div className="hidden " ref={sunRef}>

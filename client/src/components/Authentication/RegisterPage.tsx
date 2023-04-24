@@ -206,7 +206,7 @@ const Register = () => {
     }
 
     setIsRegistrationLoading(false);
-    toast.success("Registration Successfully");
+    toast.success("Registration Successful");
 
     navigate("/");
   };
