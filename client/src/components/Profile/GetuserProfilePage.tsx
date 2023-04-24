@@ -157,7 +157,7 @@ const GetUserProfile = () => {
                 </small>
                 <small className="text-secondaryColor dark:text-whiteColor mt-1.5 mb-1.5 ">
                   {`Joined ${format(
-                    new Date(user?.createdAt as string),
+                    new Date(userProfile?.createdAt as string),
                     "  dd MMM yyyy"
                   )}`}
                 </small>
