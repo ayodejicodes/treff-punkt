@@ -25,10 +25,10 @@ Treff Punkt is an artificial intelligence full-fledged responsive social media a
 ![one-on-one](https://user-images.githubusercontent.com/62625879/235306033-261f980d-35f0-4840-8f63-fe3911806d77.gif)
 
 #### Posts (Text and Image posts)
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![Post](https://user-images.githubusercontent.com/62625879/235308539-f0ec61b2-785d-4d2a-a236-640f3f7d8c48.png)
 
 #### Comments
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![Comment](https://user-images.githubusercontent.com/62625879/235308810-2a83a748-1eb5-463b-a1a1-dc7fb98f02ec.png)
 
 #### User Profile (Follow/Unfollow User)
 https://www.youtube.com/watch?v=lXzIZBAwt5Y
