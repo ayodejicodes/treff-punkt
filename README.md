@@ -3,7 +3,7 @@
 
 Treff Punkt is an artificial intelligence full-fledged responsive social media app. Users can either chat one-on-one or with an artificial intelligent chat bot when no user/friend is available.
 
-##Demo
+## Demo
 
 https://user-images.githubusercontent.com/62625879/235312957-73761cc1-f7df-4fdf-9b4e-f7e945df0da4.mp4
 
