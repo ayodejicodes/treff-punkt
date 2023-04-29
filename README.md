@@ -11,11 +11,10 @@ Treff Punkt is an artificial intelligence full-fledged responsive social media a
 
 #### Form Validation
 ![Form Validation](https://user-images.githubusercontent.com/62625879/235302456-806aed7b-3a89-43c9-b096-dd732b2092cd.gif)
-![light dark](https://user-images.githubusercontent.com/62625879/235301451-b8d10e7f-2ab7-4a56-8148-9db808474b81.gif)
-
 
 #### User Authentication and Authorization
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![Auth](https://user-images.githubusercontent.com/62625879/235303269-a0d51f43-cd64-46fc-81c3-48041a76dfa5.gif)
+
 
 #### Search Functionality
 https://www.youtube.com/watch?v=lXzIZBAwt5Y
