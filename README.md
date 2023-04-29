@@ -7,7 +7,8 @@ Treff Punkt is an artificial intelligence full-fledged responsive social media a
 ## Key Features
 
 #### Light/Dark Mode
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![imageeffects](https://user-images.githubusercontent.com/62625879/235299827-c28937bc-1af9-44f1-9215-a90a8e0c1a12.gif)
+
 
 #### Form Validation
 https://www.youtube.com/watch?v=lXzIZBAwt5Y
