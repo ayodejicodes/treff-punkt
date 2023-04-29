@@ -19,10 +19,10 @@ Treff Punkt is an artificial intelligence full-fledged responsive social media a
 ![Search](https://user-images.githubusercontent.com/62625879/235303886-766ff288-b08e-4149-bd67-057d0e0c74bd.gif)
 
 #### Chat with artificial intelligent bot (All Chatgpt does)
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![Ai Chat](https://user-images.githubusercontent.com/62625879/235305605-e373d09f-ef7d-4570-9e45-fc4fa66dffe5.gif)
 
 #### Real time one-on-one chat with any user including drag and drop to send image as a message
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![one-on-one](https://user-images.githubusercontent.com/62625879/235306033-261f980d-35f0-4840-8f63-fe3911806d77.gif)
 
 #### Posts (Text and Image posts)
 https://www.youtube.com/watch?v=lXzIZBAwt5Y
