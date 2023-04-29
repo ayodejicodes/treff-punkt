@@ -15,9 +15,8 @@ Treff Punkt is an artificial intelligence full-fledged responsive social media a
 #### User Authentication and Authorization
 ![Auth](https://user-images.githubusercontent.com/62625879/235303269-a0d51f43-cd64-46fc-81c3-48041a76dfa5.gif)
 
-
 #### Search Functionality
-https://www.youtube.com/watch?v=lXzIZBAwt5Y
+![Search](https://user-images.githubusercontent.com/62625879/235303886-766ff288-b08e-4149-bd67-057d0e0c74bd.gif)
 
 #### Chat with artificial intelligent bot (All Chatgpt does)
 https://www.youtube.com/watch?v=lXzIZBAwt5Y
