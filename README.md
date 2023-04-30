@@ -24,7 +24,7 @@ https://user-images.githubusercontent.com/62625879/235313401-09ba6aed-4e72-4651-
 
 ## Tech Stack
 
-**Client:** React (Typescript), Redux Toolkit, Redux Persist, React-Router-Dom, TailwindCSS/Flowbite, React-Hook-Form/Yup, React-Dropzone, axios , React-Toastify, Cloudinary, date-fns, Socketio-Client
+**Client:** React (Typescript), Redux Toolkit, Redux Persist, React-Router-Dom, TailwindCSS/Flowbite, React-Hook-Form/Yup, React-Dropzone, axios, React-Toastify, Cloudinary, date-fns, Socketio-Client
 
 **Server:** Mongodb, Mongoose, Nodejs (Express), Cloudinary, JWT, Bcrypt, Socketio, OpenAi.
 
