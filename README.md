@@ -20,6 +20,7 @@ https://user-images.githubusercontent.com/62625879/235313401-09ba6aed-4e72-4651-
 - Edit Profile
 - Form Validation
 - Light/Dark Mode
+- Responsive (Desktop, Tablet, Mobile)
 
 
 
