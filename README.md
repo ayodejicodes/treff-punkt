@@ -1,7 +1,7 @@
 
 # Treff Punkt Socials
 
-Treff Punkt is an artificial intelligence full-fledged responsive social media app. Users can either chat one-on-one or with an artificial intelligent chat bot when no user/friend is available.
+Treff Punkt is an artificial intelligent full-fledged responsive social media app. Users can either chat one-on-one or with an artificial intelligent chat bot when no user/friend is available.
 
 ## Live Site
 https://treffpunkt.onrender.com/
