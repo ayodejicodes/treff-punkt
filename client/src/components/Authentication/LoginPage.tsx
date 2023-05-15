@@ -144,7 +144,7 @@ const LoginPage = () => {
             {/* Email------------------------------------------------------------------- */}
 
             <label htmlFor="email" className={labelClassName}>
-              Email:
+              Email
             </label>
 
             <input
