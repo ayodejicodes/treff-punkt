@@ -1,6 +1,10 @@
 const express = require("express");
 const colors = require("colors");
 const cors = require("cors");
+
+const cron = require("node-cron");
+const axios = require("axios");
+
 const errorHandlerMiddleware = require("./middlewares/errorHandlerMiddleware");
 const connectDB = require("./config/db");
 require("dotenv").config();
@@ -91,6 +95,23 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
+});
+
+// Schedule a task to run every 10 minutes
+cron.schedule("*/14 * * * *", async () => {
+  console.log("Sending login request every 14 minutes");
+  try {
+    const response = await axios.post(
+      "https://treff-punkt-socials.onrender.com/api/users/login",
+      {
+        email: process.env.LOGIN_EMAIL,
+        password: process.env.LOGIN_PASSWORD,
+      }
+    );
+    console.log("Login successful:", response.data);
+  } catch (error) {
+    console.error("Error during login:", error);
+  }
 });
 
 // Listen to predefined port

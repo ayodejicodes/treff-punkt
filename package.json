@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ayodejicodes/treff-punkt-socials#readme",
   "dependencies": {
+    "axios": "^1.6.5",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cloudinary": "^1.35.0",
@@ -33,6 +34,7 @@
     "mongoose": "^7.0.1",
     "morgan": "^1.10.0",
     "morgan-debug": "^2.0.0",
+    "node-cron": "^3.0.3",
     "openai": "^3.2.1",
     "socket.io": "^4.6.1"
   },
